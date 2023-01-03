@@ -31,6 +31,7 @@ app.use(morgan('dev'));
 app.post('/upload', (req, res) => {
   try {
       if(!req.files) {
+          console.log(req.files)
           res.send({
               status: false,
               message: 'No file uploaded'
