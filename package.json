@@ -1,0 +1,30 @@
+{
+  "name": "dashboard-lm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chiarasharp/dashboard-lm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chiarasharp/dashboard-lm/issues"
+  },
+  "homepage": "https://github.com/chiarasharp/dashboard-lm#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "fs": "^0.0.1-security",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7"
+  }
+}
