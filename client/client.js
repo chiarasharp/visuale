@@ -1,3 +1,21 @@
+// model contains all variable needed for the interface sofia
+model = {
+	dataset : {
+		type : undefined,
+		path : ""
+	},
+
+	docList : [],
+	analysis : {},
+	//activeFilter : 'all',
+	selectedDocs : [],
+	openedDoc : undefined,
+	actualAKN : undefined,
+	dateLoaded:false,
+	bodyTextLoaded:false,
+	chart : undefined
+}
+
 $(document).ready(function(){
 
     $('form').submit(function(event) { // catch the form's submit event
@@ -10,11 +28,11 @@ $(document).ready(function(){
             url: $(this).attr('action'), // the file to call
             contentType: false,
             processData: false,
-            success: function(response) { // on success..
+            success: function(response) {
                 alert(response.message);
             }
         });
-        //return false; // cancel original event to prevent form submitting
+        
     });
 
 })

@@ -6,6 +6,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
+const fs = require('fs');
+
+const DataFile = require('./parsing.js');
+
 PORT = 3000;
 
 // path to where the files are stored on disk
@@ -27,11 +31,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('dev'));
 
+app.listen(PORT, () => console.log(`Example app is listening on port ${PORT}.`));
+
 
 app.post('/upload', (req, res) => {
   try {
       if(!req.files) {
-          console.log(req.files)
           res.send({
               status: false,
               message: 'No file uploaded'
@@ -66,4 +71,21 @@ app.post('/upload', (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Example app is listening on port ${PORT}.`));
+// Read the contents of a directory
+const dir = 'files';
+const files = fs.readdirSync(dir);
+
+// Iterate over the files in the directory and create an ODM instance for each file
+const dataFiles = files.map(file => new DataFile(path.join(dir, file)));
+
+// Import and parse the data for each ODM instance
+for (let i = 0; i < dataFiles.length; i++) {
+    dataFiles[i].import();
+}
+
+// Use the ODM instances to access and query the data
+//console.log(dataFiles[0].data);
+/*fs.writeFile("prova.json", JSON.stringify(dataFiles[0].data, null, 2),(err) => {
+    if (err) throw err;
+    console.log('Results written to file');
+  });*/
