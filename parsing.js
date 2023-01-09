@@ -45,8 +45,6 @@ const importXML = filePath => {
   }
 
   return data;
-
-  //return jsdom.parseFromString(xmlString, 'application/xml');
 };
 
 // Define a function to import RDF data

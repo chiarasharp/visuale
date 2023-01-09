@@ -14,7 +14,7 @@
       <div class="ui text container">
         <div class="header item">
           <!--<img class="logo" src="">-->
-          Dashboard
+          Dasharp
         </div>
       </div>
     </div>
@@ -26,34 +26,39 @@
           <div class="ten wide field">
             <input id="fileinput" type="file" name="files" multiple/>
           </div>
-          <button class="two wide field ui primary submit button"type="submit" id="submitButton" name="submitButton">Carica</button>
+          <button class="two wide field ui primary submit button"type="submit" id="submitButton" name="submitButton">Upload</button>
         </div>
       </form>
     </div>
 
     <!-- Panel opened after logging in the dataset -->
-    <div id="mainPanel" class="large-container">
-      <div class="ui vertically divided grid">
+    <div id="mainPanel" class="ui container">
+      <div class="ui centered grid">
         <div class="two column row">
 
           <div class="four wide column">
 
-            <div id="loadingitems">
-              <p>Loading...</p>
-            </div>
-            <div id="noitems" style="display: none;">
-              <p>No files to show.</p>
-            </div>
-
-            <!-- Document list -->
-            <div id="docList" class="ui large celled list overflow" style="display: none;">
             
-            </div>
+
+              <h3 class="header item">Uploaded files</h3>
+
+              <div id="loadingitems">
+                <p>Loading...</p>
+              </div>
+              <div id="noitems" style="display: none;">
+                <p>No files to show.</p>
+              </div>
+
+              <!-- Document list -->
+              <div id="docList" class="ui large celled list overflow" style="display: none;">
+              
+              </div>
+            
 
           </div>
 
           <div class="twelve wide column">
-            <h3>Hello</h3>
+            <h3>Dashboard</h3>
           </div>
         </div>
       </div>
