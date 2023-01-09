@@ -35,5 +35,6 @@
     "rdflib": "^2.2.21",
     "xml2js": "^0.4.23",
     "xmldom": "^0.6.0"
-  }
+  },
+  "devDependencies": {}
 }

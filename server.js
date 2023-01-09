@@ -71,6 +71,40 @@ app.post('/upload', (req, res) => {
   }
 });
 
+app.get('/pull', function(req, res) {
+	console.log(`Pull uploaded files`);
+	
+	try {
+		// Read the contents of the files' directory
+        const dir = 'files';
+        const files = fs.readdirSync(dir);
+
+        if(files.size==0) {
+            res.send({
+                status: false,
+                message: "No files to pull"
+            });
+        }
+
+        // Iterate over the files in the directory and create an ODM instance for each file
+        const dataFiles = files.map(file => new DataFile(path.join(dir, file)));
+
+        // Import and parse the data for each ODM instance
+        for (let i = 0; i < dataFiles.length; i++) {
+            dataFiles[i].import();
+        }
+
+        res.send({
+            status: true,
+            fileNames: files,
+            parsedData: dataFiles
+        })
+	}
+	catch(e) {
+		res.status(500).send(e.message);
+	}
+});
+
 // Read the contents of a directory
 const dir = 'files';
 const files = fs.readdirSync(dir);

@@ -6,6 +6,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <script src="semantic/dist/semantic.min.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="main.css">-->
+    
   </head>
   <body>
     <div class="ui borderless main menu">
@@ -17,13 +19,45 @@
       </div>
     </div>
 
-    <div class="ui main text container">
-      <h3 class="ui header">File Upload</h1>
-        <form id="formid" method="POST" action="/upload" enctype="multipart/form-data"></form>
+    <div class="ui form container">
+      <form class="ui form" id="formid" method="POST" action="/upload" enctype="multipart/form-data">
+        <div class="three fields">
+          <div class="two wide field"></div>
+          <div class="ten wide field">
             <input id="fileinput" type="file" name="files" multiple/>
-            <input type="submit" id="submitButton" name="submitButton" value="Submit">
-        </form>
+          </div>
+          <button class="two wide field ui primary submit button"type="submit" id="submitButton" name="submitButton">Carica</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Panel opened after logging in the dataset -->
+    <div id="mainPanel" class="large-container">
+      <div class="ui vertically divided grid">
+        <div class="two column row">
+
+          <div class="four wide column">
+
+            <div id="loadingitems">
+              <p>Loading...</p>
+            </div>
+            <div id="noitems" style="display: none;">
+              <p>No files to show.</p>
+            </div>
+
+            <!-- Document list -->
+            <div id="docList" class="ui large celled list overflow" style="display: none;">
+            
+            </div>
+
+          </div>
+
+          <div class="twelve wide column">
+            <h3>Hello</h3>
+          </div>
+        </div>
       </div>
+    </div>
   
     <script src="client.js"></script>
   </body>
