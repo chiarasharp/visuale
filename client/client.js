@@ -1,4 +1,3 @@
-// model contains all variable needed for the interface sofia
 model = {
 	parsedData : [],
 	fileNames : []
@@ -7,37 +6,49 @@ model = {
 $(document).ready(function(){
     
     loadData().then(function() {
-        loadDocList();
+        loadFileList();
     })
 
     $('form').submit(function(event) { // catch the form's submit event
 
         event.preventDefault();
-        $('#submitButton').addClass('loading');
-        document.getElementById("docList").style.display = "none";
-        document.getElementById("noitems").style.display = "none";
-        document.getElementById("loadingitems").style.display = "block";
 
-        $.ajax({ // create an AJAX call...
+        $('#submitButton').addClass('loading');
+        document.getElementById("fileList").style.display = "none";
+        document.getElementById("noItems").style.display = "none";
+        document.getElementById("loadingItems").style.display = "block";
+
+        $.ajax({ // AJAX call
             data: new FormData($('form')[0]), // get the form data
             type: $(this).attr('method'), // GET or POST
             url: $(this).attr('action'), // the file to call
             contentType: false,
             processData: false,
+
             success: function(response) {
 
                 loadData().then(function() {
-                    document.getElementById("fileinput").value = "";
+                    document.getElementById("fileInput").value = "";
                     $('#submitButton').removeClass('loading');
-                    loadDocList();
+                    loadFileList();
                     alert(response.message);
                 }
                 );
                 
+            },
+            error: function(error) {
+                document.getElementById("fileInput").value = "";
+                $('#submitButton').removeClass('loading');
+                loadFileList();
+                alert(error.message);
             }
         });
         
     });
+
+    $('#dwnParsed').click(function(event) {
+		downloadParsedData();
+	});
 
 })
 
@@ -57,26 +68,28 @@ function loadData() {
 	});
 }
 
-function loadDocList() {
-    var docList = $('#docList');
-	docList.html("");
-    tag = 0;
-    
+function loadFileList() {
+    var fileList = $('#fileList');
+	fileList.html("");
+
     if (model.fileNames.length == 0) {
-        document.getElementById("loadingitems").style.display = "none";
-        document.getElementById("noitems").style.display = "block";
+        document.getElementById("loadingItems").style.display = "none";
+        document.getElementById("noItems").style.display = "block";
     }
     else {
         model.fileNames.forEach((file) => {
-            docList.append(`
-                <div class="inline item" tag="${tag}" href="">
-                <p>${file}</p>
+            fileList.append(`
+                <div class="inline item" href="">
+                    <p>${file}</p>
                 </div>`);
-            tag++;
         });
 
-        document.getElementById("noitems").style.display = "none";
-        document.getElementById("loadingitems").style.display = "none";
-        document.getElementById("docList").style.display = "block";
+        document.getElementById("noItems").style.display = "none";
+        document.getElementById("loadingItems").style.display = "none";
+        document.getElementById("fileList").style.display = "block";
     }
+}
+
+function downloadParsedData() {
+    
 }

@@ -9,6 +9,7 @@ const _ = require('lodash');
 const fs = require('fs');
 
 const DataFile = require('./parsing.js');
+const supExt = ['.rdf', '.xml', '.csv']
 
 PORT = 3000;
 
@@ -47,6 +48,21 @@ app.post('/upload', (req, res) => {
           // loop all files
           _.forEach(_.keysIn(req.files.files), (key) => {
               let unfile = req.files.files[key];
+              let fileExt = path.extname(unfile.name);
+
+              isSupported = false;
+              // check that the file's format is supported by the program
+              supExt.forEach((ext) => {
+                if(fileExt == ext) {
+                    isSupported = true;
+                }
+              });
+              if (!isSupported) {
+                res.send({
+                    status: false,
+                    message: 'Extension ' + fileExt + ' not supported.'
+                });
+               }
               
               // move uploaded files to files directory
               unfile.mv('./files/' + unfile.name);
@@ -87,11 +103,16 @@ app.get('/pull', function(req, res) {
         }
 
         // Iterate over the files in the directory and create an ODM instance for each file
-        const dataFiles = files.map(file => new DataFile(path.join(dir, file)));
+        const dataFiles = files.map(file => {
+            filePath = path.join(dir, file);
+            fileContent = fs.readFileSync(filePath, 'utf-8');
+            fileFormat = path.extname(filePath);
+            new DataFile(filePath, fileContent, fileFormat);
+        });
 
         // Import and parse the data for each ODM instance
         for (let i = 0; i < dataFiles.length; i++) {
-            dataFiles[i].import();
+            dataFiles[i].parseFile();
         }
 
         res.send({
@@ -108,18 +129,25 @@ app.get('/pull', function(req, res) {
 // Read the contents of a directory
 const dir = 'files';
 const files = fs.readdirSync(dir);
+const dataFiles = [];
 
-// Iterate over the files in the directory and create an ODM instance for each file
-const dataFiles = files.map(file => new DataFile(path.join(dir, file)));
+files.forEach(function(file) {
+    filePath = path.join(dir, file);
+    fileContent = fs.readFileSync(filePath, 'utf-8');
+    fileFormat = path.extname(filePath);
+    dataFile = new DataFile(filePath, fileContent, fileFormat);
+    dataFiles.push(dataFile);
+});
 
 // Import and parse the data for each ODM instance
 for (let i = 0; i < dataFiles.length; i++) {
-    dataFiles[i].import();
+    dataFiles[i].parseFile();
 }
 
 // Use the ODM instances to access and query the data
 //console.log(dataFiles[0].data);
-/*fs.writeFile("prova.json", JSON.stringify(dataFiles[0].data, null, 2),(err) => {
+fs.writeFile("prova.json", JSON.stringify(dataFiles, null, 2),(err) => {
     if (err) throw err;
     console.log('Results written to file');
-  });*/
+});
+

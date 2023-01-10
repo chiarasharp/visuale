@@ -24,9 +24,9 @@
         <div class="three fields">
           <div class="two wide field"></div>
           <div class="ten wide field">
-            <input id="fileinput" type="file" name="files" multiple/>
+            <input id="fileInput" type="file" name="files" multiple/>
           </div>
-          <button class="two wide field ui primary submit button"type="submit" id="submitButton" name="submitButton">Upload</button>
+          <button class="two wide field ui primary submit button" type="submit" id="submitButton" name="submitButton">Upload</button>
         </div>
       </form>
     </div>
@@ -34,33 +34,31 @@
     <!-- Panel opened after logging in the dataset -->
     <div id="mainPanel" class="ui container">
       <div class="ui centered grid">
+
         <div class="two column row">
 
           <div class="four wide column">
 
-            
-
               <h3 class="header item">Uploaded files</h3>
 
-              <div id="loadingitems">
+              <div id="loadingItems">
                 <p>Loading...</p>
               </div>
-              <div id="noitems" style="display: none;">
+              <div id="noItems" style="display: none;">
                 <p>No files to show.</p>
               </div>
 
-              <!-- Document list -->
-              <div id="docList" class="ui large celled list overflow" style="display: none;">
-              
-              </div>
-            
+              <!-- list -->
+              <div id="fileList" class="ui large celled list overflow" style="display: none;"></div>
 
           </div>
 
           <div class="twelve wide column">
             <h3>Dashboard</h3>
+            <button class="ui primary button" id="dwnParsed">Download Parsed Data</button>
           </div>
         </div>
+
       </div>
     </div>
   

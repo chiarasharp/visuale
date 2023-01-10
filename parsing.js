@@ -4,90 +4,123 @@ const rdflib = require('rdflib');
 const csvparser = require('csv-parser');
 const { JSDOM } = require('jsdom');
 
-// Define a function to import XML data
-const importXML = filePath => {
-  const xmlString = fs.readFileSync(filePath, 'utf-8');
-  const dom = new JSDOM(xmlString);
-  const document = dom.window.document;
-  const data = {
-    namespaces: "",
-    namespacePrefixes: "",
-    elements: []
-  };
-
-  const elements = document.querySelectorAll('*');
-
-  if (elements[0].namespaceURI) {
-    data.namespaces = elements[0].namespaceURI;
-  }
-
-  if (elements[0].prefix) {
-    data.namespacePrefixes = elements[0].prefix;
-  }
-
-  for (const element of elements) {
-    
-    const elementData = {
-      tagName: element.tagName,
-      attributes: {},
-      textContent: ""
+  // Define a function to import XML data
+const importXML = fileContent => {
+    //const xmlString = fs.readFileSync(filePath, 'utf-8');
+    const dom = new JSDOM(fileContent);
+    const document = dom.window.document;
+    const data = {
+      namespaces: "",
+      namespacePrefixes: "",
+      elements: []
     };
 
-    for (const attribute of element.attributes) {
-      elementData.attributes[attribute.name] = attribute.value;
+    const elements = document.querySelectorAll('*');
+
+    if (elements[0].namespaceURI) {
+      data.namespaces = elements[0].namespaceURI;
     }
 
-    if (element.textContent) {
-      elementData.textContent = element.textContent.trim();
+    if (elements[0].prefix) {
+      data.namespacePrefixes = elements[0].prefix;
     }
 
-    data.elements.push(elementData);
-  }
+    for (const element of elements) {
+      
+      const elementData = {
+        tagName: element.tagName,
+        attributes: {},
+        textContent: ""
+      };
 
-  return data;
-};
+      for (const attribute of element.attributes) {
+        elementData.attributes[attribute.name] = attribute.value;
+      }
 
-// Define a function to import RDF data
-const importRDF = filePath => {
-  const rdfString = fs.readFileSync(filePath, 'utf-8');
-  const store = rdflib.graph();
-  rdflib.parse(rdfString, store, 'http://example.com/data.rdf', 'text/rdf+xml');
-  return store;
-};
+      if (element.textContent) {
+        elementData.textContent = element.textContent.trim();
+      }
 
-// Define a function to import CSV data
-const importCSV = filePath => {
-  const data = [];
-  fs.createReadStream(filePath)
-    .pipe(csv())
-    .on('data', row => data.push(row))
-    .on('end', () => {
-      return data;
+      data.elements.push(elementData);
+    }
+
+    return data;
+  };
+
+  // Define a function to import RDF data
+const importRDF = fileContent => {
+    //const rdfString = fs.readFileSync(filePath, 'utf-8');
+    const store = rdflib.graph();
+    const data = {
+      namespaces: "",
+      triples: []
+    };
+
+    //const filePath_ = path.resolve(__dirname, filePath)
+    const base_uri = `'http://example.com/${filePath}`
+
+    rdflib.parse(fileContent, store, base_uri, 'application/rdf+xml', (err, kb) => {
+      // Retrieve all the triples in the file
+      data.namespaces = kb.namespaces;
+      data.triples = kb.statements;
+      console.log(err);
     });
-};
 
-// Define an ODM class to represent a data file
+    return data;
+  };
+
+  // Define a function to import CSV data
+  /*const importCSV = fileContent => {
+    const data = [];
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', row => data.push(row))
+      .on('end', () => {
+        return data;
+      });
+  };*/
+
+// Define an ODM class to represent the file
 class DataFile {
-  constructor(filePath) {
+  constructor(filePath, fileContent, fileFormat) {
     this.filePath = filePath;
-    this.extension = path.extname(filePath);
+    this.fileContent = fileContent;
+    this.fileFormat = fileFormat;
   }
 
   // Define a method to import and parse the data
-  async import() {
-    switch (this.extension) {
+  async parseFile() {
+    switch (this.fileFormat) {
       case '.xml':
-        this.data = importXML(this.filePath);
+        this.parsedData = importXML(this.fileContent);
         break;
       case '.rdf':
-        this.data = importRDF(this.filePath);
+        this.parsedData = importXML(this.fileContent);
         break;
-      case '.csv':
-        this.data = importCSV(this.filePath);
-        break;
+      /*case '.csv':
+        this.parsedData = importCSV(this.fileContent);
+        break;*/
     }
   }
 }
 
+
+/*
+  function getXMLelementByTagName(tagName) {
+
+  }
+
+  function getXMLattributesByTagName(tagName) {
+
+  }
+
+  function getXMLtextContentByTagName(tagName) {
+
+  }
+
+  function countXMLelementsByTagName(tagName) {
+
+  }
+*/
 
 module.exports = DataFile
