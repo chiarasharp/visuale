@@ -4,9 +4,16 @@ const rdflib = require('rdflib');
 const csvparser = require('csv-parser');
 const { JSDOM } = require('jsdom');
 
+function findUriRDFXML(rdfText) {
+  const match = rdfText.match(/xmlns:(\w+)="(.*?)"/);
+  if(match) {
+      return match[2];
+  }
+  return null;
+}
+
   // Define a function to import XML data
 const importXML = fileContent => {
-    //const xmlString = fs.readFileSync(filePath, 'utf-8');
     const dom = new JSDOM(fileContent);
     const document = dom.window.document;
     const data = {
@@ -47,24 +54,26 @@ const importXML = fileContent => {
     return data;
   };
 
-  // Define a function to import RDF data
-const importRDF = fileContent => {
-    //const rdfString = fs.readFileSync(filePath, 'utf-8');
+// Define a function to import RDF data
+const importRDFXML = fileContent => {
     const store = rdflib.graph();
     const data = {
-      namespaces: "",
-      triples: []
+      namespaces: {},
+      statements: []
     };
 
-    //const filePath_ = path.resolve(__dirname, filePath)
-    const base_uri = `'http://example.com/${filePath}`
-
-    rdflib.parse(fileContent, store, base_uri, 'application/rdf+xml', (err, kb) => {
-      // Retrieve all the triples in the file
-      data.namespaces = kb.namespaces;
-      data.triples = kb.statements;
-      console.log(err);
-    });
+    try {
+      // Attempt to find the original namespace URI in the file
+      const uri = findUriRDFXML(fileContent);
+      
+      rdflib.parse(fileContent, store, uri, 'application/rdf+xml', (err, stat) => {
+        data.statements = stat.statements;
+        data.namespaces = stat.namespaces;
+      });
+  
+    } catch (e) {
+      console.error(`Error finding original namespace URI: ${e}`)
+    }
 
     return data;
   };
@@ -95,7 +104,7 @@ class DataFile {
         this.parsedData = importXML(this.fileContent);
         break;
       case '.rdf':
-        this.parsedData = importXML(this.fileContent);
+        this.parsedData = importRDFXML(this.fileContent);
         break;
       /*case '.csv':
         this.parsedData = importCSV(this.fileContent);

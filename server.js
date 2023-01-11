@@ -40,7 +40,7 @@ app.post('/upload', (req, res) => {
       if(!req.files) {
           res.send({
               status: false,
-              message: 'No file uploaded'
+              message: 'No file uploaded.'
           });
       } else {
           let data = []; 
@@ -78,7 +78,7 @@ app.post('/upload', (req, res) => {
           // return response
           res.send({
               status: true,
-              message: 'Files are uploaded',
+              message: 'Files are uploaded.',
               data: data
           });
       }
@@ -94,22 +94,23 @@ app.get('/pull', function(req, res) {
 		// Read the contents of the files' directory
         const dir = 'files';
         const files = fs.readdirSync(dir);
+        const dataFiles = [];
 
-        if(files.size==0) {
+        if(files.size == 0) {
             res.send({
                 status: false,
-                message: "No files to pull"
+                message: "No files to pull."
             });
         }
 
-        // Iterate over the files in the directory and create an ODM instance for each file
-        const dataFiles = files.map(file => {
+        files.forEach(function(file) {
             filePath = path.join(dir, file);
             fileContent = fs.readFileSync(filePath, 'utf-8');
             fileFormat = path.extname(filePath);
-            new DataFile(filePath, fileContent, fileFormat);
+            dataFile = new DataFile(filePath, fileContent, fileFormat);
+            dataFiles.push(dataFile);
         });
-
+        
         // Import and parse the data for each ODM instance
         for (let i = 0; i < dataFiles.length; i++) {
             dataFiles[i].parseFile();
@@ -122,7 +123,7 @@ app.get('/pull', function(req, res) {
         })
 	}
 	catch(e) {
-		res.status(500).send(e.message);
+		res.status(500).send(e);
 	}
 });
 
