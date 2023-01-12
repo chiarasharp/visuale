@@ -113,23 +113,4 @@ class DataFile {
   }
 }
 
-
-/*
-  function getXMLelementByTagName(tagName) {
-
-  }
-
-  function getXMLattributesByTagName(tagName) {
-
-  }
-
-  function getXMLtextContentByTagName(tagName) {
-
-  }
-
-  function countXMLelementsByTagName(tagName) {
-
-  }
-*/
-
 module.exports = DataFile

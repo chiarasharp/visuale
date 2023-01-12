@@ -4,9 +4,16 @@
     <title>Dashboard Project</title>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <script src="semantic/dist/semantic.min.js"></script>
-    <!--<link rel="stylesheet" type="text/css" href="main.css">-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.poly.js"></script>
+
+    <script src="client.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+
     
   </head>
   <body>
@@ -31,13 +38,12 @@
       </form>
     </div>
 
-    <!-- Panel opened after logging in the dataset -->
-    <div id="mainPanel" class="ui container">
+    <div class="ui container">
       <div class="ui centered grid">
 
         <div class="two column row">
 
-          <div class="four wide column">
+          <div class="three wide column">
 
               <h3 class="header item">Uploaded files</h3>
 
@@ -53,15 +59,36 @@
 
           </div>
 
-          <div class="twelve wide column">
-            <h3>Dashboard</h3>
+          <div class="thirteen wide column">
             
+            <div class="ui form row">
+              <h3 class="header item">Dashboard</h3>
+              <div class="fields">
+                <div class="ui compact">
+                  <div class="ui simple dropdown button item">
+                    <i class="chart bar icon"></i>
+                    Choose Chart
+                    <i class="dropdown icon"></i>
+                  
+                    <div class="menu">
+                      <div id="b1" class="ui item" tag="canvas1">Chart1</div>
+                      <div id="b2" class="ui item" tag="canvas2">Chart2</div>
+                    </div>
+                  </div>
+                </div>
+                <button id="addChart" class="ui primary button">Add Chart to Dashboard</button>
+              </div>
+
+            </div>
+
+            <div id="grid-container"class="grid-stack"></div>
           </div>
+
         </div>
 
       </div>
     </div>
   
-    <script src="client.js"></script>
+    
   </body>
 </html>

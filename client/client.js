@@ -1,13 +1,18 @@
 model = {
 	parsedData : [],
-	fileNames : []
+	fileNames : [],
+    grid : undefined,
+    gridItems : []
 }
+  
 
 $(document).ready(function(){
-    
+
     loadData().then(function() {
         loadFileList();
-    })
+    });
+
+    loadGridItems();
 
     $('form').submit(function(event) { // catch the form's submit event
 
@@ -46,8 +51,38 @@ $(document).ready(function(){
         
     });
 
-    $('#dwnParsed').click(function(event) {
-		downloadParsedData();
+    $('#addChart').click(function(event) {
+        var chartName = 'Canvas'+ model.gridItems.length;
+        addItem(chartName);
+        var context = document.getElementById(chartName).getContext('2d');
+		
+        var chart = new Chart(context, {
+            type: 'line',
+            data: {
+              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'My First dataset',
+                //backgroundColor: #084cdf,
+                //borderColor: window.chartColors.red,
+                data: [
+                  12,
+                  5.5,
+                ],
+                fill: false,
+              }, {
+                label: 'My Second dataset',
+                fill: false,
+                //backgroundColor: window.chartColors.blue,
+                //borderColor: window.chartColors.blue,
+                data: [
+                  12,
+                  5.5,
+                ],
+              }]
+            }
+        });
+        
+       
 	});
 
 })
@@ -90,6 +125,31 @@ function loadFileList() {
     }
 }
 
-function downloadParsedData() {
+function addItem(chartName) {
+    let item = {
+        x: 0, 
+        y: 0, 
+        width: 5, 
+        height: 5,
+        noResize: true, 
+        content: '<div style="padding-top:0px;padding-right:20px;padding-bottom:20px;padding-left:10px;"><canvas id="'+chartName+'"></canvas></div>'
+    }
     
+    //items.push(item);
+    model.grid.addWidget('<div><div class="grid-stack-item-content"><button class="ui button" id="dlt'+chartName+'"onClick="model.grid.removeWidget(this.parentNode.parentNode)">Delete Chart</button><br>' + (item.content ? item.content : ''), item);
+}
+
+function loadGridItems() {
+    model.grid = GridStack.init({
+        acceptWidgets: true,
+        float: true
+    });
+
+    model.grid.load(model.gridItems);
+  
+    model.grid.on('added removed change', function(e, items) {
+        let str = '';
+        items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+        console.log(e.type + ' ' + items.length + ' items:' + str );
+    });
 }
