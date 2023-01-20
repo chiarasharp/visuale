@@ -1,15 +1,16 @@
 // require includes the packages that were installed with npm
 var path = require('path');
+const fs = require('fs');
+
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
-const fs = require('fs');
 
 const DataFile = require('./parsing.js');
-const supExt = ['.rdf', '.xml', '.csv']
+const supExt = ['.rdf', '.xml']
 
 PORT = 3000;
 
@@ -34,7 +35,6 @@ app.use(morgan('dev'));
 
 app.listen(PORT, () => console.log(`Example app is listening on port ${PORT}.`));
 
-
 app.post('/upload', (req, res) => {
   try {
       if(!req.files) {
@@ -49,9 +49,9 @@ app.post('/upload', (req, res) => {
           _.forEach(_.keysIn(req.files.files), (key) => {
               let unfile = req.files.files[key];
               let fileExt = path.extname(unfile.name);
-
-              isSupported = false;
+              
               // check that the file's format is supported by the program
+              isSupported = false;
               supExt.forEach((ext) => {
                 if(fileExt == ext) {
                     isSupported = true;
@@ -107,7 +107,8 @@ app.get('/pull', function(req, res) {
             filePath = path.join(dir, file);
             fileContent = fs.readFileSync(filePath, 'utf-8');
             fileFormat = path.extname(filePath);
-            dataFile = new DataFile(filePath, fileContent, fileFormat);
+            
+            dataFile = new DataFile(file, fileContent, fileFormat);
             dataFiles.push(dataFile);
         });
         
@@ -127,7 +128,33 @@ app.get('/pull', function(req, res) {
 	}
 });
 
-// Read the contents of a directory
+app.get('/pullQuery', function(req, res) {
+	console.log(``);
+	
+	try {
+        const resQuery = "";
+        const parsedQuery = [];
+		
+        req.fileName;
+        req.query;
+
+        // perform query
+
+        // parse result of query
+
+        res.send({
+            status: true,
+            resQuery: resQuery,
+            parsedQuery: parsedQuery
+        })
+	}
+	catch(e) {
+		res.status(500).send(e);
+	}
+});
+
+// Read the contents of a directory 
+/* TODO delete later */
 const dir = 'files';
 const files = fs.readdirSync(dir);
 const dataFiles = [];
@@ -136,7 +163,8 @@ files.forEach(function(file) {
     filePath = path.join(dir, file);
     fileContent = fs.readFileSync(filePath, 'utf-8');
     fileFormat = path.extname(filePath);
-    dataFile = new DataFile(filePath, fileContent, fileFormat);
+
+    dataFile = new DataFile(file, fileContent, fileFormat);
     dataFiles.push(dataFile);
 });
 
@@ -146,7 +174,6 @@ for (let i = 0; i < dataFiles.length; i++) {
 }
 
 // Use the ODM instances to access and query the data
-//console.log(dataFiles[0].data);
 fs.writeFile("prova.json", JSON.stringify(dataFiles, null, 2),(err) => {
     if (err) throw err;
     console.log('Results written to file');

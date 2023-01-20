@@ -114,7 +114,7 @@ function loadFileList() {
     else {
         model.fileNames.forEach((file) => {
             fileList.append(`
-                <div class="inline item" href="">
+                <div class="inline item" tag="${file}">
                     <p>${file}</p>
                 </div>`);
         });
@@ -123,6 +123,28 @@ function loadFileList() {
         document.getElementById("loadingItems").style.display = "none";
         document.getElementById("fileList").style.display = "block";
     }
+}
+
+function queryFile(fileName, query) {
+    $.ajax({
+	    url: 'pullQuery',
+	    type: 'GET',
+	    contentType: "application/json",
+        data: {
+            fileName: fileName,
+            query: query
+        },
+
+	    success: function(data) {
+            // update file parsed Data info with queried parsed data
+            // query_x = {query, queryRes, parsedRes}
+            // model.parsedData.forEach...
+	    },
+        error: function(error) {
+            alert(error.message);
+        }
+	});
+
 }
 
 function addItem(chartName) {

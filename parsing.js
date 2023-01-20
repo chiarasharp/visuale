@@ -12,7 +12,7 @@ function findUriRDFXML(rdfText) {
   return null;
 }
 
-  // Define a function to import XML data
+// Define a function to import XML data
 const importXML = fileContent => {
     const dom = new JSDOM(fileContent);
     const document = dom.window.document;
@@ -78,27 +78,18 @@ const importRDFXML = fileContent => {
     return data;
   };
 
-  // Define a function to import CSV data
-  /*const importCSV = fileContent => {
-    const data = [];
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on('data', row => data.push(row))
-      .on('end', () => {
-        return data;
-      });
-  };*/
-
 // Define an ODM class to represent the file
 class DataFile {
-  constructor(filePath, fileContent, fileFormat) {
-    this.filePath = filePath;
+  
+  constructor(fileName, fileContent, fileFormat) {
+    this.fileName = fileName;
     this.fileContent = fileContent;
     this.fileFormat = fileFormat;
   }
 
   // Define a method to import and parse the data
   async parseFile() {
+
     switch (this.fileFormat) {
       case '.xml':
         this.parsedData = importXML(this.fileContent);
@@ -106,10 +97,8 @@ class DataFile {
       case '.rdf':
         this.parsedData = importRDFXML(this.fileContent);
         break;
-      /*case '.csv':
-        this.parsedData = importCSV(this.fileContent);
-        break;*/
     }
+    
   }
 }
 
