@@ -1,3 +1,5 @@
+
+
 model = {
 	parsedData : [],
 	fileNames : [],
@@ -36,6 +38,7 @@ $(document).ready(function(){
                     document.getElementById("fileInput").value = "";
                     $('#submitButton').removeClass('loading');
                     loadFileList();
+                    
                     alert(response.message);
                 }
                 );
@@ -48,7 +51,8 @@ $(document).ready(function(){
                 alert(error.message);
             }
         });
-        
+
+       
     });
 
     $('#addChart').click(function(event) {
@@ -84,6 +88,8 @@ $(document).ready(function(){
         
        
 	});
+
+    //queryFile("cia.xml", 'for $article in /akomantoso/act/body/article return $article');
 
 })
 
@@ -128,8 +134,8 @@ function loadFileList() {
 function queryFile(fileName, query) {
     $.ajax({
 	    url: 'pullQuery',
-	    type: 'GET',
-	    contentType: "application/json",
+	    type: 'POST',
+	    //contentType: "application/json",
         data: {
             fileName: fileName,
             query: query
@@ -139,9 +145,14 @@ function queryFile(fileName, query) {
             // update file parsed Data info with queried parsed data
             // query_x = {query, queryRes, parsedRes}
             // model.parsedData.forEach...
+            model.parsedData.forEach((item) => {
+                item.queryData = data;
+                console(item.queryData);
+            });
+            
 	    },
         error: function(error) {
-            alert(error.message);
+            alert(error);
         }
 	});
 

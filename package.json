@@ -21,7 +21,6 @@
   "dependencies": {
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
-    "csv-parser": "^3.0.0",
     "del": "6.1",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
@@ -33,8 +32,6 @@
     "node-fetch": "^3.3.0",
     "path": "^0.12.7",
     "rdflib": "^2.2.21",
-    "xml2js": "^0.4.23",
     "xmldom": "^0.6.0"
-  },
-  "devDependencies": {}
+  }
 }

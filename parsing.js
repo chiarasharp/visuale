@@ -1,8 +1,5 @@
-var path = require('path');
-const fs = require('fs');
 const rdflib = require('rdflib');
-const csvparser = require('csv-parser');
-const { JSDOM } = require('jsdom');
+const DOMParser = require('xmldom').DOMParser;
 
 function findUriRDFXML(rdfText) {
   const match = rdfText.match(/xmlns:(\w+)="(.*?)"/);
@@ -12,47 +9,82 @@ function findUriRDFXML(rdfText) {
   return null;
 }
 
+/*const queryXML = (query, fileContent) => {
+  const resQuery = "";
+  try {
+    const baseXSession = basex.Session();
+    const dom = new JSDOM(fileContent);
+    //const document = dom.window.document;
+    const docString = dom.serialize();
+    //const resQuery = xpath.select(query, document);
+  
+
+    baseXSession.execute("xquery", query, { input : docString }, (error, result) => {
+      if(error){
+        resQuery = null;
+        console.log("Invalid query or an error occurred during execution", error);
+      }
+      else{
+        resQuery = result.result;
+        console.log(result.result)
+      }
+      baseXSession.close();
+    });
+  } catch (e) {
+    console.log(e);
+  }
+
+  return resQuery;
+}*/
+
 // Define a function to import XML data
 const importXML = fileContent => {
-    const dom = new JSDOM(fileContent);
-    const document = dom.window.document;
-    const data = {
-      namespaces: "",
-      namespacePrefixes: "",
-      elements: []
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(fileContent, 'application/xml');
+  const root = doc.documentElement;
+
+  const data = {
+    namespaces: "",
+    namespacePrefixes: "",
+    elements: [],
+    queryData: [],
+  };
+
+  const elements = root.getElementsByTagName('*');
+  const elementsArray = Array.from(elements);
+
+  if (elements[0].namespaceURI) {
+    data.namespaces = elements[0].namespaceURI;
+  }
+
+  if (elements[0].prefix) {
+    data.namespacePrefixes = elements[0].prefix;
+  }
+
+  for (const element of elementsArray) {
+      
+    const elementData = {
+      tagName: element.tagName,
+      attributes: {},
+      textContent: ""
     };
 
-    const elements = document.querySelectorAll('*');
+    const attributes = element.attributes;
+    const attributesArray = Array.from(attributes);
 
-    if (elements[0].namespaceURI) {
-      data.namespaces = elements[0].namespaceURI;
+    for (const attribute of attributesArray) {
+      elementData.attributes[attribute.name] = attribute.value;
     }
 
-    if (elements[0].prefix) {
-      data.namespacePrefixes = elements[0].prefix;
+    if (element.textContent) {
+      elementData.textContent = element.textContent.trim();
     }
 
-    for (const element of elements) {
-      
-      const elementData = {
-        tagName: element.tagName,
-        attributes: {},
-        textContent: ""
-      };
+    data.elements.push(elementData);
+  }
 
-      for (const attribute of element.attributes) {
-        elementData.attributes[attribute.name] = attribute.value;
-      }
-
-      if (element.textContent) {
-        elementData.textContent = element.textContent.trim();
-      }
-
-      data.elements.push(elementData);
-    }
-
-    return data;
-  };
+  return data;
+};
 
 // Define a function to import RDF data
 const importRDFXML = fileContent => {
@@ -99,6 +131,13 @@ class DataFile {
         break;
     }
     
+  }
+
+  async queryFile(query) {
+    switch (this.fileFormat) {
+      case '.xml':
+        return queryXML(query, this.fileContent);
+    }
   }
 }
 

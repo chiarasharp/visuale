@@ -128,20 +128,41 @@ app.get('/pull', function(req, res) {
 	}
 });
 
-app.get('/pullQuery', function(req, res) {
-	console.log(``);
+app.post('/pullQuery', function(req, res) {
+	console.log(`Pullin query.`);
 	
 	try {
+        const dir = 'files';
         const resQuery = "";
         const parsedQuery = [];
-		
-        req.fileName;
-        req.query;
+        //const dataFile = {};
 
         // perform query
+        filePath = path.join(dir, req.body.fileName);
+        fileContent = fs.readFileSync(filePath, 'utf-8');
+        fileFormat = path.extname(filePath);
+        
+        dataFile = new DataFile(req.body.fileName, fileContent, fileFormat);
+
+        console.log(req.body.fileName + filePath + fileContent + fileFormat);
+        resQuery = dataFile.queryFile(req.body.query);
+
+    
+        if (resQuery == null) {
+            res.send({
+                status: false,
+                message: "Invalid query or an error occurred during execution of it."
+            })
+        }
 
         // parse result of query
+        parsedQuery = new DataFile("query1", resQuery, '.xml');
 
+        
+    fs.writeFile("query.json", JSON.stringify(parsedQuery, null, 2),(err) => {
+        if (err) throw err;
+        console.log('Results of query written to file');
+    });
         res.send({
             status: true,
             resQuery: resQuery,
