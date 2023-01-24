@@ -89,7 +89,7 @@ $(document).ready(function(){
        
 	});
 
-    //queryFile("cia.xml", 'for $article in /akomantoso/act/body/article return $article');
+    queryFile("cia.xml", '//*[local-name()="article"]', 'xpath', getQueriesDataLength('cia.xml'));
 
 })
 
@@ -131,25 +131,36 @@ function loadFileList() {
     }
 }
 
-function queryFile(fileName, query) {
+function getQueriesDataLength(fileName) {
+    model.parsedData.forEach((item) => {
+        if (item.fileName == fileName) {
+            return item.queriesData.length;
+        }
+    });
+    return null;
+}
+
+function queryFile(fileName, query, queryLang, numQuery) {
     $.ajax({
-	    url: 'pullQuery',
+	    url: 'query',
 	    type: 'POST',
-	    //contentType: "application/json",
         data: {
             fileName: fileName,
-            query: query
+            query: query,
+            queryLang: queryLang,
+            numQuery: numQuery
         },
 
 	    success: function(data) {
+
             // update file parsed Data info with queried parsed data
-            // query_x = {query, queryRes, parsedRes}
-            // model.parsedData.forEach...
             model.parsedData.forEach((item) => {
-                item.queryData = data;
-                console(item.queryData);
+                if (item.fileName == fileName) {
+                    //item.queriesData.push(data.parsedData);
+                }
             });
-            
+
+            alert('Query success.');
 	    },
         error: function(error) {
             alert(error);

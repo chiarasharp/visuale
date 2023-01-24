@@ -3,3 +3,5 @@ client/semantic
 data
 .DS_Store
 prova.json
+query.json
+*.xml

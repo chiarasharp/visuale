@@ -104,7 +104,7 @@ app.get('/pull', function(req, res) {
         }
 
         files.forEach(function(file) {
-            filePath = path.join(dir, file);
+            filePath = path.join(FILES_DIR, file);
             fileContent = fs.readFileSync(filePath, 'utf-8');
             fileFormat = path.extname(filePath);
             
@@ -128,41 +128,36 @@ app.get('/pull', function(req, res) {
 	}
 });
 
-app.post('/pullQuery', function(req, res) {
-	console.log(`Pullin query.`);
+app.post('/query', function(req, res) {
+	console.log(`Making query...`);
 	
 	try {
-        const dir = 'files';
-        const resQuery = "";
-        const parsedQuery = [];
-        //const dataFile = {};
-
-        // perform query
-        filePath = path.join(dir, req.body.fileName);
-        fileContent = fs.readFileSync(filePath, 'utf-8');
-        fileFormat = path.extname(filePath);
+        const filePath = path.join(FILES_DIR, req.body.fileName);
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const fileFormat = path.extname(filePath);
         
-        dataFile = new DataFile(req.body.fileName, fileContent, fileFormat);
+        const dataFile = new DataFile(req.body.fileName, fileContent, fileFormat);
+        
+        // perform query on file
+        dataFile.queryFile(req.body.query, req.body.queryLang);
+        const resQuery = dataFile.queryResult;
 
-        console.log(req.body.fileName + filePath + fileContent + fileFormat);
-        resQuery = dataFile.queryFile(req.body.query);
-
-    
         if (resQuery == null) {
             res.send({
                 status: false,
-                message: "Invalid query or an error occurred during execution of it."
+                error: "Invalid query or an error occurred during execution of it."
             })
         }
 
         // parse result of query
-        parsedQuery = new DataFile("query1", resQuery, '.xml');
+        const parsedQuery = new DataFile(req.body.queryLang+"query"+req.body.numQuery, resQuery, fileFormat);
+        parsedQuery.parseFile();
 
+        fs.writeFile("query.json", JSON.stringify(parsedQuery, null, 2),(err) => {
+            if (err) throw err;
+            console.log('Results of the query written to file.');
+        });
         
-    fs.writeFile("query.json", JSON.stringify(parsedQuery, null, 2),(err) => {
-        if (err) throw err;
-        console.log('Results of query written to file');
-    });
         res.send({
             status: true,
             resQuery: resQuery,
@@ -170,7 +165,10 @@ app.post('/pullQuery', function(req, res) {
         })
 	}
 	catch(e) {
-		res.status(500).send(e);
+		res.send({
+            status: false,
+            error: e.message
+        });
 	}
 });
 
@@ -199,4 +197,3 @@ fs.writeFile("prova.json", JSON.stringify(dataFiles, null, 2),(err) => {
     if (err) throw err;
     console.log('Results written to file');
 });
-

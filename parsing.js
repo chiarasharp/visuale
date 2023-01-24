@@ -1,6 +1,10 @@
 const rdflib = require('rdflib');
 const DOMParser = require('xmldom').DOMParser;
+const xpath = require('xpath');
 
+/*
+* Auxiliar function that finds the URI inside an RDF/XML file.
+*/
 function findUriRDFXML(rdfText) {
   const match = rdfText.match(/xmlns:(\w+)="(.*?)"/);
   if(match) {
@@ -9,7 +13,23 @@ function findUriRDFXML(rdfText) {
   return null;
 }
 
-/*const queryXML = (query, fileContent) => {
+/*
+* Querys an XML file with an XPath query.
+*/
+const queryXMLXPath = (query, fileContent) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(fileContent, 'application/xml');
+  const root = doc.documentElement; // avoiding xmldom security problem
+  
+  const res = xpath.select(query, root).toString();
+
+  return res;
+}
+
+/*
+* Querys an XML file with an XQuery query.
+*/
+/*const queryXMLXQuery = (query, fileContent) => {
   const resQuery = "";
   try {
     const baseXSession = basex.Session();
@@ -37,8 +57,10 @@ function findUriRDFXML(rdfText) {
   return resQuery;
 }*/
 
-// Define a function to import XML data
-const importXML = fileContent => {
+/* 
+* Parses an XML file.
+*/
+const parseXML = fileContent => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(fileContent, 'application/xml');
   const root = doc.documentElement;
@@ -47,7 +69,7 @@ const importXML = fileContent => {
     namespaces: "",
     namespacePrefixes: "",
     elements: [],
-    queryData: [],
+    queriesData: {},
   };
 
   const elements = root.getElementsByTagName('*');
@@ -86,8 +108,10 @@ const importXML = fileContent => {
   return data;
 };
 
-// Define a function to import RDF data
-const importRDFXML = fileContent => {
+/* 
+* Parses an RDF/XML file.
+*/
+const parseRDFXML = fileContent => {
     const store = rdflib.graph();
     const data = {
       namespaces: {},
@@ -110,7 +134,9 @@ const importRDFXML = fileContent => {
     return data;
   };
 
-// Define an ODM class to represent the file
+/* 
+* ODM class to represent a generic file. 
+*/
 class DataFile {
   
   constructor(fileName, fileContent, fileFormat) {
@@ -119,24 +145,39 @@ class DataFile {
     this.fileFormat = fileFormat;
   }
 
-  // Define a method to import and parse the data
+  /*
+  * Parsing of the file based on the format.
+  */
   async parseFile() {
 
     switch (this.fileFormat) {
       case '.xml':
-        this.parsedData = importXML(this.fileContent);
+        this.parsedData = parseXML(this.fileContent);
         break;
       case '.rdf':
-        this.parsedData = importRDFXML(this.fileContent);
+        this.parsedData = parseRDFXML(this.fileContent);
         break;
     }
     
   }
 
-  async queryFile(query) {
+  /*
+  * Querying of the file based on the format and the query language.
+  */
+  async queryFile(query, queryLang) {
     switch (this.fileFormat) {
       case '.xml':
-        return queryXML(query, this.fileContent);
+        switch (queryLang) {
+          case 'xpath':
+            this.queryResult = queryXMLXPath(query, this.fileContent);
+            break;
+          case 'xquery':
+            //return queryXML(query, this.fileContent);
+            break;
+          default:
+            console.error(`Can't perform a ${queryLang} query on XML file.`);
+            break;
+        }
     }
   }
 }
