@@ -1,7 +1,6 @@
 // require includes the packages that were installed with npm
 var path = require('path');
 const fs = require('fs');
-
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
@@ -9,18 +8,20 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
 
-const DataFile = require('./parsing.js');
-const supExt = ['.rdf', '.xml']
+global.rootDir = __dirname;
+global.filesDir = global.rootDir + '/files'; // path to where the files are stored on disk
+global.supExt = ['.rdf', '.xml'];
+global.startDate = null;
 
-PORT = 3000;
+const DataFile = require(global.rootDir + '/scripts/parsing.js');
 
-// path to where the files are stored on disk
-var FILES_DIR = path.join(__dirname, 'files')
+PORT = 8000;
 
-// create an express server
+/* ============== */
+/* EXPRESS CONFIG */
+/* ============== */
 var app = express();
-
-app.use('/', express.static(path.join(__dirname, '/client')));
+app.use('/', express.static(global.rootDir + '/client'));
 
 // enable files upload
 app.use(fileUpload({
@@ -32,68 +33,99 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('dev'));
+app.enable('trust proxy');
 
-app.listen(PORT, () => console.log(`Example app is listening on port ${PORT}.`));
 
 app.post('/upload', (req, res) => {
-  try {
-      if(!req.files) {
-          res.send({
-              status: false,
-              message: 'No file uploaded.'
-          });
-      } else {
-          let data = []; 
-  
-          // loop all files
-          _.forEach(_.keysIn(req.files.files), (key) => {
-              let unfile = req.files.files[key];
-              let fileExt = path.extname(unfile.name);
+    console.log(`Uploading files...`);
+    let data = []; 
+
+    try {
+        
+        if(!req.files) {
+            res.send({
+                status: false,
+                message: 'No file uploaded.'
+            });
+        } else if (Object.keys(req.files).length < 2) {
+            let unfile = req.files.files;
+            let fileExt = path.extname(unfile.name);
               
-              // check that the file's format is supported by the program
-              isSupported = false;
-              supExt.forEach((ext) => {
+            // check that the file's format is supported by the program
+            isSupported = false;
+            global.supExt.forEach((ext) => {
                 if(fileExt == ext) {
                     isSupported = true;
                 }
-              });
-              if (!isSupported) {
+            });
+            if (!isSupported) {
                 res.send({
                     status: false,
                     message: 'Extension ' + fileExt + ' not supported.'
                 });
-               }
+            }
               
-              // move uploaded files to files directory
-              unfile.mv('./files/' + unfile.name);
+            // move uploaded files to files directory
+            unfile.mv('./files/' + unfile.name);
 
-              // push file details
-              data.push({
-                  name: unfile.name,
-                  mimetype: unfile.mimetype,
-                  size: unfile.size
-              });
-          });
+            data.push({
+                name: unfile.name,
+                mimetype: unfile.mimetype,
+                size: unfile.size
+            });
+            res.send({
+                status: true,
+                message: 'File is uploaded.',
+                data: data
+            });
+
+        }
+        else {   
+            // loop all files
+            _.forEach(_.keysIn(req.files.files), (key) => {
+                let unfile = req.files.files[key];
+                let fileExt = path.extname(unfile.name);
+              
+                // check that the file's format is supported by the program
+                isSupported = false;
+                global.supExt.forEach((ext) => {
+                    if(fileExt == ext) {
+                        isSupported = true;
+                    }
+                });
+                if (!isSupported) {
+                    res.send({
+                        status: false,
+                        message: 'Extension ' + fileExt + ' not supported.'
+                    });
+                }
+              
+                // move uploaded files to files directory
+                unfile.mv('./files/' + unfile.name);
+                
+                data.push({
+                    name: unfile.name,
+                    mimetype: unfile.mimetype,
+                    size: unfile.size
+                });
+            });
   
-          // return response
-          res.send({
-              status: true,
-              message: 'Files are uploaded.',
-              data: data
-          });
-      }
-  } catch (err) {
-      res.status(500).send(err);
-  }
+            res.send({
+                status: true,
+                message: 'Files are uploaded.',
+                data: data
+            });
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 app.get('/pull', function(req, res) {
-	console.log(`Pull uploaded files`);
+	console.log(`Pulling uploaded files...`);
 	
 	try {
-		// Read the contents of the files' directory
-        const dir = 'files';
-        const files = fs.readdirSync(dir);
+        const files = fs.readdirSync(global.filesDir);
         const dataFiles = [];
 
         if(files.size == 0) {
@@ -104,7 +136,7 @@ app.get('/pull', function(req, res) {
         }
 
         files.forEach(function(file) {
-            filePath = path.join(FILES_DIR, file);
+            filePath = path.join(global.filesDir, file);
             fileContent = fs.readFileSync(filePath, 'utf-8');
             fileFormat = path.extname(filePath);
             
@@ -132,7 +164,7 @@ app.post('/query', function(req, res) {
 	console.log(`Making query...`);
 	
 	try {
-        const filePath = path.join(FILES_DIR, req.body.fileName);
+        const filePath = path.join(global.filesDir, req.body.fileName);
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         const fileFormat = path.extname(filePath);
         
@@ -150,13 +182,14 @@ app.post('/query', function(req, res) {
         }
 
         // parse result of query
-        const parsedQuery = new DataFile(req.body.queryLang+"query"+req.body.numQuery, resQuery, fileFormat);
+        const parsedQuery = new DataFile(req.body.queryLang + "query" + req.body.numQuery, resQuery, fileFormat);
         parsedQuery.parseFile();
 
+        /* TODO delete later
         fs.writeFile("query.json", JSON.stringify(parsedQuery, null, 2),(err) => {
             if (err) throw err;
             console.log('Results of the query written to file.');
-        });
+        });*/
         
         res.send({
             status: true,
@@ -172,9 +205,8 @@ app.post('/query', function(req, res) {
 	}
 });
 
-// Read the contents of a directory 
-/* TODO delete later */
-const dir = 'files';
+/* TODO delete later 
+const dir = global.rootDir + '/files';
 const files = fs.readdirSync(dir);
 const dataFiles = [];
 
@@ -196,4 +228,13 @@ for (let i = 0; i < dataFiles.length; i++) {
 fs.writeFile("prova.json", JSON.stringify(dataFiles, null, 2),(err) => {
     if (err) throw err;
     console.log('Results written to file');
+});*/
+
+
+/* ==================== */
+/* ACTIVATE NODE SERVER */
+/* ==================== */
+app.listen(PORT, function() {
+    global.startDate = new Date(); 
+    console.log(`App is listening on port ${PORT} started ${global.startDate.toLocaleString()}.`);
 });
