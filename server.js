@@ -102,7 +102,7 @@ app.post('/upload', (req, res) => {
               
                 // move uploaded files to files directory
                 unfile.mv('./files/' + unfile.name);
-                
+
                 data.push({
                     name: unfile.name,
                     mimetype: unfile.mimetype,
@@ -193,7 +193,6 @@ app.post('/query', function(req, res) {
         
         res.send({
             status: true,
-            resQuery: resQuery,
             parsedQuery: parsedQuery
         })
 	}

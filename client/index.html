@@ -3,20 +3,23 @@
   <head>
     <title>Dashboard Project</title>
 
+    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
     <script src="semantic/dist/semantic.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.all.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.poly.js"></script>
-
     <script src="client.js"></script>
 
+    <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="main.css">
 
-    
   </head>
+
   <body>
+
+    <!-- HEADER -->
     <div class="ui borderless main menu">
       <div class="ui text container">
         <div class="header item">
@@ -26,6 +29,7 @@
       </div>
     </div>
 
+    <!-- UPLOAD FILE FORM -->
     <div class="ui form container">
       <form class="ui form" id="formid" method="POST" action="/upload" enctype="multipart/form-data">
         <div class="three fields">
@@ -37,12 +41,13 @@
         </div>
       </form>
     </div>
-
+    
+    <!-- MAIN CONTENT -->
     <div class="ui container">
       <div class="ui centered grid">
-
         <div class="two column row">
 
+          <!-- LIST OF UPLOADED FILES -->
           <div class="three wide column">
 
               <h3 class="header item">Uploaded files</h3>
@@ -54,11 +59,11 @@
                 <p>No files to show.</p>
               </div>
 
-              <!-- list -->
               <div id="fileList" class="ui large celled list overflow" style="display: none;"></div>
 
           </div>
-
+          
+          <!-- PERSONALIZED DASHBOARD -->
           <div class="thirteen wide column">
             
             <div class="ui form row">
@@ -85,10 +90,9 @@
           </div>
 
         </div>
-
       </div>
     </div>
-  
     
   </body>
+
 </html>

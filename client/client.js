@@ -12,6 +12,8 @@ $(document).ready(function(){
 
     loadData().then(function() {
         loadFileList();
+        const numQuery = getQueriesDataLength('cia.xml');
+        queryFile("cia.xml", '//*[local-name()="article"]', 'xpath', numQuery);
     });
 
     loadGridItems();
@@ -89,8 +91,6 @@ $(document).ready(function(){
        
 	});
 
-    queryFile("cia.xml", '//*[local-name()="article"]', 'xpath', getQueriesDataLength('cia.xml'));
-
 })
 
 function loadData() {
@@ -132,12 +132,16 @@ function loadFileList() {
 }
 
 function getQueriesDataLength(fileName) {
+    var res = null;
     model.parsedData.forEach((item) => {
         if (item.fileName == fileName) {
-            return item.queriesData.length;
+            res = item.parsedData.queriesData.length
+            return res;
         }
     });
-    return null;
+
+    return res;
+
 }
 
 function queryFile(fileName, query, queryLang, numQuery) {
@@ -156,7 +160,13 @@ function queryFile(fileName, query, queryLang, numQuery) {
             // update file parsed Data info with queried parsed data
             model.parsedData.forEach((item) => {
                 if (item.fileName == fileName) {
-                    //item.queriesData.push(data.parsedData);
+                    queryData = {
+                        queryName : data.parsedQuery.fileName,
+                        queryFormat : data.parsedQuery.fileFormat,
+                        queryRes : data.parsedQuery.fileContent,
+                        parsedQuery : data.parsedQuery.parsedData
+                    }
+                    item.parsedData.queriesData.push(queryData);
                 }
             });
 

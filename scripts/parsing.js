@@ -69,7 +69,7 @@ const parseXML = fileContent => {
     namespaces: "",
     namespacePrefixes: "",
     elements: [],
-    queriesData: {},
+    queriesData: [],
   };
 
   const elements = root.getElementsByTagName('*');
