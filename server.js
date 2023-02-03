@@ -8,14 +8,16 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
 
+/* =========== */
+/* GLOBAL VARS */
+/* =========== */
 global.rootDir = __dirname;
 global.filesDir = global.rootDir + '/files'; // path to where the files are stored on disk
 global.supExt = ['.rdf', '.xml'];
 global.startDate = null;
+global.port = 8000;
 
 const DataFile = require(global.rootDir + '/scripts/parsing.js');
-
-PORT = 8000;
 
 /* ============== */
 /* EXPRESS CONFIG */
@@ -235,5 +237,5 @@ fs.writeFile("prova.json", JSON.stringify(dataFiles, null, 2),(err) => {
 /* ==================== */
 app.listen(PORT, function() {
     global.startDate = new Date(); 
-    console.log(`App is listening on port ${PORT} started ${global.startDate.toLocaleString()}.`);
+    console.log(`App is listening on port ${global.port} started ${global.startDate.toLocaleString()}.`);
 });

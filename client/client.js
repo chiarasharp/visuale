@@ -1,5 +1,3 @@
-
-
 model = {
 	parsedData : [],
 	fileNames : [],
