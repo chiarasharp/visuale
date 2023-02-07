@@ -1,6 +1,7 @@
 const rdflib = require('rdflib');
 const DOMParser = require('xmldom').DOMParser;
 const xpath = require('xpath');
+const fs = require('fs');
 
 /*
 * Auxiliar function that finds the URI inside an RDF/XML file.
@@ -20,8 +21,21 @@ const queryXMLXPath = (query, fileContent) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(fileContent, 'application/xml');
   const root = doc.documentElement; // avoiding xmldom security problem
+  var res = "";
   
-  const res = xpath.select(query, root).toString();
+  var resultEvaluate = xpath.evaluate(
+    query,            // xpathExpression
+    root,                        // contextNode
+    null,                       // namespaceResolver
+    xpath.XPathResult.ANY_TYPE, // resultType
+    null                        // result
+  )
+  
+  node = resultEvaluate.iterateNext();
+  while (node) {
+    res = res + "\n" + node.toString();
+    node = resultEvaluate.iterateNext();
+  }
 
   return res;
 }
@@ -63,7 +77,7 @@ const queryXMLXPath = (query, fileContent) => {
 const parseXML = fileContent => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(fileContent, 'application/xml');
-  const root = doc.documentElement;
+  //const root = doc.documentElement;
 
   const data = {
     namespaces: "",
@@ -72,15 +86,15 @@ const parseXML = fileContent => {
     queriesData: [],
   };
 
-  const elements = root.getElementsByTagName('*');
+  const elements = doc.getElementsByTagName('*');
   const elementsArray = Array.from(elements);
 
-  if (elements[0].namespaceURI) {
-    data.namespaces = elements[0].namespaceURI;
+  if (elementsArray[0].namespaceURI) {
+    data.namespaces = elementsArray[0].namespaceURI;
   }
 
-  if (elements[0].prefix) {
-    data.namespacePrefixes = elements[0].prefix;
+  if (elementsArray[0].prefix) {
+    data.namespacePrefixes = elementsArray[0].prefix;
   }
 
   for (const element of elementsArray) {
@@ -170,6 +184,7 @@ class DataFile {
         switch (queryLang) {
           case 'xpath':
             this.queryResult = queryXMLXPath(query, this.fileContent);
+            this.strQueryRes = queryXMLXPathString(query, this.fileContent);
             break;
           case 'xquery':
             //return queryXML(query, this.fileContent);

@@ -12,7 +12,7 @@ const _ = require('lodash');
 /* GLOBAL VARS */
 /* =========== */
 global.rootDir = __dirname;
-global.filesDir = global.rootDir + '/files'; // path to where the files are stored on disk
+global.filesDir = global.rootDir + '/client/data'; // path to where the files are stored on disk
 global.supExt = ['.rdf', '.xml'];
 global.startDate = null;
 global.port = 8000;
@@ -68,7 +68,7 @@ app.post('/upload', (req, res) => {
             }
               
             // move uploaded files to files directory
-            unfile.mv('./files/' + unfile.name);
+            unfile.mv('./client/data/' + unfile.name);
 
             data.push({
                 name: unfile.name,
@@ -103,7 +103,7 @@ app.post('/upload', (req, res) => {
                 }
               
                 // move uploaded files to files directory
-                unfile.mv('./files/' + unfile.name);
+                unfile.mv('./client/data/' + unfile.name);
 
                 data.push({
                     name: unfile.name,
@@ -187,7 +187,7 @@ app.post('/query', function(req, res) {
         const parsedQuery = new DataFile(req.body.queryLang + "query" + req.body.numQuery, resQuery, fileFormat);
         parsedQuery.parseFile();
 
-        /* TODO delete later
+       /*// TODO delete later
         fs.writeFile("query.json", JSON.stringify(parsedQuery, null, 2),(err) => {
             if (err) throw err;
             console.log('Results of the query written to file.');
@@ -207,7 +207,7 @@ app.post('/query', function(req, res) {
 });
 
 /* TODO delete later 
-const dir = global.rootDir + '/files';
+const dir = global.rootDir + '/client/data';
 const files = fs.readdirSync(dir);
 const dataFiles = [];
 
@@ -235,7 +235,7 @@ fs.writeFile("prova.json", JSON.stringify(dataFiles, null, 2),(err) => {
 /* ==================== */
 /* ACTIVATE NODE SERVER */
 /* ==================== */
-app.listen(PORT, function() {
+app.listen(global.port, function() {
     global.startDate = new Date(); 
     console.log(`App is listening on port ${global.port} started ${global.startDate.toLocaleString()}.`);
 });

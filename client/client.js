@@ -10,8 +10,8 @@ $(document).ready(function(){
 
     loadData().then(function() {
         loadFileList();
-        const numQuery = getQueriesDataLength('cia.xml');
-        queryFile("cia.xml", '//*[local-name()="article"]', 'xpath', numQuery);
+        const numQuery = getQueriesDataLength('akn-download-0-2.xml');
+        queryFile("akn-download-0-2.xml", '//*[local-name()="article"]', 'xpath', numQuery);
     });
 
     loadGridItems();
@@ -118,8 +118,10 @@ function loadFileList() {
     else {
         model.fileNames.forEach((file) => {
             fileList.append(`
-                <div class="inline item" tag="${file}">
-                    <p>${file}</p>
+                <div class="item" tag="${file}">
+                    <div class="content">
+                        <div class="description">${file}</div>
+                    </div>
                 </div>`);
         });
 
@@ -161,14 +163,14 @@ function queryFile(fileName, query, queryLang, numQuery) {
                     queryData = {
                         queryName : data.parsedQuery.fileName,
                         queryFormat : data.parsedQuery.fileFormat,
+                        query: query,
                         queryRes : data.parsedQuery.fileContent,
                         parsedQuery : data.parsedQuery.parsedData
                     }
-                    item.parsedData.queriesData.push(queryData);
+                    item.parsedData.queriesData.push(queryData);  
                 }
-            });
-
-            alert('Query success.');
+            })
+            //alert('Query success.');
 	    },
         error: function(error) {
             alert(error);
