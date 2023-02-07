@@ -30,12 +30,31 @@ const queryXMLXPath = (query, fileContent) => {
     xpath.XPathResult.ANY_TYPE, // resultType
     null                        // result
   )
-  
-  node = resultEvaluate.iterateNext();
-  while (node) {
-    res = res + "\n" + node.toString();
-    node = resultEvaluate.iterateNext();
+
+  switch (resultEvaluate.resultType) {
+    case 1:
+      res = resultEvaluate.numberValue;
+      break;
+    case 2:
+      res = resultEvaluate.stringValue;
+      break;
+    case 3:
+      res = resultEvaluate.booleanValue;
+      break;
+    case 4:
+    case 5:
+      node = resultEvaluate.iterateNext();
+      while (node) {
+        res = res + "\n" + node.toString();
+        node = resultEvaluate.iterateNext();
+      }
+      break;
+    default:
+      res = null;
+      break;
   }
+  
+  /**/
 
   return res;
 }
@@ -184,7 +203,6 @@ class DataFile {
         switch (queryLang) {
           case 'xpath':
             this.queryResult = queryXMLXPath(query, this.fileContent);
-            this.strQueryRes = queryXMLXPathString(query, this.fileContent);
             break;
           case 'xquery':
             //return queryXML(query, this.fileContent);

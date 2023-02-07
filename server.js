@@ -162,8 +162,8 @@ app.get('/pull', function(req, res) {
 	}
 });
 
-app.post('/query', function(req, res) {
-	console.log(`Making query...`);
+app.post('/query-and-parse', function(req, res) {
+	console.log(`Making query and parsing the result...`);
 	
 	try {
         const filePath = path.join(global.filesDir, req.body.fileName);
@@ -196,6 +196,46 @@ app.post('/query', function(req, res) {
         res.send({
             status: true,
             parsedQuery: parsedQuery
+        })
+	}
+	catch(e) {
+		res.send({
+            status: false,
+            error: e.message
+        });
+	}
+});
+
+app.post('/query', function(req, res) {
+	console.log(`Making query...`);
+	
+	try {
+        const filePath = path.join(global.filesDir, req.body.fileName);
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const fileFormat = path.extname(filePath);
+        
+        const dataFile = new DataFile(req.body.fileName, fileContent, fileFormat);
+        
+        // perform query on file
+        dataFile.queryFile(req.body.query, req.body.queryLang);
+        const resQuery = dataFile.queryResult;
+
+        if (resQuery == null) {
+            res.send({
+                status: false,
+                error: "Invalid query or an error occurred during execution of it."
+            })
+        }
+
+        const result = {
+            queryName: req.body.queryLang + "query" + req.body.numQuery,
+            queryFormat: fileFormat,
+            queryResult: resQuery
+        }
+        
+        res.send({
+            status: true,
+            queryResult: result
         })
 	}
 	catch(e) {

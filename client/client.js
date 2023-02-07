@@ -1,4 +1,4 @@
-model = {
+global = {
 	parsedData : [],
 	fileNames : [],
     grid : undefined,
@@ -10,8 +10,12 @@ $(document).ready(function(){
 
     loadData().then(function() {
         loadFileList();
+
+        /*
         const numQuery = getQueriesDataLength('akn-download-0-2.xml');
+        queryFile("akn-download-0-2.xml", 'count(//*[local-name()="article"])', 'xpath', numQuery);
         queryFile("akn-download-0-2.xml", '//*[local-name()="article"]', 'xpath', numQuery);
+        */
     });
 
     loadGridItems();
@@ -56,7 +60,7 @@ $(document).ready(function(){
     });
 
     $('#addChart').click(function(event) {
-        var chartName = 'Canvas'+ model.gridItems.length;
+        var chartName = 'Canvas'+ global.gridItems.length;
         addItem(chartName);
         var context = document.getElementById(chartName).getContext('2d');
 		
@@ -98,8 +102,8 @@ function loadData() {
 	    contentType: "application/json",
 
 	    success: function(data) {
-            model.fileNames = data.fileNames;
-            model.parsedData = data.parsedData;
+            global.fileNames = data.fileNames;
+            global.parsedData = data.parsedData;
 	    },
         error: function(error) {
             alert(error.message);
@@ -111,12 +115,12 @@ function loadFileList() {
     var fileList = $('#fileList');
 	fileList.html("");
 
-    if (model.fileNames.length == 0) {
+    if (global.fileNames.length == 0) {
         document.getElementById("loadingItems").style.display = "none";
         document.getElementById("noItems").style.display = "block";
     }
     else {
-        model.fileNames.forEach((file) => {
+        global.fileNames.forEach((file) => {
             fileList.append(`
                 <div class="item" tag="${file}">
                     <div class="content">
@@ -133,7 +137,7 @@ function loadFileList() {
 
 function getQueriesDataLength(fileName) {
     var res = null;
-    model.parsedData.forEach((item) => {
+    global.parsedData.forEach((item) => {
         if (item.fileName == fileName) {
             res = item.parsedData.queriesData.length
             return res;
@@ -141,6 +145,39 @@ function getQueriesDataLength(fileName) {
     });
 
     return res;
+
+}
+
+function queryFileAndParseResult(fileName, query, queryLang, numQuery) {
+    $.ajax({
+	    url: '/query-and-parse',
+	    type: 'POST',
+        data: {
+            fileName: fileName,
+            query: query,
+            queryLang: queryLang,
+            numQuery: numQuery
+        },
+
+	    success: function(data) {
+            global.parsedData.forEach((item) => {
+                if (item.fileName == fileName) {
+                    queryData = {
+                        queryName : data.parsedQuery.fileName,
+                        queryFormat : queryLang,
+                        query: query,
+                        queryResult : data.parsedQuery.fileContent,
+                        queryParsed : data.parsedQuery.parsedData
+                    }
+
+                    item.parsedData.queriesData.push(queryData);  
+                }
+            })  
+	    },
+        error: function(error) {
+            alert(error);
+        }
+	});
 
 }
 
@@ -156,21 +193,18 @@ function queryFile(fileName, query, queryLang, numQuery) {
         },
 
 	    success: function(data) {
-
-            // update file parsed Data info with queried parsed data
-            model.parsedData.forEach((item) => {
+            global.parsedData.forEach((item) => {
                 if (item.fileName == fileName) {
                     queryData = {
-                        queryName : data.parsedQuery.fileName,
-                        queryFormat : data.parsedQuery.fileFormat,
+                        queryName : data.queryResult.queryName,
+                        queryLang : queryLang,
                         query: query,
-                        queryRes : data.parsedQuery.fileContent,
-                        parsedQuery : data.parsedQuery.parsedData
+                        queryResult : data.queryResult.queryResult
                     }
+
                     item.parsedData.queriesData.push(queryData);  
                 }
             })
-            //alert('Query success.');
 	    },
         error: function(error) {
             alert(error);
@@ -190,18 +224,18 @@ function addItem(chartName) {
     }
     
     //items.push(item);
-    model.grid.addWidget('<div><div class="grid-stack-item-content"><button class="ui button" id="dlt'+chartName+'"onClick="model.grid.removeWidget(this.parentNode.parentNode)">Delete Chart</button><br>' + (item.content ? item.content : ''), item);
+    global.grid.addWidget('<div><div class="grid-stack-item-content"><button class="ui button" id="dlt'+chartName+'"onClick="global.grid.removeWidget(this.parentNode.parentNode)">Delete Chart</button><br>' + (item.content ? item.content : ''), item);
 }
 
 function loadGridItems() {
-    model.grid = GridStack.init({
+    global.grid = GridStack.init({
         acceptWidgets: true,
         float: true
     });
 
-    model.grid.load(model.gridItems);
+    global.grid.load(global.gridItems);
   
-    model.grid.on('added removed change', function(e, items) {
+    global.grid.on('added removed change', function(e, items) {
         let str = '';
         items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
         console.log(e.type + ' ' + items.length + ' items:' + str );
