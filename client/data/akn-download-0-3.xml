@@ -1,0 +1,241 @@
+<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:cirsfid="http://nir.it/metadata" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:html="http://www.w3.org/1999/xhtml">
+    <act name="monovigente">
+        <meta>
+            <identification source="#source">
+                <FRBRWork>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1990-03-26/65/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1990-03-26/65"/>
+                    <FRBRalias value="urn:nir:stato:decreto.legge:1990-03-26;65" name="urn:nir"/>
+                    <FRBRalias value="eli/id/1990/03/29/090G0103/sg" name="eli"/>
+                    <FRBRdate name="" date="1990-03-26"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRcountry value="it"/>
+                </FRBRWork>
+                <FRBRExpression>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1990-03-26/65/ita@1990-03-30/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1990-03-26/65/ita@1990-03-30"/>
+                    <FRBRdate name="" date="1990-03-30"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRlanguage language="ita"/>
+                </FRBRExpression>
+                <FRBRManifestation>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1990-03-26/65/ita@1990-03-30/!main.xml"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1990-03-26/65/ita@1990-03-30.xml"/>
+                    <FRBRdate name="" date="2018-11-08"/>
+                    <FRBRauthor as="#author" href=""/>
+                </FRBRManifestation>
+            </identification>
+            <publication date="1990-03-29" name="  " showAs="" number="74"/>
+            <analysis source="#palmirani"/>
+            <references source="#source">
+                <TLCPerson showAs="Somebody" href="/akn/ontology/person/somebody" eId="source"/>
+                <TLCRole showAs="Author" href="/akn/ontology/role/author" eId="author"/>
+                <TLCConcept eId="concept_1" href="/akn/it/ontology/concept/ipzs/lavoriPreparatori" showAs="Lavori Preparatori"/>
+                <original eId="ro1" href="/akn/it/act/decretoLegge/stato/1990-03-26/65/!main" showAs=""/>
+            </references>
+        </meta>
+        <preface>
+            <p>
+                <docType>
+                    DECRETO-LEGGE
+                </docType>
+                <docTitle>
+                      Partecipazione  dell'Italia  al  Fondo  di  stabilizzazione  per la
+Polonia.
+
+                </docTitle>
+                <docNumber>
+                    65
+                </docNumber>
+                <docDate date="1990-03-29">
+                    29 marzo 1990
+                </docDate>
+            </p>
+        </preface>
+        <preamble>
+            <formula name="formulaInizialePreambolo">
+                <p>
+                    IL PRESIDENTE DELLA REPUBBLICA
+                </p>
+            </formula>
+            <citations eId="cits_1">
+                <citation eId="cits_1__cit_1">
+                    <p>
+                        Visti gli 
+                        <ref eId="ref_0" href="/akn/it/act/costituzione/stato/1948/cost/!main#art_77">
+                            articoli 77
+                        </ref>
+                         e 
+                        <ref eId="ref_1" href="/akn/it/act/costituzione/stato/1948/cost/!main#art_87">
+                            87
+                        </ref>
+                         della 
+                        <ref eId="ref_2" href="/akn/it/act/costituzione/stato/1948/cost/!main">
+                            Costituzione
+                        </ref>
+                        ;
+                    </p>
+                </citation>
+            </citations>
+            <p>
+                 Ritenuta la straordinaria necessita' ed urgenza di provvedere ai conferimenti finanziari nei confronti degli organismi nazionali impegnati agli aiuti d'emergenza, per effetto degli accordi assunti in sede internazionale, in favore della Polonia; 
+            </p>
+            <citations eId="cits_2">
+                <citation eId="cits_2__cit_1">
+                    <p>
+                        Vista la deliberazione del Consiglio dei Ministri, adottata nella riunione del 23 marzo 1990;
+                    </p>
+                </citation>
+            </citations>
+            <recitals eId="recs_1">
+                <recital eId="recs_1__rec_1">
+                    <p>
+                        Sulla proposta del Presidente del Consiglio dei Ministri e del Ministro del tesoro, di concerto con i Ministri del bilancio e della programmazione economica e del commercio con l'estero;
+                    </p>
+                </recital>
+            </recitals>
+            <formula name="formulaFinalePreambolo">
+                <p>
+                     E M A N A il seguente decreto-legge:
+                </p>
+            </formula>
+        </preamble>
+        <body>
+            <article eId="art_1">
+                <num>
+                    Art. 1.
+                </num>
+                
+ 
+                <paragraph eId="art_1__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Allo scopo di sostenere il processo di liberalizzazione dell'economia della Polonia e, in particolare, del sistema dei cambi di tale Paese, l'Italia concede alla Polonia un prestito di importo pari a 100 milioni di dollari USA. L'Ufficio italiano dei cambi e' autorizzato ad effettuare l'operazione a favore della Banca nazionale di Polonia. L'importo del prestito e' destinato alla istituzione del Fondo di stabilizzazione della moneta polacca.
+                        </p>
+                    </content>
+                </paragraph>
+            </article>
+            <article eId="art_2">
+                <num>
+                    Art. 2.
+                </num>
+                
+ 
+                <paragraph eId="art_2__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il Ministro del tesoro e' autorizzato a erogare all'Ufficio italiano dei cambi il corrispondente importo necessario per l'erogazione del prestito di cui all'articolo 1 e a stabilire le modalita', le condizioni e i termini del rimborso del prestito stesso, il cui importo dovra' essere riversato all'entrata del bilancio dello Stato, capo XII, capitolo 3540.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+                <paragraph eId="art_2__para_2">
+                    <num>
+                        2.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            I rapporti tra il Ministero del tesoro e l'Ufficio italiano dei cambi derivanti dalla gestione del prestito di cui all'articolo 1 sono regolati da apposita convenzione.
+                        </p>
+                    </content>
+                </paragraph>
+            </article>
+            <article eId="art_3">
+                <num>
+                    Art. 3.
+                </num>
+                
+ 
+                <paragraph eId="art_3__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            All'onere derivante dall'attuazione del presente decreto, valutato in L. 127.050.000.000 per l'anno 1990, si provvede mediante corrispondente riduzione dello stanziamento iscritto al capitolo 6856 dello stato di previsione del Ministero del tesoro per l'anno medesimo, all'uopo utilizzando parzialmente l'accantonamento 
+                            <mod eId="mod_1">
+                                <quotedText eId="mod_1__content__qtext_1">
+                                    "Partecipazione italiana al Fondo di stabilizzazione cambi per la Polonia e Paesi dell'Est"
+                                </quotedText>
+                            </mod>
+                            .
+                        </p>
+                    </content>
+                </paragraph>
+                 
+                <paragraph eId="art_3__para_2">
+                    <num>
+                        2.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Agli eventuali maggiori oneri derivanti da sfavorevoli oscillazioni delle quote del cambio tra lira e dollaro USA si provvede, in considerazione della natura degli oneri stessi, mediante corrispondente prelevamento dal fondo di riserva per le spese obbligatorie e d'ordine, iscritto nello stato di previsione del Ministero del tesoro.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+                <paragraph eId="art_3__para_3">
+                    <num>
+                        3.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il Ministro del tesoro e' autorizzato ad apportare, con propri decreti, le occorrenti variazioni di bilancio.
+                        </p>
+                    </content>
+                </paragraph>
+            </article>
+            <article eId="art_4">
+                <num>
+                    Art. 4.
+                </num>
+                
+ 
+                <paragraph eId="art_4__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il presente decreto entra in vigore il giorno successivo a quello della sua pubblicazione nella Gazzetta Ufficiale della Repubblica italiana e sara' presentato alle Camere per la conversione in legge.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+            </article>
+        </body>
+        <conclusions>
+            <formula name="formulaFinaleConclusioni">
+                <p>
+                    Il presente decreto, munito del sigillo dello Stato, sara' inserito nella Raccolta ufficiale degli atti normativi della Repubblica italiana. E' fatto obbligo a chiunque spetti di osservarlo e di farlo osservare. 
+                </p>
+            </formula>
+            <p>
+                Dato a 
+                <location refersTo="#roma" eId="location_1">
+                    Roma
+                </location>
+                , addi' 
+                <date date="1990-03-26">
+                    26 marzo 1990
+                </date>
+            </p>
+            <p>
+                 COSSIGA ANDREOTTI, Presidente del Consiglio dei Ministri CARLI, Ministro del tesoro CIRINO POMICINO, Ministro del bilancio e della programmazione economica RUGGIERO, Ministro del commercio con l'estero Visto, il Guardasigilli: VASSALLI 
+            </p>
+        </conclusions>
+    </act>
+</akomaNtoso>

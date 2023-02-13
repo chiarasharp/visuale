@@ -1,0 +1,180 @@
+<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:cirsfid="http://nir.it/metadata" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:html="http://www.w3.org/1999/xhtml">
+    <act name="monovigente">
+        <meta>
+            <identification source="#source">
+                <FRBRWork>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1990-05-18/118/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1990-05-18/118"/>
+                    <FRBRalias value="urn:nir:stato:decreto.legge:1990-05-18;118" name="urn:nir"/>
+                    <FRBRalias value="eli/id/1990/05/19/090G0160/sg" name="eli"/>
+                    <FRBRdate name="" date="1990-05-18"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRcountry value="it"/>
+                </FRBRWork>
+                <FRBRExpression>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1990-05-18/118/ita@1990-05-19/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1990-05-18/118/ita@1990-05-19"/>
+                    <FRBRdate name="" date="1990-05-19"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRlanguage language="ita"/>
+                </FRBRExpression>
+                <FRBRManifestation>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1990-05-18/118/ita@1990-05-19/!main.xml"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1990-05-18/118/ita@1990-05-19.xml"/>
+                    <FRBRdate name="" date="2018-11-08"/>
+                    <FRBRauthor as="#author" href=""/>
+                </FRBRManifestation>
+            </identification>
+            <publication date="1990-05-19" name="  " showAs="" number="115"/>
+            <analysis source="#palmirani"/>
+            <references source="#source">
+                <TLCPerson showAs="Somebody" href="/akn/ontology/person/somebody" eId="source"/>
+                <TLCRole showAs="Author" href="/akn/ontology/role/author" eId="author"/>
+                <TLCConcept eId="concept_1" href="/akn/it/ontology/concept/ipzs/lavoriPreparatori" showAs="Lavori Preparatori"/>
+                <original eId="ro1" href="/akn/it/act/decretoLegge/stato/1990-05-18/118/!main" showAs=""/>
+            </references>
+        </meta>
+        <preface>
+            <p>
+                <docType>
+                    DECRETO-LEGGE
+                </docType>
+                <docTitle>
+                      Differimento del termine relativo all'elevazione del limite di eta'
+per il collocamento in congedo dei sottufficiali e  dei  militari  di
+truppa del Corpo degli agenti di custodia.
+
+                </docTitle>
+                <docNumber>
+                    118
+                </docNumber>
+                <docDate date="1990-05-19">
+                    19 maggio 1990
+                </docDate>
+            </p>
+        </preface>
+        <preamble>
+            <formula name="formulaInizialePreambolo">
+                <p>
+                    IL PRESIDENTE DELLA REPUBBLICA
+                </p>
+            </formula>
+            <citations eId="cits_1">
+                <citation eId="cits_1__cit_1">
+                    <p>
+                        Visti gli 
+                        <ref eId="ref_0" href="/akn/it/act/costituzione/stato/1948/cost/!main#art_77">
+                            articoli 77
+                        </ref>
+                         e 
+                        <ref eId="ref_1" href="/akn/it/act/costituzione/stato/1948/cost/!main#art_87">
+                            87
+                        </ref>
+                         della 
+                        <ref eId="ref_2" href="/akn/it/act/costituzione/stato/1948/cost/!main">
+                            Costituzione
+                        </ref>
+                        ;
+                    </p>
+                </citation>
+            </citations>
+            <p>
+                 Ritenuta la straordinaria necessita' ed urgenza di differire di due anni il disposto di cui all'
+                <ref eId="ref_3" href="/akn/it/act/decretoLegge/stato/1988/139/!main#art_1">
+                    articolo 1 del decreto-legge 3 maggio 1988, n. 139
+                </ref>
+                , convertito dalla 
+                <ref eId="ref_4" href="/akn/it/act/legge/stato/1988/227/!main">
+                    legge 20 giugno 1988, n. 227
+                </ref>
+                , concernente l'elevazione a 58 anni del limite di eta' per il collocamento in congedo dei sottufficiali e dei militari di truppa del Corpo degli agenti di custodia; 
+            </p>
+            <citations eId="cits_2">
+                <citation eId="cits_2__cit_1">
+                    <p>
+                        Vista la deliberazione del Consiglio dei Ministri, adottata nella riunione del 18 maggio 1990;
+                    </p>
+                </citation>
+            </citations>
+            <recitals eId="recs_1">
+                <recital eId="recs_1__rec_1">
+                    <p>
+                        Sulla proposta del Presidente del Consiglio dei Ministri e del Ministro di grazia e giustizia, di concerto con il Ministro del tesoro;
+                    </p>
+                </recital>
+            </recitals>
+            <formula name="formulaFinalePreambolo">
+                <p>
+                     E M A N A il seguente decreto-legge:
+                </p>
+            </formula>
+        </preamble>
+        <body>
+            <article eId="art_1">
+                <num>
+                    Art. 1.
+                </num>
+                
+ 
+                <paragraph eId="art_1__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il termine di cui all'
+                            <ref eId="ref_5" href="/akn/it/act/decretoLegge/stato/1988/139/!main#art_1">
+                                articolo 1 del decreto-legge 3 maggio 1988, n. 139
+                            </ref>
+                            , convertito dalla 
+                            <ref eId="ref_6" href="/akn/it/act/legge/stato/1988/227/!main">
+                                legge 20 giugno 1988, n. 227
+                            </ref>
+                            , e' differito di due anni.
+                        </p>
+                    </content>
+                </paragraph>
+            </article>
+            <article eId="art_2">
+                <num>
+                    Art. 2.
+                </num>
+                
+ 
+                <paragraph eId="art_2__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il presente decreto entra in vigore il giorno stesso della sua pubblicazione nella Gazzetta Ufficiale della Repubblica italiana e sara' presentato alle Camere per la conversione in legge.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+            </article>
+        </body>
+        <conclusions>
+            <formula name="formulaFinaleConclusioni">
+                <p>
+                    Il presente decreto, munito del sigillo dello Stato, sara' inserito nella Raccolta ufficiale degli atti normativi della Repubblica italiana. E' fatto obbligo a chiunque spetti di osservarlo e di farlo osservare. 
+                </p>
+            </formula>
+            <p>
+                Dato a 
+                <location refersTo="#roma" eId="location_1">
+                    Roma
+                </location>
+                , addi' 
+                <date date="1990-05-18">
+                    18 maggio 1990
+                </date>
+            </p>
+            <p>
+                 COSSIGA ANDREOTTI, Presidente del Consiglio dei Ministri VASSALLI, Ministro di grazia e giustizia CARLI, Ministro del tesoro Visto, il Guardasigilli: VASSALLI 
+            </p>
+        </conclusions>
+    </act>
+</akomaNtoso>

@@ -1,0 +1,293 @@
+<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:cirsfid="http://nir.it/metadata" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:html="http://www.w3.org/1999/xhtml">
+    <act name="monovigente">
+        <meta>
+            <identification source="#source">
+                <FRBRWork>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/2006-09-27/260/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/2006-09-27/260"/>
+                    <FRBRalias value="urn:nir:stato:decreto.legge:2006-09-27;260" name="urn:nir"/>
+                    <FRBRalias value="eli/id/2006/09/27/006G0280/sg" name="eli"/>
+                    <FRBRdate name="" date="2006-09-27"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRcountry value="it"/>
+                </FRBRWork>
+                <FRBRExpression>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/2006-09-27/260/ita@2006-11-16/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/2006-09-27/260/ita@2006-11-16"/>
+                    <FRBRdate name="" date="2006-11-16"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRlanguage language="ita"/>
+                </FRBRExpression>
+                <FRBRManifestation>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/2006-09-27/260/ita@2006-11-16/!main.xml"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/2006-09-27/260/ita@2006-11-16.xml"/>
+                    <FRBRdate name="" date="2018-11-08"/>
+                    <FRBRauthor as="#author" href=""/>
+                </FRBRManifestation>
+            </identification>
+            <publication date="2006-09-27" name="  " showAs="" number="225"/>
+            <lifecycle source="#palmirani">
+                <eventRef eId="eventRef_0" date="2006-09-28" source="#ro1"/>
+                <eventRef eId="eventRef_1" date="2006-11-16" source="#rp1"/>
+            </lifecycle>
+            <analysis source="#palmirani">
+                <passiveModifications>
+                    <textualMod type="insertion" eId="pmod_0">
+                        <source href="#"/>
+                        <destination href="#art_1-bis__para_1"/>
+                        <new>
+                            <cirsfid:text>
+                                ((1. In deroga a quanto previsto dall'
+                                <ref eId="ref_0" href="/akn/it/act/decretoLegislativo/stato/2001/215/!main#art_24__para_6">
+                                    articolo 24, comma 6, del decreto legislativo 8 maggio 2001, n. 215
+                                </ref>
+                                , e successive modificazioni, fatte salve le assunzioni nell'Arma dei carabinieri autorizzate per l'anno 2006 dal decreto del Presidente della Repubblica 28 aprile 2006, pubblicato nella Gazzetta Ufficiale n. 117 del 22 maggio 2006, per le esigenze connesse alle missioni internazionali e al fine di garantire la funzionalita' e l'operativita' dei comandi, degli enti e delle unita', entro il limite di spesa di 282.740 euro per l'anno 2006, il Ministro della difesa puo' autorizzare il trattenimento in servizio a domanda, senza soluzione di continuita', a decorrere dal 14 ottobre 2006 e fino al 31 dicembre 2006, degli ufficiali in ferma prefissata dell'Arma dei carabinieri, frequentatori del 1° corso allievi ufficiali in ferma prefissata ausiliari del ruolo speciale e del ruolo tecnico-logistico dell'Arma dei carabinieri, che hanno terminato senza demerito l'ulteriore ferma annuale di cui alla lettera a) del citato 
+                                <ref eId="ref_1" href="/akn/it/act/decretoLegislativo/stato/2001/215/!main#art_24__para_6">
+                                    articolo 24, comma 6, del decreto legislativo n. 215 del 2001
+                                </ref>
+                                , e successive modificazioni.
+                            </cirsfid:text>
+                        </new>
+                    </textualMod>
+                    <textualMod type="insertion" eId="pmod_1">
+                        <source href="#"/>
+                        <destination href="#art_1-bis__para_2"/>
+                        <new>
+                            <cirsfid:text>
+                                2. All'onere derivante dall'attuazione del comma 1, pari a 282.740 euro per l'anno 2006, si provvede a valere sul fondo di cui all'
+                                <ref eId="ref_2" href="/akn/it/act/legge/stato/2004/311/!main#art_1__para_96">
+                                    articolo 1, comma 96, della legge 30 dicembre 2004, n. 311
+                                </ref>
+                                , nei limiti di spesa autorizzati con il citato decreto del Presidente della Repubblica 28 aprile 2006.
+                            </cirsfid:text>
+                        </new>
+                    </textualMod>
+                    <textualMod type="insertion" eId="pmod_2">
+                        <source href="#"/>
+                        <destination href="#art_1-bis__para_3"/>
+                        <new>
+                            <cirsfid:text>
+                                3. Il Ministro dell'economia e delle finanze e' autorizzato ad apportare, con propri decreti, le occorrenti variazioni di bilancio.))
+                            </cirsfid:text>
+                        </new>
+                    </textualMod>
+                </passiveModifications>
+            </analysis>
+            <references source="#source">
+                <TLCPerson showAs="Somebody" href="/akn/ontology/person/somebody" eId="source"/>
+                <TLCRole showAs="Author" href="/akn/ontology/role/author" eId="author"/>
+                <TLCConcept eId="concept_1" href="/akn/it/ontology/concept/ipzs/lavoriPreparatori" showAs="Lavori Preparatori"/>
+                <original eId="ro1" href="/akn/it/act/decretoLegge/stato/2006-09-27/260/!main" showAs=""/>
+                <passiveRef eId="rp1" href="/akn/it/act/decreto-del-presidente-della-repubblica/2006-04-28/!main" showAs="decreto del Presidente della Repubblica 28 aprile 2006"/>
+                <passiveRef eId="rp2" href="/akn/it/act/decreto-legislativo/xxxx-xx-xx/n--215/!main" showAs="decreto legislativo n. 215 del 2001"/>
+            </references>
+        </meta>
+        <preface>
+            <p>
+                <docType>
+                    DECRETO-LEGGE
+                </docType>
+                <docTitle>
+                    Misure   urgenti  per  la  funzionalita'  dell'Amministrazione  della
+pubblica sicurezza.
+
+                </docTitle>
+                <docNumber>
+                    260
+                </docNumber>
+                <docDate date="2006-09-27">
+                    27 settembre 2006
+                </docDate>
+            </p>
+        </preface>
+        <preamble>
+            <formula name="formulaInizialePreambolo">
+                <p>
+                    IL PRESIDENTE DELLA REPUBBLICA
+                </p>
+            </formula>
+            <citations eId="cits_1">
+                <citation eId="cits_1__cit_1">
+                    <p>
+                        Visti gli 
+                        <ref eId="ref_3" href="/akn/it/act/costituzione/stato/1948/cost/!main#art_77">
+                            articoli 77
+                        </ref>
+                         e 
+                        <ref eId="ref_4" href="/akn/it/act/costituzione/stato/1948/cost/!main#art_87">
+                            87
+                        </ref>
+                         della 
+                        <ref eId="ref_5" href="/akn/it/act/costituzione/stato/1948/cost/!main">
+                            Costituzione
+                        </ref>
+                        ;
+                    </p>
+                </citation>
+            </citations>
+            <p>
+                 Ritenuta la straordinaria necessita' ed urgenza di assicurare la funzionalita' dell'Amministrazione della pubblica sicurezza per le esigenze connesse con la prevenzione ed il contrasto del terrorismo, anche internazionale, e della criminalita' organizzata; 
+            </p>
+            <citations eId="cits_2">
+                <citation eId="cits_2__cit_1">
+                    <p>
+                        Vista la deliberazione del Consiglio dei Ministri, adottata nella riunione del 22 settembre 2006;
+                    </p>
+                </citation>
+            </citations>
+            <recitals eId="recs_1">
+                <recital eId="recs_1__rec_1">
+                    <p>
+                        Sulla proposta del Presidente del Consiglio dei Ministri e del Ministro dell'interno, di concerto con il Ministro dell'economia e delle finanze e con il Ministro per le riforme e le innovazioni nella pubblica amministrazione;
+                    </p>
+                </recital>
+            </recitals>
+            <formula name="formulaFinalePreambolo">
+                <p>
+                     E m a n a il seguente decreto-legge:
+                </p>
+            </formula>
+        </preamble>
+        <body>
+            <article eId="art_1">
+                <num>
+                    Art. 1 
+                </num>
+                
+
+                <paragraph eId="art_1__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Per le esigenze connesse con la prevenzione ed il contrasto del terrorismo, anche internazionale, e della criminalita' organizzata e per assicurare la funzionalita' dell'Amministrazione della pubblica sicurezza, il Ministro dell'interno, entro il limite di spesa di 8.650.000 euro, puo' autorizzare l'ulteriore trattenimento in servizio, fino al 31 dicembre 2006, degli agenti ausiliari trattenuti frequentatori del 63° e 64° corso di allievo agente ausiliario di leva, i quali ne facciano domanda.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+                <paragraph eId="art_1__para_2">
+                    <num>
+                        2.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            All'onere derivante dall'attuazione del comma 1, pari a 8.650.000 euro per l'anno 2006, si provvede mediante corrispondente riduzione dell'autorizzazione di spesa di cui all'
+                            <ref eId="ref_6" href="/akn/it/act/legge/stato/2005/266/!main#art_1__para_27">
+                                articolo 1, comma 27, della legge 23 dicembre 2005, n. 266
+                            </ref>
+                            .
+                        </p>
+                    </content>
+                </paragraph>
+                 
+                <paragraph eId="art_1__para_3">
+                    <num>
+                        3.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il Ministro dell'economia e delle finanze e' autorizzato ad apportare, con propri decreti, le occorrenti variazioni di bilancio.
+                        </p>
+                    </content>
+                </paragraph>
+            </article>
+            <article eId="art_1-bis">
+                <num>
+                    Art. 1-bis
+                </num>
+                
+ 
+                <paragraph eId="art_1-bis__para_1" status="editorial">
+                    <num>
+                        ((1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            In deroga a quanto previsto dall'
+                            <ref eId="ref_7" href="/akn/it/act/decretoLegislativo/stato/2001/215/!main#art_24__para_6">
+                                articolo 24, comma 6, del decreto legislativo 8 maggio 2001, n. 215
+                            </ref>
+                            , e successive modificazioni, fatte salve le assunzioni nell'Arma dei carabinieri autorizzate per l'anno 2006 dal decreto del Presidente della Repubblica 28 aprile 2006, pubblicato nella Gazzetta Ufficiale n. 117 del 22 maggio 2006, per le esigenze connesse alle missioni internazionali e al fine di garantire la funzionalita' e l'operativita' dei comandi, degli enti e delle unita', entro il limite di spesa di 282.740 euro per l'anno 2006, il Ministro della difesa puo' autorizzare il trattenimento in servizio a domanda, senza soluzione di continuita', a decorrere dal 14 ottobre 2006 e fino al 31 dicembre 2006, degli ufficiali in ferma prefissata dell'Arma dei carabinieri, frequentatori del 1° corso allievi ufficiali in ferma prefissata ausiliari del ruolo speciale e del ruolo tecnico-logistico dell'Arma dei carabinieri, che hanno terminato senza demerito l'ulteriore ferma annuale di cui alla lettera a) del citato 
+                            <ref eId="ref_8" href="/akn/it/act/decretoLegislativo/stato/2001/215/!main#art_24__para_6">
+                                articolo 24, comma 6, del decreto legislativo n. 215 del 2001
+                            </ref>
+                            , e successive modificazioni.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+                <paragraph eId="art_1-bis__para_2" status="editorial">
+                    <num>
+                        2.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            All'onere derivante dall'attuazione del comma 1, pari a 282.740 euro per l'anno 2006, si provvede a valere sul fondo di cui all'
+                            <ref eId="ref_9" href="/akn/it/act/legge/stato/2004/311/!main#art_1__para_96">
+                                articolo 1, comma 96, della legge 30 dicembre 2004, n. 311
+                            </ref>
+                            , nei limiti di spesa autorizzati con il citato decreto del Presidente della Repubblica 28 aprile 2006.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+                <paragraph eId="art_1-bis__para_3" status="editorial">
+                    <num>
+                        3.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il Ministro dell'economia e delle finanze e' autorizzato ad apportare, con propri decreti, le occorrenti variazioni di bilancio.))
+                        </p>
+                    </content>
+                </paragraph>
+            </article>
+            <article eId="art_2">
+                <num>
+                    Art. 2.
+                </num>
+                
+ 
+                <paragraph eId="art_2__para_1">
+                    <num>
+                        1.
+                    </num>
+                     
+                    <content>
+                        <p>
+                            Il presente decreto entra in vigore il giorno successivo a quello della sua pubblicazione nella Gazzetta Ufficiale della Repubblica italiana e sara' presentato alle Camere per la conversione in legge.
+                        </p>
+                    </content>
+                </paragraph>
+                 
+            </article>
+        </body>
+        <conclusions>
+            <formula name="formulaFinaleConclusioni">
+                <p>
+                    Il presente decreto, munito del sigillo dello Stato, sara' inserito nella Raccolta ufficiale degli atti normativi della Repubblica italiana. E' fatto obbligo a chiunque spetti di osservarlo e di farlo osservare. 
+                </p>
+            </formula>
+            <p>
+                Dato a 
+                <location refersTo="#roma" eId="location_1">
+                    Roma
+                </location>
+                , addi' 
+                <date date="2006-09-27">
+                    27 settembre 2006
+                </date>
+            </p>
+            <p>
+                 NAPOLITANO Prodi, Presidente del Consiglio dei Ministri Amato, Ministro dell'interno Padoa-Schioppa, Ministro dell'economia e delle finanze Nicolais, Ministro per le riforme e le innovazioni nella pubblica amministrazione Visto, il Guardasigilli: Mastella 
+            </p>
+        </conclusions>
+    </act>
+</akomaNtoso>
