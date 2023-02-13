@@ -24,25 +24,27 @@ const queryXMLXPath = (query, fileContent) => {
   var res = "";
   
   var resultEvaluate = xpath.evaluate(
-    query,            // xpathExpression
-    root,                        // contextNode
+    query,                      // xpathExpression
+    root,                       // contextNode
     null,                       // namespaceResolver
     xpath.XPathResult.ANY_TYPE, // resultType
     null                        // result
   )
 
+  console.log(resultEvaluate.resultType)
+
   switch (resultEvaluate.resultType) {
-    case 1:
-      res = resultEvaluate.numberValue;
+    case 1:                              // NUMBER_TYPE
+      res = resultEvaluate.numberValue; 
       break;
-    case 2:
-      res = resultEvaluate.stringValue;
+    case 2:                              // STRING_TYPE
+      res = resultEvaluate.stringValue;  
       break;
-    case 3:
+    case 3:                              // BOOLEAN_TYPE
       res = resultEvaluate.booleanValue;
       break;
-    case 4:
-    case 5:
+    case 4:                              // UNORDERED_NODE_ITERATOR_TYPE
+    case 5:                              // ORDERED_NODE_ITERATOR_TYPE
       node = resultEvaluate.iterateNext();
       while (node) {
         res = res + "\n" + node.toString();
@@ -53,8 +55,6 @@ const queryXMLXPath = (query, fileContent) => {
       res = null;
       break;
   }
-  
-  /**/
 
   return res;
 }

@@ -10,15 +10,26 @@ $(document).ready(function(){
 
     loadData().then(function() {
         loadFileList();
-
-        /*
-        const numQuery = getQueriesDataLength('akn-download-0-2.xml');
-        queryFile("akn-download-0-2.xml", 'count(//*[local-name()="article"])', 'xpath', numQuery);
-        queryFile("akn-download-0-2.xml", '//*[local-name()="article"]', 'xpath', numQuery);
-        */
     });
 
     loadGridItems();
+
+    loadQueries().then(function() {
+        var yearCount = {};
+        global.parsedData.forEach(item => {
+            queryArt = item.parsedData.queriesData[0].queryResult;
+            queryDate = item.parsedData.queriesData[1].queryResult;
+            queryYear = new Date(queryDate).getFullYear()
+
+            if(yearCount.hasOwnProperty(queryYear)) {
+                yearCount[queryYear] = yearCount[queryYear] + queryArt;
+            }
+            else {
+                yearCount[queryYear] = queryArt;
+            } 
+        })
+        console.log(yearCount);
+    });
 
     $('form').submit(function(event) { // catch the form's submit event
 
@@ -137,15 +148,19 @@ function loadFileList() {
 
 function getQueriesDataLength(fileName) {
     var res = null;
+
     global.parsedData.forEach((item) => {
         if (item.fileName == fileName) {
-            res = item.parsedData.queriesData.length
+            res = item.parsedData.queriesData.length;
             return res;
         }
     });
 
     return res;
+}
 
+function loadQueries() {
+    return queryFiles('count(//*[local-name()="article"])','string(//*[local-name()="publication"]/@date)', 'xpath', 0);
 }
 
 function queryFileAndParseResult(fileName, query, queryLang, numQuery) {
@@ -179,6 +194,7 @@ function queryFileAndParseResult(fileName, query, queryLang, numQuery) {
         }
 	});
 
+    return res;
 }
 
 function queryFile(fileName, query, queryLang, numQuery) {
@@ -202,7 +218,7 @@ function queryFile(fileName, query, queryLang, numQuery) {
                         queryResult : data.queryResult.queryResult
                     }
 
-                    item.parsedData.queriesData.push(queryData);  
+                    item.parsedData.queriesData.push(queryData);
                 }
             })
 	    },
@@ -210,7 +226,50 @@ function queryFile(fileName, query, queryLang, numQuery) {
             alert(error);
         }
 	});
+}
 
+function queryFiles(query0, query1, queryLang, numQuery) {
+    return $.ajax({
+	    url: 'queries',
+	    type: 'POST',
+        data: {
+            query0: query0,
+            query1: query1,
+            queryLang: queryLang,
+            numQuery: numQuery
+        },
+
+	    success: function(data) {
+            global.parsedData.forEach((item) => {
+                data.queriesResult.forEach((queryRes) => {
+
+                    if (item.fileName == queryRes.fileName) {
+                        if (!queryRes.queryNum) {
+                            queryData = {
+                                queryName : queryRes.queryName,
+                                queryLang : queryLang,
+                                query: query0,
+                                queryResult : queryRes.queryResult
+                            }
+                        }
+                        else {
+                            queryData = {
+                                queryName : queryRes.queryName,
+                                queryLang : queryLang,
+                                query: query1,
+                                queryResult : queryRes.queryResult
+                            }
+                        }
+                        item.parsedData.queriesData.push(queryData);
+                    }
+                })
+                
+            })
+	    },
+        error: function(error) {
+            alert(error);
+        }
+	});
 }
 
 function addItem(chartName) {
@@ -240,4 +299,10 @@ function loadGridItems() {
         items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
         console.log(e.type + ' ' + items.length + ' items:' + str );
     });
+}
+
+function createChartArticleInYears() {
+    global.parsedData.forEach((item) => {
+        doc.date = new Date(doc.akomando.getPublicationInfo().date)
+    })
 }

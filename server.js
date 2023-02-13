@@ -246,6 +246,80 @@ app.post('/query', function(req, res) {
 	}
 });
 
+app.post('/queries', function(req, res) {
+	console.log(`Making query...`);
+	
+	try {
+        const files = fs.readdirSync(global.filesDir);
+        const dataFiles = [];
+        const queriesRes = [];
+
+        if(files.size == 0) {
+            res.send({
+                status: false,
+                message: "No files to query."
+            });
+        }
+
+        files.forEach(function(file) {
+            filePath = path.join(global.filesDir, file);
+            fileContent = fs.readFileSync(filePath, 'utf-8');
+            fileFormat = path.extname(filePath);
+            
+            dataFile = new DataFile(file, fileContent, fileFormat);
+            dataFiles.push(dataFile);
+        });
+
+        dataFiles.forEach(function(dataFile) {
+            dataFile.queryFile(req.body.query0, req.body.queryLang);
+            const resQuery0 = dataFile.queryResult;
+            dataFile.queryFile(req.body.query1, req.body.queryLang);
+            const resQuery1 = dataFile.queryResult;
+
+            if (resQuery0 == null || resQuery1 == null) {
+                res.send({
+                    status: false,
+                    error: "Invalid query or an error occurred during execution of it."
+                })
+            }
+
+            const result = [
+                {
+                    fileName: dataFile.fileName,
+                    queryNum: 0,
+                    queryName: req.body.queryLang + "query" + req.body.numQuery,
+                    queryFormat: fileFormat,
+                    queryResult: resQuery0
+                },
+                {
+                    fileName: dataFile.fileName,
+                    queryNum: 1,
+                    queryName: req.body.queryLang + "query" + req.body.numQuery+1,
+                    queryFormat: fileFormat,
+                    queryResult: resQuery1
+                }
+            ]
+                
+            result.forEach(function(res) {
+                queriesRes.push(res);
+            })
+
+        })
+        
+        
+        res.send({
+            status: true,
+            queriesResult: queriesRes
+        })
+	}
+	catch(e) {
+		res.send({
+            status: false,
+            error: e.message
+        });
+	}
+});
+
 /* TODO delete later 
 const dir = global.rootDir + '/client/data';
 const files = fs.readdirSync(dir);
