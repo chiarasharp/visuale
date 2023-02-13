@@ -247,7 +247,7 @@ app.post('/query', function(req, res) {
 });
 
 app.post('/queries', function(req, res) {
-	console.log(`Making query...`);
+	console.log(`Making two ad hoc queries on all the documents...`);
 	
 	try {
         const files = fs.readdirSync(global.filesDir);
@@ -266,22 +266,43 @@ app.post('/queries', function(req, res) {
             fileContent = fs.readFileSync(filePath, 'utf-8');
             fileFormat = path.extname(filePath);
             
-            dataFile = new DataFile(file, fileContent, fileFormat);
+            const dataFile = new DataFile(file, fileContent, fileFormat);
             dataFiles.push(dataFile);
         });
 
         dataFiles.forEach(function(dataFile) {
-            dataFile.queryFile(req.body.query0, req.body.queryLang);
-            const resQuery0 = dataFile.queryResult;
+            var results = [];
+            var counterQuery = 0;
+
+            req.body.queries.forEach((query) => {
+                dataFile.queryFile(query, req.body.queryLang);
+                const resQuery = dataFile.queryResult;
+
+                if (resQuery == null) {
+                    res.send({
+                        status: false,
+                        error: "Invalid query or an error occurred during execution of it."
+                    })
+                }
+
+                const result = {
+                    fileName: dataFile.fileName,
+                    queryNum: counterQuery,
+                    queryName: req.body.queryLang + "query" + counterQuery,
+                    queryResult: resQuery
+                }
+
+                counterQuery++;
+
+                results.push(result);
+            }) 
+            /* // making the first query
+            
+            // making the second query
             dataFile.queryFile(req.body.query1, req.body.queryLang);
             const resQuery1 = dataFile.queryResult;
 
-            if (resQuery0 == null || resQuery1 == null) {
-                res.send({
-                    status: false,
-                    error: "Invalid query or an error occurred during execution of it."
-                })
-            }
+            
 
             const result = [
                 {
@@ -298,14 +319,13 @@ app.post('/queries', function(req, res) {
                     queryFormat: fileFormat,
                     queryResult: resQuery1
                 }
-            ]
+            ] */
                 
-            result.forEach(function(res) {
+            results.forEach(function(res) {
                 queriesRes.push(res);
             })
 
         })
-        
         
         res.send({
             status: true,

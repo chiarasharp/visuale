@@ -2,7 +2,8 @@ global = {
 	parsedData : [],
 	fileNames : [],
     grid : undefined,
-    gridItems : []
+    gridItems : [],
+    gridItemsLength : 0
 }
   
 
@@ -14,22 +15,6 @@ $(document).ready(function(){
 
     loadGridItems();
 
-    loadQueries().then(function() {
-        var yearCount = {};
-        global.parsedData.forEach(item => {
-            queryArt = item.parsedData.queriesData[0].queryResult;
-            queryDate = item.parsedData.queriesData[1].queryResult;
-            queryYear = new Date(queryDate).getFullYear()
-
-            if(yearCount.hasOwnProperty(queryYear)) {
-                yearCount[queryYear] = yearCount[queryYear] + queryArt;
-            }
-            else {
-                yearCount[queryYear] = queryArt;
-            } 
-        })
-        console.log(yearCount);
-    });
 
     $('form').submit(function(event) { // catch the form's submit event
 
@@ -71,37 +56,23 @@ $(document).ready(function(){
     });
 
     $('#addChart').click(function(event) {
-        var chartName = 'Canvas'+ global.gridItems.length;
-        addItem(chartName);
-        var context = document.getElementById(chartName).getContext('2d');
-		
-        var chart = new Chart(context, {
-            type: 'line',
-            data: {
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [{
-                label: 'My First dataset',
-                //backgroundColor: #084cdf,
-                //borderColor: window.chartColors.red,
-                data: [
-                  12,
-                  5.5,
-                ],
-                fill: false,
-              }, {
-                label: 'My Second dataset',
-                fill: false,
-                //backgroundColor: window.chartColors.blue,
-                //borderColor: window.chartColors.blue,
-                data: [
-                  12,
-                  5.5,
-                ],
-              }]
-            }
-        });
-        
-       
+        loadQueries().then(function() {
+            var yearCount = {};
+            global.parsedData.forEach(item => {
+                queryArt = item.parsedData.queriesData[0].queryResult;
+                queryDate = item.parsedData.queriesData[1].queryResult;
+                queryYear = new Date(queryDate).getFullYear();
+    
+                if(yearCount.hasOwnProperty(queryYear)) {
+                    yearCount[queryYear] = yearCount[queryYear] + queryArt;
+                }
+                else {
+                    yearCount[queryYear] = queryArt;
+                } 
+            })
+            createChartArticlesInYears(yearCount);
+            console.log(yearCount);
+        });  
 	});
 
 })
@@ -160,7 +131,7 @@ function getQueriesDataLength(fileName) {
 }
 
 function loadQueries() {
-    return queryFiles('count(//*[local-name()="article"])','string(//*[local-name()="publication"]/@date)', 'xpath', 0);
+    return queriesFiles(['count(//*[local-name()="article"])','string(//*[local-name()="publication"]/@date)'], 'xpath');
 }
 
 function queryFileAndParseResult(fileName, query, queryLang, numQuery) {
@@ -228,42 +199,35 @@ function queryFile(fileName, query, queryLang, numQuery) {
 	});
 }
 
-function queryFiles(query0, query1, queryLang, numQuery) {
+function queriesFiles(queries, queryLang) {
     return $.ajax({
 	    url: 'queries',
 	    type: 'POST',
         data: {
-            query0: query0,
-            query1: query1,
-            queryLang: queryLang,
-            numQuery: numQuery
+            queries: queries,
+            queryLang: queryLang
         },
 
 	    success: function(data) {
             global.parsedData.forEach((item) => {
-                data.queriesResult.forEach((queryRes) => {
+                const queriesItem = [];
 
+                data.queriesResult.forEach((queryRes) => {
                     if (item.fileName == queryRes.fileName) {
-                        if (!queryRes.queryNum) {
-                            queryData = {
-                                queryName : queryRes.queryName,
-                                queryLang : queryLang,
-                                query: query0,
-                                queryResult : queryRes.queryResult
-                            }
-                        }
-                        else {
-                            queryData = {
-                                queryName : queryRes.queryName,
-                                queryLang : queryLang,
-                                query: query1,
-                                queryResult : queryRes.queryResult
-                            }
-                        }
-                        item.parsedData.queriesData.push(queryData);
+                        queriesItem.push(queryRes);
                     }
-                })
+                });
+
+                queriesItem.forEach((query) => {
+                    queryData = {
+                        queryName : query.queryName,
+                        queryLang : queryLang,
+                        query: queries[query.counterQuery],
+                        queryResult : query.queryResult
+                    }
                 
+                    item.parsedData.queriesData.push(queryData);
+                });            
             })
 	    },
         error: function(error) {
@@ -283,6 +247,7 @@ function addItem(chartName) {
     }
     
     //items.push(item);
+    global.gridItemsLength++;
     global.grid.addWidget('<div><div class="grid-stack-item-content"><button class="ui button" id="dlt'+chartName+'"onClick="global.grid.removeWidget(this.parentNode.parentNode)">Delete Chart</button><br>' + (item.content ? item.content : ''), item);
 }
 
@@ -294,15 +259,37 @@ function loadGridItems() {
 
     global.grid.load(global.gridItems);
   
-    global.grid.on('added removed change', function(e, items) {
+    global.grid.on('added change', function(e, items) {
         let str = '';
         items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+
+        console.log(e.type + ' ' + items.length + ' items:' + str );
+    });
+
+    global.grid.on('removed', function(e, items) {
+        let str = '';
+        items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+        global.gridItemsLength--;
         console.log(e.type + ' ' + items.length + ' items:' + str );
     });
 }
 
-function createChartArticleInYears() {
-    global.parsedData.forEach((item) => {
-        doc.date = new Date(doc.akomando.getPublicationInfo().date)
-    })
+function createChartArticlesInYears(articlesInYears) {
+    var chartName = 'Canvas'+ global.gridItemsLength;
+    addItem(chartName);
+    console.log(chartName);
+    var context = document.getElementById(chartName).getContext('2d');
+		
+    var chart = new Chart(context, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(articlesInYears),
+            datasets: [{
+                label: 'Number of articles by year.',
+                data: Object.values(articlesInYears),
+                fill: false,
+            }]
+        }
+    });
+        
 }
