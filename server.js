@@ -12,12 +12,16 @@ const _ = require('lodash');
 /* GLOBAL VARS */
 /* =========== */
 global.rootDir = __dirname;
-global.filesDir = global.rootDir + '/client/data'; // path to where the files are stored on disk
+global.collectionsDir = global.rootDir + '/data/';
+global.testCollDir = global.collectionsDir + '/data-test/';
+global.jsonDir = global.rootDir + '/json/';
+
 global.supExt = ['.rdf', '.xml'];
 global.startDate = null;
 global.port = 8000;
 
-const DataFile = require(global.rootDir + '/scripts/parsing.js');
+
+const {DataFile, FileCollection} = require(global.rootDir + '/scripts/parsing.js');
 
 /* ============== */
 /* EXPRESS CONFIG */
@@ -38,7 +42,7 @@ app.use(morgan('dev'));
 app.enable('trust proxy');
 
 
-app.post('/upload', (req, res) => {
+/*app.post('/upload', (req, res) => {
     console.log(`Uploading files...`);
     let data = []; 
 
@@ -121,40 +125,47 @@ app.post('/upload', (req, res) => {
     } catch (err) {
         res.status(500).send(err);
     }
-});
+});*/
 
-app.get('/pull', function(req, res) {
-	console.log(`Pulling uploaded files...`);
+app.get('/pull-parse', function(req, res) {
+	console.log(`Pulling files and parsing them...`);
 	
 	try {
-        const files = fs.readdirSync(global.filesDir);
+        const coll = fs.readdirSync(global.testCollDir);
+        const fileCollection = new FileCollection(global.testCollDir);
         const dataFiles = [];
-
-        if(files.size == 0) {
+        if(coll.size == 0) {
             res.send({
                 status: false,
                 message: "No files to pull."
             });
         }
 
-        files.forEach(function(file) {
-            filePath = path.join(global.filesDir, file);
+        coll.forEach(function(file) {
+            filePath = path.join(global.testCollDir, file);
             fileContent = fs.readFileSync(filePath, 'utf-8');
             fileFormat = path.extname(filePath);
             
-            dataFile = new DataFile(file, fileContent, fileFormat);
-            dataFiles.push(dataFile);
+            const dataFile = new DataFile(file, fileContent, fileFormat);
+            dataFile.parseFile();
+            //dataFiles.push(dataFile);
+            fileCollection.pushDataFile(dataFile);
         });
-        
-        // Import and parse the data for each ODM instance
-        for (let i = 0; i < dataFiles.length; i++) {
-            dataFiles[i].parseFile();
-        }
+
+        // saving the parsed data of the collection in a json file
+        const jsonString = JSON.stringify(fileCollection);
+        fs.writeFile(global.jsonDir + 'data-test-collection.json', jsonString, (err) => {
+            if (err) {
+                console.error('Error writing file:', err);
+            } else {
+                console.log('Objects saved to file.');
+            }
+        });
 
         res.send({
             status: true,
-            fileNames: files,
-            parsedData: dataFiles
+            fileNames: coll,
+            parsedData: fileCollection.collFiles
         })
 	}
 	catch(e) {
@@ -162,121 +173,22 @@ app.get('/pull', function(req, res) {
 	}
 });
 
-app.post('/query-and-parse', function(req, res) {
-	console.log(`Making query and parsing the result...`);
-	
-	try {
-        const filePath = path.join(global.filesDir, req.body.fileName);
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const fileFormat = path.extname(filePath);
-        
-        const dataFile = new DataFile(req.body.fileName, fileContent, fileFormat);
-        
-        // perform query on file
-        dataFile.queryFile(req.body.query, req.body.queryLang);
-        const resQuery = dataFile.queryResult;
-
-        if (resQuery == null) {
-            res.send({
-                status: false,
-                error: "Invalid query or an error occurred during execution of it."
-            })
-        }
-
-        // parse result of query
-        const parsedQuery = new DataFile(req.body.queryLang + "query" + req.body.numQuery, resQuery, fileFormat);
-        parsedQuery.parseFile();
-
-       /*// TODO delete later
-        fs.writeFile("query.json", JSON.stringify(parsedQuery, null, 2),(err) => {
-            if (err) throw err;
-            console.log('Results of the query written to file.');
-        });*/
-        
-        res.send({
-            status: true,
-            parsedQuery: parsedQuery
-        })
-	}
-	catch(e) {
-		res.send({
-            status: false,
-            error: e.message
-        });
-	}
-});
-
-app.post('/query', function(req, res) {
-	console.log(`Making query...`);
-	
-	try {
-        const filePath = path.join(global.filesDir, req.body.fileName);
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const fileFormat = path.extname(filePath);
-        
-        const dataFile = new DataFile(req.body.fileName, fileContent, fileFormat);
-        
-        // perform query on file
-        dataFile.queryFile(req.body.query, req.body.queryLang);
-        const resQuery = dataFile.queryResult;
-
-        if (resQuery == null) {
-            res.send({
-                status: false,
-                error: "Invalid query or an error occurred during execution of it."
-            })
-        }
-
-        const result = {
-            queryName: req.body.queryLang + "query" + req.body.numQuery,
-            queryFormat: fileFormat,
-            queryResult: resQuery
-        }
-        
-        res.send({
-            status: true,
-            queryResult: result
-        })
-	}
-	catch(e) {
-		res.send({
-            status: false,
-            error: e.message
-        });
-	}
-});
-
 app.post('/queries', function(req, res) {
-	console.log(`Making two ad hoc queries on all the documents...`);
+	console.log(`Making n queries on all the documents...`);
 	
 	try {
-        const files = fs.readdirSync(global.filesDir);
-        const dataFiles = [];
         const queriesRes = [];
+        const json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-test-collection.json'));
+        const fileCollection = new FileCollection(global.testCollDir);
 
-        if(files.size == 0) {
-            res.send({
-                status: false,
-                message: "No files to query."
-            });
-        }
+        fileCollection.constructFromJson(json);
 
-        files.forEach(function(file) {
-            filePath = path.join(global.filesDir, file);
-            fileContent = fs.readFileSync(filePath, 'utf-8');
-            fileFormat = path.extname(filePath);
-            
-            const dataFile = new DataFile(file, fileContent, fileFormat);
-            dataFiles.push(dataFile);
-        });
-
-        dataFiles.forEach(function(dataFile) {
+        fileCollection.collFiles.forEach(function(dataFile) {
             var results = [];
-            var counterQuery = 0;
 
             req.body.queries.forEach((query) => {
                 dataFile.queryFile(query, req.body.queryLang);
-                const resQuery = dataFile.queryResult;
+                const resQuery = dataFile.fileQueries.at(-1);
 
                 if (resQuery == null) {
                     res.send({
@@ -285,47 +197,24 @@ app.post('/queries', function(req, res) {
                     })
                 }
 
-                const result = {
-                    fileName: dataFile.fileName,
-                    queryNum: counterQuery,
-                    queryName: req.body.queryLang + "query" + counterQuery,
-                    queryResult: resQuery
-                }
-
-                counterQuery++;
-
-                results.push(result);
-            }) 
-            /* // making the first query
-            
-            // making the second query
-            dataFile.queryFile(req.body.query1, req.body.queryLang);
-            const resQuery1 = dataFile.queryResult;
-
-            
-
-            const result = [
-                {
-                    fileName: dataFile.fileName,
-                    queryNum: 0,
-                    queryName: req.body.queryLang + "query" + req.body.numQuery,
-                    queryFormat: fileFormat,
-                    queryResult: resQuery0
-                },
-                {
-                    fileName: dataFile.fileName,
-                    queryNum: 1,
-                    queryName: req.body.queryLang + "query" + req.body.numQuery+1,
-                    queryFormat: fileFormat,
-                    queryResult: resQuery1
-                }
-            ] */
+                results.push(resQuery);
+            });
                 
             results.forEach(function(res) {
                 queriesRes.push(res);
-            })
+            });
 
         })
+
+        // updating the json
+        const jsonString = JSON.stringify(fileCollection);
+        fs.writeFile(global.jsonDir + 'data-test-collection.json', jsonString, (err) => {
+            if (err) {
+                console.error('Error writing file:', err);
+            } else {
+                console.log('Objects saved to file.');
+            }
+        });
         
         res.send({
             status: true,
@@ -339,32 +228,6 @@ app.post('/queries', function(req, res) {
         });
 	}
 });
-
-/* TODO delete later 
-const dir = global.rootDir + '/client/data';
-const files = fs.readdirSync(dir);
-const dataFiles = [];
-
-files.forEach(function(file) {
-    filePath = path.join(dir, file);
-    fileContent = fs.readFileSync(filePath, 'utf-8');
-    fileFormat = path.extname(filePath);
-
-    dataFile = new DataFile(file, fileContent, fileFormat);
-    dataFiles.push(dataFile);
-});
-
-// Import and parse the data for each ODM instance
-for (let i = 0; i < dataFiles.length; i++) {
-    dataFiles[i].parseFile();
-}
-
-// Use the ODM instances to access and query the data
-fs.writeFile("prova.json", JSON.stringify(dataFiles, null, 2),(err) => {
-    if (err) throw err;
-    console.log('Results written to file');
-});*/
-
 
 /* ==================== */
 /* ACTIVATE NODE SERVER */

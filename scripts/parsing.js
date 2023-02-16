@@ -31,8 +31,6 @@ const queryXMLXPath = (query, fileContent) => {
     null                        // result
   )
 
-  console.log(resultEvaluate.resultType)
-
   switch (resultEvaluate.resultType) {
     case 1:                              // NUMBER_TYPE
       res = resultEvaluate.numberValue; 
@@ -61,6 +59,7 @@ const queryXMLXPath = (query, fileContent) => {
 
 /*
 * Querys an XML file with an XQuery query.
+  // TODO: try saxon 
 */
 /*const queryXMLXQuery = (query, fileContent) => {
   const resQuery = "";
@@ -101,8 +100,7 @@ const parseXML = fileContent => {
   const data = {
     namespaces: "",
     namespacePrefixes: "",
-    elements: [],
-    queriesData: [],
+    elements: []
   };
 
   const elements = doc.getElementsByTagName('*');
@@ -168,6 +166,24 @@ const parseRDFXML = fileContent => {
   };
 
 /* 
+* ODM class to represent a generic query. 
+*/
+class Query {
+  
+  /* 
+  * Constructor for a query.
+  */
+  constructor(queryFile, queryNum, queryText, queryLang, queryRes) {
+    this.queryFile = queryFile;
+    this.queryNum = queryNum;
+    this.queryText = queryText;
+    this.queryLang = queryLang;
+    this.queryRes = queryRes;
+  }
+
+}
+
+/* 
 * ODM class to represent a generic file. 
 */
 class DataFile {
@@ -176,6 +192,8 @@ class DataFile {
     this.fileName = fileName;
     this.fileContent = fileContent;
     this.fileFormat = fileFormat;
+    this.fileParsed = {};
+    this.fileQueries = [];
   }
 
   /*
@@ -185,10 +203,10 @@ class DataFile {
 
     switch (this.fileFormat) {
       case '.xml':
-        this.parsedData = parseXML(this.fileContent);
+        this.fileParsed = parseXML(this.fileContent);
         break;
       case '.rdf':
-        this.parsedData = parseRDFXML(this.fileContent);
+        this.fileParsed = parseRDFXML(this.fileContent);
         break;
     }
     
@@ -202,8 +220,12 @@ class DataFile {
       case '.xml':
         switch (queryLang) {
           case 'xpath':
-            this.queryResult = queryXMLXPath(query, this.fileContent);
+            const queryRes = queryXMLXPath(query, this.fileContent);
+            const queryOb = new Query(this.fileName, this.fileQueries.length, query, queryLang, queryRes);
+            
+            this.fileQueries.push(queryOb);
             break;
+            
           case 'xquery':
             //return queryXML(query, this.fileContent);
             break;
@@ -215,4 +237,29 @@ class DataFile {
   }
 }
 
-module.exports = DataFile
+class FileCollection {
+  constructor(collName) {
+    this.collName = collName;
+    this.collFiles = [];
+  }
+
+  async pushDataFile(dataFile) {
+    this.collFiles.push(dataFile);
+  }
+
+  async constructFromJson(json) {
+    json.collFiles.forEach(file => {
+      var dataFile = new DataFile(file.fileName, file.fileContent, file.fileFormat);
+
+      dataFile.fileParsed = file.fileParsed;
+
+      file.fileQueries.forEach(query => {
+        dataFile.fileQueries.push(query);
+      })
+
+      this.collFiles.push(dataFile);
+    });
+  }
+}
+
+module.exports = {DataFile, FileCollection}

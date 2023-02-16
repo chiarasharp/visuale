@@ -16,7 +16,7 @@ $(document).ready(function(){
     loadGridItems();
 
 
-    $('form').submit(function(event) { // catch the form's submit event
+    /*$('form').submit(function(event) { // catch the form's submit event
 
         event.preventDefault();
 
@@ -53,14 +53,17 @@ $(document).ready(function(){
         });
 
        
-    });
+    });*/
 
-    $('#addChart').click(function(event) {
+    $('#b1').click(function(event) {
+        label = event.target.textContent;
+
         loadQueries().then(function() {
             var yearCount = {};
+
             global.parsedData.forEach(item => {
-                queryArt = item.parsedData.queriesData[0].queryResult;
-                queryDate = item.parsedData.queriesData[1].queryResult;
+                queryArt = item.fileQueries[0].queryResult;
+                queryDate = item.fileQueries[1].queryResult;
                 queryYear = new Date(queryDate).getFullYear();
     
                 if(yearCount.hasOwnProperty(queryYear)) {
@@ -70,16 +73,16 @@ $(document).ready(function(){
                     yearCount[queryYear] = queryArt;
                 } 
             })
-            createChartArticlesInYears(yearCount);
-            console.log(yearCount);
+
+            createChart(yearCount, label);
         });  
-	});
+    });
 
 })
 
 function loadData() {
 	return $.ajax({
-	    url: 'pull',
+	    url: 'pull-parse',
 	    type: 'GET',
 	    contentType: "application/json",
 
@@ -88,7 +91,7 @@ function loadData() {
             global.parsedData = data.parsedData;
 	    },
         error: function(error) {
-            alert(error.message);
+            alert(error);
         }
 	});
 }
@@ -122,7 +125,7 @@ function getQueriesDataLength(fileName) {
 
     global.parsedData.forEach((item) => {
         if (item.fileName == fileName) {
-            res = item.parsedData.queriesData.length;
+            res = item.fileQueries.length;
             return res;
         }
     });
@@ -132,71 +135,6 @@ function getQueriesDataLength(fileName) {
 
 function loadQueries() {
     return queriesFiles(['count(//*[local-name()="article"])','string(//*[local-name()="publication"]/@date)'], 'xpath');
-}
-
-function queryFileAndParseResult(fileName, query, queryLang, numQuery) {
-    $.ajax({
-	    url: '/query-and-parse',
-	    type: 'POST',
-        data: {
-            fileName: fileName,
-            query: query,
-            queryLang: queryLang,
-            numQuery: numQuery
-        },
-
-	    success: function(data) {
-            global.parsedData.forEach((item) => {
-                if (item.fileName == fileName) {
-                    queryData = {
-                        queryName : data.parsedQuery.fileName,
-                        queryFormat : queryLang,
-                        query: query,
-                        queryResult : data.parsedQuery.fileContent,
-                        queryParsed : data.parsedQuery.parsedData
-                    }
-
-                    item.parsedData.queriesData.push(queryData);  
-                }
-            })  
-	    },
-        error: function(error) {
-            alert(error);
-        }
-	});
-
-    return res;
-}
-
-function queryFile(fileName, query, queryLang, numQuery) {
-    $.ajax({
-	    url: 'query',
-	    type: 'POST',
-        data: {
-            fileName: fileName,
-            query: query,
-            queryLang: queryLang,
-            numQuery: numQuery
-        },
-
-	    success: function(data) {
-            global.parsedData.forEach((item) => {
-                if (item.fileName == fileName) {
-                    queryData = {
-                        queryName : data.queryResult.queryName,
-                        queryLang : queryLang,
-                        query: query,
-                        queryResult : data.queryResult.queryResult
-                    }
-
-                    item.parsedData.queriesData.push(queryData);
-                }
-            })
-	    },
-        error: function(error) {
-            alert(error);
-        }
-	});
 }
 
 function queriesFiles(queries, queryLang) {
@@ -209,25 +147,22 @@ function queriesFiles(queries, queryLang) {
         },
 
 	    success: function(data) {
+
             global.parsedData.forEach((item) => {
                 const queriesItem = [];
-
+                
+                // for each doc we take the query res for it
                 data.queriesResult.forEach((queryRes) => {
-                    if (item.fileName == queryRes.fileName) {
+                    if (item.fileName == queryRes.queryFile) {
                         queriesItem.push(queryRes);
                     }
                 });
-
-                queriesItem.forEach((query) => {
-                    queryData = {
-                        queryName : query.queryName,
-                        queryLang : queryLang,
-                        query: queries[query.counterQuery],
-                        queryResult : query.queryResult
-                    }
                 
-                    item.parsedData.queriesData.push(queryData);
-                });            
+                // for each query we create a structure with diff metadata
+                // and push it in the structure for the file
+                queriesItem.forEach((query) => {
+                    item.fileQueries.push(query);
+                });
             })
 	    },
         error: function(error) {
@@ -274,10 +209,9 @@ function loadGridItems() {
     });
 }
 
-function createChartArticlesInYears(articlesInYears) {
-    var chartName = 'Canvas'+ global.gridItemsLength;
+/*function createChartArticlesInYears(articlesInYears) {
+    var chartName = 'canvas'+ global.gridItemsLength;
     addItem(chartName);
-    console.log(chartName);
     var context = document.getElementById(chartName).getContext('2d');
 		
     var chart = new Chart(context, {
@@ -287,6 +221,25 @@ function createChartArticlesInYears(articlesInYears) {
             datasets: [{
                 label: 'Number of articles by year.',
                 data: Object.values(articlesInYears),
+                fill: false,
+            }]
+        }
+    });
+        
+}*/
+
+function createChart(data, label) {
+    var chartName = 'canvas'+ global.gridItemsLength;
+    addItem(chartName);
+    var context = document.getElementById(chartName).getContext('2d');
+		
+    var chart = new Chart(context, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: label,
+                data: Object.values(data),
                 fill: false,
             }]
         }
