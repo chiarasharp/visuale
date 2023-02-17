@@ -1,18 +1,21 @@
 
-/* required file for gridstack to work */
-@import "https://cdn.jsdelivr.net/npm/gridstack@1.0.0/dist/gridstack.min.css";
-
-.grid-stack {
-  background: rgba(59, 101, 233, 0.5);
-}
-
-.grid-stack-item-content {
-  color: #2c3e50;
-  text-align: center;
-  background-color: rgb(245,245,245);
+.ui.secondary.menu {
+  background-color: #EBEBD3;
 }
 
 #container {
     width: 100%;
     height: 100%;
   }
+
+.chart-container {
+  position: relative;
+}
+  
+.chart {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}

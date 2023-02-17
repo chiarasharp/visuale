@@ -1,98 +1,108 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Dashboard Project</title>
 
-    <!-- SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
-    <script src="semantic/dist/semantic.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.all.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.poly.js"></script>
-    <script src="client.js"></script>
+<head>
+  <title>Dashboard Project</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="main.css">
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+  <script src="semantic/dist/semantic.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.poly.js"></script>
+  <script src="client.js"></script>
 
-  </head>
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="main.css">
 
-  <body>
+</head>
 
-    <!-- HEADER -->
-    <div class="ui borderless main menu">
-      <div class="ui text container">
-        <div class="header item">
-          <!--<img class="logo" src="">-->
-          Dasharp
-        </div>
+<body>
+
+  <!-- HEADER -->
+  <nav class="ui secondary menu navbar">
+    <div class="ui text container">
+      <div class="header item">
+        <i class="meh icon"></i>
+        Dashboard
       </div>
     </div>
+  </nav>
 
-    <!-- UPLOAD FILE FORM -->
-    <!--<div class="ui form container">
-      <form class="ui form" id="formid" method="POST" action="/upload" enctype="multipart/form-data">
-        <div class="three fields">
-          <div class="two wide field"></div>
-          <div class="ten wide field">
-            <input id="fileInput" type="file" name="files" multiple/>
+  <!-- MAIN CONTENT -->
+  <div class="ui container">
+    <div class="ui centered grid">
+      <div class="two column row">
+
+        <!-- LIST OF UPLOADED FILES -->
+        <div class="three wide column">
+
+          <h3 class="header item">
+            <i class="folder icon"></i>
+            Files</h3>
+
+          <div id="loadingItems">
+            <p>Loading...</p>
           </div>
-          <button class="two wide field ui primary submit button" type="submit" id="submitButton" name="submitButton">Upload</button>
+          <div id="noItems" style="display: none;">
+            <p>No files to show.</p>
+          </div>
+
+          <div id="fileList" class="ui large celled list overflow" style="overflow: auto; display: none;"></div>
+
         </div>
-      </form>
-    </div>-->
-    
-    <!-- MAIN CONTENT -->
-    <div class="ui container">
-      <div class="ui centered grid">
-        <div class="two column row">
 
-          <!-- LIST OF UPLOADED FILES -->
-          <div class="three wide column">
+        <!-- PERSONALIZED DASHBOARD -->
+        <div class="thirteen wide column">
 
-              <h3 class="header item">Uploaded files</h3>
+          <h3 class="header item">
+            Charts
+          </h3>
 
-              <div id="loadingItems">
-                <p>Loading...</p>
-              </div>
-              <div id="noItems" style="display: none;">
-                <p>No files to show.</p>
-              </div>
+          <div class="ui stackable grid">
 
-              <div id="fileList" class="ui large celled list overflow" style="overflow: auto; display: none;"></div>
-
-          </div>
-          
-          <!-- PERSONALIZED DASHBOARD -->
-          <div class="thirteen wide column">
-            
-            <div class="ui form row">
-              <h3 class="header item">Dashboard</h3>
-              <div class="fields">
-                <div class="ui compact">
-                  <div class="ui simple dropdown button item">
-                    <i class="chart bar icon"></i>
-                    Choose Chart
-                    <i class="dropdown icon"></i>
-                  
-                    <div class="menu">
-                      <div id="b1" class="ui item" tag="canvas1">Number of articles per year</div>
-                      <!--<div id="b2" class="ui item" tag="canvas2">Chart2</div>-->
-                    </div>
+            <div class="six wide column">
+              <div class="ui raised segment">
+                <div class="ui link card">
+                  <div class="content">
+                    <div class="header">Number of articles per year</div>
+                  </div>
+                  <div class="content chart-container" style="width: 100%; height: 250px;">
+                    <canvas class="chart" id="canvas1"></canvas>
+                  </div>
+                  <div class="extra content">
+                    <span>Info about Chart 1</span>
                   </div>
                 </div>
-                <!--<button id="addChart" class="ui primary button">Add Chart to Dashboard</button>-->
               </div>
-
             </div>
 
-            <div id="grid-container"class="grid-stack"></div>
+
+            <div class="six wide column">
+              <div class="ui raised segment chart-container">
+                <div class="ui link card">
+                  <div class="content">
+                    <div class="header">Chart 2</div>
+                  </div>
+                  <div class="content">
+                    <canvas id="canvas2"></canvas>
+                  </div>
+                  <div class="extra content">
+                    <span>Info about Chart 2</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
+
       </div>
     </div>
-    
-  </body>
+  </div>
+
+</body>
 
 </html>
