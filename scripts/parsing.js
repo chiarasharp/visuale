@@ -173,9 +173,8 @@ class Query {
   /* 
   * Constructor for a query.
   */
-  constructor(queryFile, queryNum, queryText, queryLang, queryRes) {
+  constructor(queryFile, queryText, queryLang, queryRes) {
     this.queryFile = queryFile;
-    this.queryNum = queryNum;
     this.queryText = queryText;
     this.queryLang = queryLang;
     this.queryRes = queryRes;
@@ -188,6 +187,10 @@ class Query {
 */
 class DataFile {
   
+  /**
+   * @property {string} fileName - the file's name.
+   //{Query[][]} fileQueries - a matrix of Querys because for a single file we often do multiple queries at the time and it is useful to index them together.
+   * */
   constructor(fileName, fileContent, fileFormat) {
     this.fileName = fileName;
     this.fileContent = fileContent;
@@ -196,7 +199,7 @@ class DataFile {
     this.fileQueries = [];
   }
 
-  /*
+  /**
   * Parsing of the file based on the format.
   */
   async parseFile() {
@@ -221,9 +224,32 @@ class DataFile {
         switch (queryLang) {
           case 'xpath':
             const queryRes = queryXMLXPath(query, this.fileContent);
-            const queryOb = new Query(this.fileName, this.fileQueries.length, query, queryLang, queryRes);
+            const queryOb = [new Query(this.fileName, query, queryLang, queryRes)];
             
             this.fileQueries.push(queryOb);
+            break;
+            
+          case 'xquery':
+            //return queryXML(query, this.fileContent);
+            break;
+          default:
+            console.error(`Can't perform a ${queryLang} query on XML file.`);
+            break;
+        }
+    }
+  }
+
+  async queriesFile(queries, queryLang) {
+    switch (this.fileFormat) {
+      case '.xml':
+        switch (queryLang) {
+          case 'xpath':
+            var queriesRes = [];
+            queries.forEach((query) => {
+              const queryRes = queryXMLXPath(query, this.fileContent);
+              queriesRes.push(new Query(this.fileName, query, queryLang, queryRes));
+            })
+            this.fileQueries.push(queriesRes);
             break;
             
           case 'xquery':
@@ -253,8 +279,12 @@ class FileCollection {
 
       dataFile.fileParsed = file.fileParsed;
 
-      file.fileQueries.forEach(query => {
-        dataFile.fileQueries.push(query);
+      file.fileQueries.forEach(queries => {
+        var queriesI = []
+        queries.forEach(query => {
+          queriesI.push(query);
+        })
+        dataFile.fileQueries.push(queriesI);
       })
 
       this.collFiles.push(dataFile);
