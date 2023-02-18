@@ -39,45 +39,59 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(morgan('dev'));
-app.enable('trust proxy'); 
+app.enable('trust proxy');
 
 app.get('/pull-parse', function (req, res) {
-    console.log(`Pulling files and parsing them...`);
+    console.log(`Pulling files from all the collections and parsing them...`);
 
     try {
-        const coll = fs.readdirSync(global.testCollDir);
-        const fileCollection = new FileCollection('data-test');
-        if (coll.size == 0) {
-            res.send({
-                status: false,
-                message: "No files to pull."
-            });
-        }
+        let datasetDir = fs.readdirSync(global.collectionsDir);
+        let collectionsFiles = [];
+        let collectionsFilesNames = [];
 
-        coll.forEach(function (file) {
-            filePath = path.join(global.testCollDir, file);
-            fileContent = fs.readFileSync(filePath, 'utf-8');
-            fileFormat = path.extname(filePath);
+        datasetDir.forEach(pathDir => {
 
-            const dataFile = new DataFile(file, fileContent, fileFormat);
-            dataFile.parseFile();
-            fileCollection.pushDataFile(dataFile);
-        });
+            const fullPath = path.join(global.collectionsDir, pathDir);
+            if (!(fs.statSync(fullPath).isFile())) {
+                const coll = fs.readdirSync(fullPath);
+                const fileCollection = new FileCollection(pathDir);
 
-        // saving the parsed data of the collection in a json file
-        const jsonString = JSON.stringify(fileCollection);
-        fs.writeFile(global.jsonDir + 'data-test-collection.json', jsonString, (err) => {
-            if (err) {
-                console.error('Error writing file:', err);
-            } else {
-                console.log('File of objects created.');
+                if (coll.size == 0) {
+                    res.send({
+                        status: false,
+                        message: "No files to pull."
+                    });
+                }
+
+                coll.forEach(function (file) {
+                    filePath = path.join(fullPath, file);
+                    fileContent = fs.readFileSync(filePath, 'utf-8');
+                    fileFormat = path.extname(filePath);
+
+                    const dataFile = new DataFile(file, fileContent, fileFormat);
+                    dataFile.parseFile();
+                    fileCollection.pushDataFile(dataFile);
+                });
+
+                // saving the parsed data of the collection in a json file
+                const jsonString = JSON.stringify(fileCollection);
+                fs.writeFile(global.jsonDir + pathDir + '-collection.json', jsonString, (err) => {
+                    if (err) {
+                        console.error('Error writing file:', err);
+                    } else {
+                        console.log('File of objects created.');
+                    }
+                });
+
+                collectionsFiles.push(fileCollection.collFiles);
+                collectionsFilesNames.push(coll);
             }
         });
 
         res.send({
             status: true,
-            fileNames: coll,
-            parsedData: fileCollection.collFiles
+            fileNames: collectionsFilesNames,
+            parsedData: collectionsFiles
         })
     }
     catch (e) {
@@ -146,8 +160,19 @@ app.post('/queries', function (req, res) {
 
     try {
         var queriesRes = [];
-        const json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-test-collection.json'));
-        const fileCollection = new FileCollection('data-test');
+        var json;
+        var fileCollection;
+
+        switch (req.body.queriesTag) {
+            case 'tag1':
+                json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-one-collection.json'));
+                fileCollection = new FileCollection('data-one');
+                break;
+            case 'tag2':
+                json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-two-collection.json'));
+                fileCollection = new FileCollection('data-two');
+                break;
+        }
 
         fileCollection.constructFromJson(json);
 
@@ -155,7 +180,7 @@ app.post('/queries', function (req, res) {
             var queriesResTag = {
                 tag: req.body.queriesTag,
                 queriesResult: [] // array of queries
-            }; 
+            };
 
             dataFile.queriesFile(req.body.queries, req.body.queryLang);
             const resQueries = dataFile.fileQueries.at(-1); // array of queries

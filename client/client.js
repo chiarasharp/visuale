@@ -1,16 +1,14 @@
 global = {
     parsedData: [],
-    fileNames: [],
-    grid: undefined,
-    gridItems: [],
-    gridItemsLength: 0
+    dsNum: 0,
+    fileNames: []
 }
 
 
 $(document).ready(function () {
 
     loadData().then(function () {
-        loadFileList();
+        loadFileList(global.dsNum);
     });
 
     window.onload = function () {
@@ -20,7 +18,7 @@ $(document).ready(function () {
         loadQueries(queriesChart1, tagChart1).then(function () {
             var yearCount = {};
 
-            global.parsedData.forEach(item => {
+            global.parsedData[global.dsNum].forEach(item => {
                 item.fileQueries.forEach((query) => {
                     if (query.tag == tagChart1) {
                         var queryResChart1 = query.queriesResult;
@@ -62,16 +60,16 @@ function loadData() {
     });
 }
 
-function loadFileList() {
+function loadFileList(dsNum) {
     var fileList = $('#fileList');
     fileList.html("");
 
-    if (global.fileNames.length == 0) {
+    if (global.fileNames[dsNum].length == 0) {
         document.getElementById("loadingItems").style.display = "none";
         document.getElementById("noItems").style.display = "block";
     }
     else {
-        global.fileNames.forEach((file) => {
+        global.fileNames[dsNum].forEach((file) => {
             fileList.append(`
                 <div class="item" tag="${file}">
                     <div class="content">
@@ -86,10 +84,10 @@ function loadFileList() {
     }
 }
 
-function getQueriesDataLength(fileName) {
+function getQueriesDataLength(fileName, dsNum) {
     var res = null;
 
-    global.parsedData.forEach((item) => {
+    global.parsedData[dsNum].forEach((item) => {
         if (item.fileName == fileName) {
             res = item.fileQueries.length;
             return res;
@@ -100,10 +98,10 @@ function getQueriesDataLength(fileName) {
 }
 
 function loadQueries(queries, tag) {
-    return queriesFiles(queries, 'xpath', tag);
+    return queriesFiles(queries, 'xpath', tag, global.dsNum);
 }
 
-function queriesFiles(queries, queryLang, tag) {
+function queriesFiles(queries, queryLang, tag, dsNum) {
     return $.ajax({
         url: 'queries',
         type: 'POST',
@@ -115,7 +113,7 @@ function queriesFiles(queries, queryLang, tag) {
 
         success: function (data) {
 
-            global.parsedData.forEach((item) => {
+            global.parsedData[dsNum].forEach((item) => {
                 var queriesItem = []; // array of queries
 
                 // for each doc we take the query res for it
