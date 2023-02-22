@@ -264,8 +264,8 @@ class DataFile {
 }
 
 class FileCollection {
-  constructor(collName) {
-    this.collName = collName;
+  constructor(collId) {
+    this.collId = collId;
     this.collFiles = [];
   }
 

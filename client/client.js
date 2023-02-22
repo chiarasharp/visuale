@@ -1,45 +1,55 @@
 global = {
-    parsedData: [],
-    dsNum: 0,
+    //parsedData: [],
+    queriesByTag: [],
     fileNames: []
 }
 
 
 $(document).ready(function () {
 
-    loadData().then(function () {
-        loadFileList(global.dsNum);
-    });
+    loadData();
 
     window.onload = function () {
-        var queriesChart1 = ['count(//*[local-name()="article"])', 'string(//*[local-name()="publication"]/@date)'];
-        var tagChart1 = 'tag1';
+        var queriesChart0 = ['count(//*[local-name()="article"])', 'string(//*[local-name()="publication"]/@date)'];
+        var tagChart0 = 0;
+        var dsNum = 0;
+        var yearCount = {};
 
-        loadQueries(queriesChart1, tagChart1).then(function () {
-            var yearCount = {};
+        global.queriesByTag.push(
+            {
+                tag: tagChart0,
+                queriesByDs: []
+            }
+        );
 
-            global.parsedData[global.dsNum].forEach(item => {
-                item.fileQueries.forEach((query) => {
-                    if (query.tag == tagChart1) {
-                        var queryResChart1 = query.queriesResult;
-                        const queryArt = queryResChart1[0].queryRes;
-                        const queryDate = queryResChart1[1].queryRes;
-                        const queryYear = new Date(queryDate).getFullYear();
+        global.queriesByTag[tagChart0].queriesByDs.push(
+            {
+                ds: dsNum,
+                queries: []
+            }
+        );
 
-                        if (yearCount.hasOwnProperty(queryYear)) {
-                            yearCount[queryYear] = yearCount[queryYear] + queryArt;
-                        }
-                        else {
-                            yearCount[queryYear] = queryArt;
-                        }
-                    }
-                })
+        loadQueries(queriesChart0, tagChart0, dsNum).then(function () {
 
+            /* THIS WILL BE DONE ON AN USER INTERFACE IN THE FUTURE */
+            
+            global.queriesByTag[tagChart0].queriesByDs[dsNum].queries.forEach(queryFile => {
+                const queryArt = queryFile[0].queryRes;
+                const queryDate = queryFile[1].queryRes;
+                const queryYear = new Date(queryDate).getFullYear();
 
+                if (yearCount.hasOwnProperty(queryYear)) {
+                    yearCount[queryYear] = yearCount[queryYear] + queryArt;
+                }
+                else {
+                    yearCount[queryYear] = queryArt;
+                }
             })
+            createChart(yearCount, "Number of articles per year", tagChart0);
 
-            createChart(yearCount, "Number of articles per year", 1);
         });
+
+        console.log(yearCount);
     };
 
 })
@@ -52,7 +62,7 @@ function loadData() {
 
         success: function (data) {
             global.fileNames = data.fileNames;
-            global.parsedData = data.parsedData;
+            //global.parsedData = data.parsedData;
         },
         error: function (error) {
             alert(error);
@@ -60,23 +70,29 @@ function loadData() {
     });
 }
 
-function loadFileList(dsNum) {
+function loadFileList() {
     var fileList = $('#fileList');
     fileList.html("");
 
-    if (global.fileNames[dsNum].length == 0) {
+    if (global.fileNames.length == 0) {
         document.getElementById("loadingItems").style.display = "none";
         document.getElementById("noItems").style.display = "block";
     }
     else {
-        global.fileNames[dsNum].forEach((file) => {
+        count = 0;
+        global.fileNames.forEach((dir) => {
             fileList.append(`
+            <h4>Directory ${count}</h4>`);
+            dir.forEach((file) => {
+                fileList.append(`
                 <div class="item" tag="${file}">
                     <div class="content">
                         <div class="description">${file}</div>
                     </div>
                 </div>`);
-        });
+            })
+            count++;
+        })
 
         document.getElementById("noItems").style.display = "none";
         document.getElementById("loadingItems").style.display = "none";
@@ -84,21 +100,8 @@ function loadFileList(dsNum) {
     }
 }
 
-function getQueriesDataLength(fileName, dsNum) {
-    var res = null;
-
-    global.parsedData[dsNum].forEach((item) => {
-        if (item.fileName == fileName) {
-            res = item.fileQueries.length;
-            return res;
-        }
-    });
-
-    return res;
-}
-
-function loadQueries(queries, tag) {
-    return queriesFiles(queries, 'xpath', tag, global.dsNum);
+function loadQueries(queries, tag, dsNum) {
+    return queriesFiles(queries, 'xpath', tag, dsNum);
 }
 
 function queriesFiles(queries, queryLang, tag, dsNum) {
@@ -108,26 +111,13 @@ function queriesFiles(queries, queryLang, tag, dsNum) {
         data: {
             queries: queries,
             queryLang: queryLang,
-            queriesTag: tag
+            queriesDs: dsNum
         },
 
         success: function (data) {
 
-            global.parsedData[dsNum].forEach((item) => {
-                var queriesItem = []; // array of queries
+            global.queriesByTag[tag].queriesByDs[dsNum].queries = data.queriesResColl;
 
-                // for each doc we take the query res for it
-                data.queriesResult.forEach((queriesResTag) => {
-
-                    if (item.fileName == queriesResTag.queriesResult[0].queryFile) {
-                        queriesItem = queriesResTag;
-                    }
-
-                });
-
-
-                item.fileQueries.push(queriesItem);
-            })
         },
         error: function (error) {
             alert(error);

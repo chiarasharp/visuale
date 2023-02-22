@@ -45,24 +45,29 @@ app.get('/pull-parse', function (req, res) {
     console.log(`Pulling files from all the collections and parsing them...`);
 
     try {
+        // parse the directory of collections of files
         let datasetDir = fs.readdirSync(global.collectionsDir);
-        let collectionsFiles = [];
+
+        //let collectionsFiles = [];
         let collectionsFilesNames = [];
 
+        var countDir = 0;
+        
+        // cycle ds directory
         datasetDir.forEach(pathDir => {
-
+            
+            // get current sub directory
             const fullPath = path.join(global.collectionsDir, pathDir);
+            
+            // check if it's a directory
             if (!(fs.statSync(fullPath).isFile())) {
+
+                // parse the directory to get files
                 const coll = fs.readdirSync(fullPath);
-                const fileCollection = new FileCollection(pathDir);
-
-                if (coll.size == 0) {
-                    res.send({
-                        status: false,
-                        message: "No files to pull."
-                    });
-                }
-
+                // creating file collection object
+                const fileCollection = new FileCollection(countDir);
+                
+                // parsing the collection of files
                 coll.forEach(function (file) {
                     filePath = path.join(fullPath, file);
                     fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -73,25 +78,27 @@ app.get('/pull-parse', function (req, res) {
                     fileCollection.pushDataFile(dataFile);
                 });
 
-                // saving the parsed data of the collection in a json file
+                // saving all the data about the collection in a json file
                 const jsonString = JSON.stringify(fileCollection);
-                fs.writeFile(global.jsonDir + pathDir + '-collection.json', jsonString, (err) => {
+                fs.writeFile(global.jsonDir + pathDir + ".json", jsonString, (err) => {
                     if (err) {
-                        console.error('Error writing file:', err);
+                        console.error('Error writing ' + pathDir + ".json" + ' file:', err);
                     } else {
-                        console.log('File of objects created.');
+                        console.log('File ' + pathDir + ".json" + ' of objects created.');
                     }
                 });
 
-                collectionsFiles.push(fileCollection.collFiles);
+                //collectionsFiles.push(fileCollection.collFiles); //TODO: rivedere meglio cosa ha senso avere nel client
                 collectionsFilesNames.push(coll);
+
+                countDir++;
             }
         });
 
         res.send({
             status: true,
-            fileNames: collectionsFilesNames,
-            parsedData: collectionsFiles
+            fileNames: collectionsFilesNames
+            //parsedData: collectionsFiles
         })
     }
     catch (e) {
@@ -104,8 +111,8 @@ app.post('/query', function (req, res) {
 
     try {
         const queriesRes = [];
-        const json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-test-collection.json'));
-        const fileCollection = new FileCollection('data-test');
+        const json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-one-collection.json'));
+        const fileCollection = new FileCollection('data-one');
 
         fileCollection.constructFromJson(json);
 
@@ -159,33 +166,25 @@ app.post('/queries', function (req, res) {
     console.log(`Making n queries on all the documents...`);
 
     try {
-        var queriesRes = [];
-        var json;
-        var fileCollection;
+        var queriesResColl = []; // matrix of all the queries results for each file
 
-        switch (req.body.queriesTag) {
-            case 'tag1':
-                json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-one-collection.json'));
-                fileCollection = new FileCollection('data-one');
-                break;
-            case 'tag2':
-                json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-two-collection.json'));
-                fileCollection = new FileCollection('data-two');
-                break;
-        }
+        // getting the json of the directory to query and parsing it
+        let dir = fs.readdirSync(global.jsonDir)[req.body.queriesDs];
+        let json = JSON.parse(fs.readFileSync(global.jsonDir + dir));
 
+        let fileCollection = new FileCollection(req.body.queriesDs);
         fileCollection.constructFromJson(json);
 
+        // querying all the files of the collection
         fileCollection.collFiles.forEach(function (dataFile) {
-            var queriesResTag = {
-                tag: req.body.queriesTag,
-                queriesResult: [] // array of queries
-            };
+            var queriesResFile = []; // array of all the queries results for the current dataFile
 
+            // making the queries on the file
             dataFile.queriesFile(req.body.queries, req.body.queryLang);
-            const resQueries = dataFile.fileQueries.at(-1); // array of queries
+            queriesResFile = dataFile.fileQueries.at(-1); // array of queries
 
-            resQueries.forEach(resQuery => {
+            // checking that the queries went well
+            queriesResFile.forEach(resQuery => {
                 if (resQuery == null) {
                     res.send({
                         status: false,
@@ -194,23 +193,23 @@ app.post('/queries', function (req, res) {
                 }
             });
 
-            queriesResTag.queriesResult = resQueries;
-            queriesRes.push(queriesResTag);
+            // pushing the array of query res in the queries result matrix
+            queriesResColl.push(queriesResFile);
         })
 
         // updating the json
         const jsonString = JSON.stringify(fileCollection);
-        fs.writeFile(global.jsonDir + 'data-test-collection.json', jsonString, (err) => {
+        fs.writeFile(global.jsonDir + dir, jsonString, (err) => {
             if (err) {
-                console.error('Error writing file:', err);
+                console.error('Error writing ' + dir + ' file:', err);
             } else {
-                console.log('File of objects updated.');
+                console.log('File ' + dir + ' of objects updated.');
             }
         });
 
         res.send({
             status: true,
-            queriesResult: queriesRes
+            queriesResColl: queriesResColl
         })
     }
     catch (e) {
