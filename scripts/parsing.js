@@ -1,6 +1,7 @@
 const rdflib = require('rdflib');
 const DOMParser = require('xmldom').DOMParser;
 const xpath = require('xpath');
+const SaxonJS = require('saxon-js');
 const fs = require('fs');
 
 /*
@@ -8,8 +9,8 @@ const fs = require('fs');
 */
 function findUriRDFXML(rdfText) {
   const match = rdfText.match(/xmlns:(\w+)="(.*?)"/);
-  if(match) {
-      return match[2];
+  if (match) {
+    return match[2];
   }
   return null;
 }
@@ -22,7 +23,7 @@ const queryXMLXPath = (query, fileContent) => {
   const doc = parser.parseFromString(fileContent, 'application/xml');
   const root = doc.documentElement; // avoiding xmldom security problem
   var res = "";
-  
+
   var resultEvaluate = xpath.evaluate(
     query,                      // xpathExpression
     root,                       // contextNode
@@ -33,10 +34,10 @@ const queryXMLXPath = (query, fileContent) => {
 
   switch (resultEvaluate.resultType) {
     case 1:                              // NUMBER_TYPE
-      res = resultEvaluate.numberValue; 
+      res = resultEvaluate.numberValue;
       break;
     case 2:                              // STRING_TYPE
-      res = resultEvaluate.stringValue;  
+      res = resultEvaluate.stringValue;
       break;
     case 3:                              // BOOLEAN_TYPE
       res = resultEvaluate.booleanValue;
@@ -60,34 +61,16 @@ const queryXMLXPath = (query, fileContent) => {
 /*
 * Querys an XML file with an XQuery query.
   // TODO: try saxon 
-*/
-/*const queryXMLXQuery = (query, fileContent) => {
-  const resQuery = "";
-  try {
-    const baseXSession = basex.Session();
-    const dom = new JSDOM(fileContent);
-    //const document = dom.window.document;
-    const docString = dom.serialize();
-    //const resQuery = xpath.select(query, document);
-  
 
-    baseXSession.execute("xquery", query, { input : docString }, (error, result) => {
-      if(error){
-        resQuery = null;
-        console.log("Invalid query or an error occurred during execution", error);
-      }
-      else{
-        resQuery = result.result;
-        console.log(result.result)
-      }
-      baseXSession.close();
-    });
-  } catch (e) {
-    console.log(e);
-  }
-
-  return resQuery;
+const queryXMLXQuery = (query, fileContent) => {
+  const xmlDoc = SaxonJS.getResource({ type: 'xml', text: fileContent });
+  //const xmlDoc = SaxonJS.XPath.createDocument(fileContent);
+  const result = SaxonJS.XPath.evaluate(query, xmlDoc);
+  console.log(result);
+  return result;
 }*/
+
+
 
 /* 
 * Parses an XML file.
@@ -115,7 +98,7 @@ const parseXML = fileContent => {
   }
 
   for (const element of elementsArray) {
-      
+
     const elementData = {
       tagName: element.tagName,
       attributes: {},
@@ -143,33 +126,33 @@ const parseXML = fileContent => {
 * Parses an RDF/XML file.
 */
 const parseRDFXML = fileContent => {
-    const store = rdflib.graph();
-    const data = {
-      namespaces: {},
-      statements: []
-    };
-
-    try {
-      // Attempt to find the original namespace URI in the file
-      const uri = findUriRDFXML(fileContent);
-      
-      rdflib.parse(fileContent, store, uri, 'application/rdf+xml', (err, stat) => {
-        data.statements = stat.statements;
-        data.namespaces = stat.namespaces;
-      });
-  
-    } catch (e) {
-      console.error(`Error finding original namespace URI: ${e}`)
-    }
-
-    return data;
+  const store = rdflib.graph();
+  const data = {
+    namespaces: {},
+    statements: []
   };
+
+  try {
+    // Attempt to find the original namespace URI in the file
+    const uri = findUriRDFXML(fileContent);
+
+    rdflib.parse(fileContent, store, uri, 'application/rdf+xml', (err, stat) => {
+      data.statements = stat.statements;
+      data.namespaces = stat.namespaces;
+    });
+
+  } catch (e) {
+    console.error(`Error finding original namespace URI: ${e}`)
+  }
+
+  return data;
+};
 
 /* 
 * ODM class to represent a generic query. 
 */
 class Query {
-  
+
   /* 
   * Constructor for a query.
   */
@@ -186,7 +169,7 @@ class Query {
 * ODM class to represent a generic file. 
 */
 class DataFile {
-  
+
   /**
    * @property {string} fileName - the file's name.
    //{Query[][]} fileQueries - a matrix of Querys because for a single file we often do multiple queries at the time and it is useful to index them together.
@@ -212,25 +195,27 @@ class DataFile {
         this.fileParsed = parseRDFXML(this.fileContent);
         break;
     }
-    
+
   }
 
   /*
   * Querying of the file based on the format and the query language.
   */
   async queryFile(query, queryLang) {
+    let queryRes, queryOb;
     switch (this.fileFormat) {
       case '.xml':
         switch (queryLang) {
           case 'xpath':
-            const queryRes = queryXMLXPath(query, this.fileContent);
-            const queryOb = [new Query(this.fileName, query, queryLang, queryRes)];
-            
+            queryRes = queryXMLXPath(query, this.fileContent);
+            queryOb = [new Query(this.fileName, query, queryLang, queryRes)];
+
             this.fileQueries.push(queryOb);
             break;
-            
           case 'xquery':
-            //return queryXML(query, this.fileContent);
+            queryRes = queryXMLXQuery(query, this.fileContent);
+            queryOb = [new Query(this.fileName, query, queryLang, queryRes)];
+            this.fileQueries.push(queryOb);
             break;
           default:
             console.error(`Can't perform a ${queryLang} query on XML file.`);
@@ -245,15 +230,23 @@ class DataFile {
         switch (queryLang) {
           case 'xpath':
             var queriesRes = [];
+
             queries.forEach((query) => {
-              const queryRes = queryXMLXPath(query, this.fileContent);
+              let queryRes = queryXMLXPath(query, this.fileContent);
               queriesRes.push(new Query(this.fileName, query, queryLang, queryRes));
             })
+
             this.fileQueries.push(queriesRes);
             break;
-            
           case 'xquery':
-            //return queryXML(query, this.fileContent);
+            /*var xqueriesRes = [];
+
+            queries.forEach((query) => {
+              var queryRes = queryXMLXQuery(query, this.fileContent);
+              xqueriesRes.push(new Query(this.fileName, query, queryLang, queryRes))
+            })
+
+            this.fileQueries.push(xqueriesRes);*/
             break;
           default:
             console.error(`Can't perform a ${queryLang} query on XML file.`);
@@ -292,4 +285,4 @@ class FileCollection {
   }
 }
 
-module.exports = {DataFile, FileCollection}
+module.exports = { DataFile, FileCollection }
