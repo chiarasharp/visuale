@@ -1,0 +1,524 @@
+<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:cirsfid="http://nir.it/metadata" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:html="http://www.w3.org/1999/xhtml">
+    <act name="monovigente">
+        <meta>
+            <identification source="#source">
+                <FRBRWork>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1992-07-20/342/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1992-07-20/342"/>
+                    <FRBRalias value="urn:nir:stato:decreto.legge:1992-07-20;342" name="urn:nir"/>
+                    <FRBRalias value="eli/id/1992/07/21/092G0385/sg" name="eli"/>
+                    <FRBRdate name="" date="1992-07-20"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRcountry value="it"/>
+                </FRBRWork>
+                <FRBRExpression>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1992-07-20/342/ita@1992-09-20/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1992-07-20/342/ita@1992-09-20"/>
+                    <FRBRdate name="" date="1992-09-20"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRlanguage language="ita"/>
+                </FRBRExpression>
+                <FRBRManifestation>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1992-07-20/342/ita@1992-09-20/!main.xml"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1992-07-20/342/ita@1992-09-20.xml"/>
+                    <FRBRdate name="" date="2018-11-08"/>
+                    <FRBRauthor as="#author" href=""/>
+                </FRBRManifestation>
+            </identification>
+            <publication date="1992-07-21" name="  " showAs="" number="170"/>
+            <analysis source="#palmirani"/>
+            <references source="#source">
+                <TLCPerson showAs="Somebody" href="/akn/ontology/person/somebody" eId="source"/>
+                <TLCRole showAs="Author" href="/akn/ontology/role/author" eId="author"/>
+                <TLCConcept eId="concept_1" href="/akn/it/ontology/concept/ipzs/lavoriPreparatori" showAs="Lavori Preparatori"/>
+                <original eId="ro1" href="/akn/it/act/decretoLegge/stato/1992-07-20/342/!main" showAs=""/>
+            </references>
+        </meta>
+        <preface>
+            <p>
+                <docType>
+                    DECRETO-LEGGE
+                </docType>
+                <docTitle>
+                      Disposizioni urgenti in materia di finanza locale per il 1992.
+
+                </docTitle>
+                <docNumber>
+                    342
+                </docNumber>
+                <docDate date="1992-07-21">
+                    21 luglio 1992
+                </docDate>
+            </p>
+        </preface>
+        <body>
+            <article eId="art_1">
+                                               
+                <num>
+                    Art. 1.
+                </num>
+                <content>
+                    <p>
+                        
+ 
+       DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI 
+                    DALLA 
+                        <ref eId="ref_0" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                         
+
+                    </p>
+                </content>
+            </article>
+            <article eId="art_2">
+                <num>
+                    Art. 2.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_1" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_3">
+                <num>
+                    Art. 3.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_2" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_4">
+                <num>
+                    Art. 4.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_3" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_5">
+                <num>
+                    Art. 5.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_4" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_6">
+                <num>
+                    Art. 6.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_5" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_7">
+                <num>
+                    Art. 7.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_6" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_8">
+                <num>
+                    Art. 8.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_7" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_9">
+                <num>
+                    Art. 9.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_8" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_10">
+                <num>
+                    Art. 10.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_9" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_11">
+                <num>
+                    Art. 11.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_10" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_12">
+                <num>
+                    Art. 12.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_11" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_13">
+                <num>
+                    Art. 13.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_12" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_14">
+                <num>
+                    Art. 14.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_13" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_15">
+                <num>
+                    Art. 15.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_14" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_16">
+                <num>
+                    Art. 16.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_15" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_17">
+                <num>
+                    Art. 17.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_16" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_18">
+                <num>
+                    Art. 18.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_17" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_19">
+                <num>
+                    Art. 19.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_18" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_20">
+                <num>
+                    Art. 20.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_19" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_21">
+                <num>
+                    Art. 21.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_20" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_22">
+                <num>
+                    Art. 22.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_21" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_23">
+                <num>
+                    Art. 23.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_22" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_24">
+                <num>
+                    Art. 24.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_23" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_25">
+                <num>
+                    Art. 25.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_24" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_26">
+                <num>
+                    Art. 26.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_25" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_27">
+                <num>
+                    Art. 27.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_26" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_28">
+                <num>
+                    Art. 28.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_27" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_29">
+                <num>
+                    Art. 29.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_28" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_30">
+                <num>
+                    Art. 30.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_29" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_31">
+                <num>
+                    Art. 31.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_30" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_32">
+                <num>
+                    Art. 32.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_31" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_33">
+                <num>
+                    Art. 33.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_32" href="/akn/it/act/legge/stato/1993/68/!main">
+                            L. 19 MARZO 1993, N. 68
+                        </ref>
+                    </p>
+                </content>
+            </article>
+        </body>
+    </act>
+</akomaNtoso>

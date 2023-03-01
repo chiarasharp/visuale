@@ -1,0 +1,94 @@
+<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:cirsfid="http://nir.it/metadata" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:html="http://www.w3.org/1999/xhtml">
+    <act name="monovigente">
+        <meta>
+            <identification source="#source">
+                <FRBRWork>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1992-06-19/316/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1992-06-19/316"/>
+                    <FRBRalias value="urn:nir:stato:decreto.legge:1992-06-19;316" name="urn:nir"/>
+                    <FRBRalias value="eli/id/1992/06/20/092G0358/sg" name="eli"/>
+                    <FRBRdate name="" date="1992-06-19"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRcountry value="it"/>
+                </FRBRWork>
+                <FRBRExpression>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1992-06-19/316/ita@1992-08-20/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1992-06-19/316/ita@1992-08-20"/>
+                    <FRBRdate name="" date="1992-08-20"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRlanguage language="ita"/>
+                </FRBRExpression>
+                <FRBRManifestation>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1992-06-19/316/ita@1992-08-20/!main.xml"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1992-06-19/316/ita@1992-08-20.xml"/>
+                    <FRBRdate name="" date="2018-11-08"/>
+                    <FRBRauthor as="#author" href=""/>
+                </FRBRManifestation>
+            </identification>
+            <publication date="1992-06-20" name="  " showAs="" number="144"/>
+            <analysis source="#palmirani"/>
+            <references source="#source">
+                <TLCPerson showAs="Somebody" href="/akn/ontology/person/somebody" eId="source"/>
+                <TLCRole showAs="Author" href="/akn/ontology/role/author" eId="author"/>
+                <TLCConcept eId="concept_1" href="/akn/it/ontology/concept/ipzs/lavoriPreparatori" showAs="Lavori Preparatori"/>
+                <original eId="ro1" href="/akn/it/act/decretoLegge/stato/1992-06-19/316/!main" showAs=""/>
+            </references>
+        </meta>
+        <preface>
+            <p>
+                <docType>
+                    DECRETO-LEGGE
+                </docType>
+                <docTitle>
+                      Differimento dei termini per i versamenti delle imposte sui redditi
+dovute  sulla  base delle dichiarazioni dei redditi per l'anno 1991 e
+degli acconti di  imposta,  nonche'  per  taluni  versamenti  per  la
+definizione  agevolata dei rapporti tributari previsti dalla legge 30
+dicembre 1991, n. 413.
+
+                </docTitle>
+                <docNumber>
+                    316
+                </docNumber>
+                <docDate date="1992-06-20">
+                    20 giugno 1992
+                </docDate>
+            </p>
+        </preface>
+        <body>
+            <article eId="art_1">
+                                               
+                <num>
+                    Art. 1.
+                </num>
+                <content>
+                    <p>
+                        
+ 
+       DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI 
+                    DALLA 
+                        <ref eId="ref_0" href="/akn/it/act/legge/stato/1993/75/!main">
+                            L. 24 MARZO 1993, N. 75
+                        </ref>
+                         
+
+                    </p>
+                </content>
+            </article>
+            <article eId="art_2">
+                <num>
+                    Art. 2.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_1" href="/akn/it/act/legge/stato/1993/75/!main">
+                            L. 24 MARZO 1993, N. 75
+                        </ref>
+                    </p>
+                </content>
+            </article>
+        </body>
+    </act>
+</akomaNtoso>

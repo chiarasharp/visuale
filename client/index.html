@@ -61,9 +61,12 @@
             Charts
           </h3>
 
-          <div class="ui three column doubling stackable grid">
+          <div id="chartsGrid" class="ui three column doubling stackable grid">
             <div class="column">
               <div class="ui link card">
+
+                <button class="ui button" id="showViz0">Make Chart</button>
+                
                 <div class="content">
                   <div class="header">Number of articles per year</div>
                 </div>
@@ -77,14 +80,16 @@
             </div>
             <div class="column">
               <div class="ui link card">
+                <button class="ui button" id="showViz1">Make Chart</button>
+                
                 <div class="content">
-                  <div class="header">Chart 2</div>
+                  <div class="header">Number of articles per year</div>
                 </div>
                 <div class="chart-container">
-                  <canvas id="canvas2"></canvas>
+                  <canvas id="canvas1"></canvas>
                 </div>
                 <div class="extra content">
-                  <span>This chart shows</span>
+                  <span>Queries from directory <i><b>data-one</b></i> and <i><b>data-two</b></i>.</span>
                 </div>
               </div>
             </div>

@@ -1,0 +1,118 @@
+<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" xmlns:cirsfid="http://nir.it/metadata" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:html="http://www.w3.org/1999/xhtml">
+    <act name="monovigente">
+        <meta>
+            <identification source="#source">
+                <FRBRWork>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1993-02-27/44/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1993-02-27/44"/>
+                    <FRBRalias value="urn:nir:stato:decreto.legge:1993-02-27;44" name="urn:nir"/>
+                    <FRBRalias value="eli/id/1993/02/27/093G0101/sg" name="eli"/>
+                    <FRBRdate name="" date="1993-02-27"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRcountry value="it"/>
+                </FRBRWork>
+                <FRBRExpression>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1993-02-27/44/ita@1993-04-29/!main"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1993-02-27/44/ita@1993-04-29"/>
+                    <FRBRdate name="" date="1993-04-29"/>
+                    <FRBRauthor as="#author" href=""/>
+                    <FRBRlanguage language="ita"/>
+                </FRBRExpression>
+                <FRBRManifestation>
+                    <FRBRthis value="/akn/it/act/decretoLegge/stato/1993-02-27/44/ita@1993-04-29/!main.xml"/>
+                    <FRBRuri value="/akn/it/act/decretoLegge/stato/1993-02-27/44/ita@1993-04-29.xml"/>
+                    <FRBRdate name="" date="2018-11-08"/>
+                    <FRBRauthor as="#author" href=""/>
+                </FRBRManifestation>
+            </identification>
+            <publication date="1993-02-27" name="  " showAs="" number="48"/>
+            <analysis source="#palmirani"/>
+            <references source="#source">
+                <TLCPerson showAs="Somebody" href="/akn/ontology/person/somebody" eId="source"/>
+                <TLCRole showAs="Author" href="/akn/ontology/role/author" eId="author"/>
+                <TLCConcept eId="concept_1" href="/akn/it/ontology/concept/ipzs/lavoriPreparatori" showAs="Lavori Preparatori"/>
+                <original eId="ro1" href="/akn/it/act/decretoLegge/stato/1993-02-27/44/!main" showAs=""/>
+            </references>
+        </meta>
+        <preface>
+            <p>
+                <docType>
+                    DECRETO-LEGGE
+                </docType>
+                <docTitle>
+                      Provvedimenti urgenti in materia radiotelevisiva.
+
+                </docTitle>
+                <docNumber>
+                    44
+                </docNumber>
+                <docDate date="1993-02-27">
+                    27 febbraio 1993
+                </docDate>
+            </p>
+        </preface>
+        <body>
+            <article eId="art_1">
+                                               
+                <num>
+                    Art. 1.
+                </num>
+                <content>
+                    <p>
+                        
+ 
+       DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI 
+                  DALLA 
+                        <ref eId="ref_0" href="/akn/it/act/legge/stato/1993/422/!main">
+                            L. 27 OTTOBRE 1993, N. 422
+                        </ref>
+                         
+
+                    </p>
+                </content>
+            </article>
+            <article eId="art_2">
+                <num>
+                    Art. 2.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_1" href="/akn/it/act/legge/stato/1993/422/!main">
+                            L. 27 OTTOBRE 1993, N. 422
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_3">
+                <num>
+                    Art. 3.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_2" href="/akn/it/act/legge/stato/1993/422/!main">
+                            L. 27 OTTOBRE 1993, N. 422
+                        </ref>
+                    </p>
+                </content>
+            </article>
+            <article eId="art_4">
+                <num>
+                    Art. 4.
+                </num>
+                <content>
+                    <p>
+                        
+ DECRETO DECADUTO; I SUOI EFFETTI SONO STATI FATTI SALVI DALLA 
+                        <ref eId="ref_3" href="/akn/it/act/legge/stato/1993/422/!main">
+                            L. 27 OTTOBRE 1993, N. 422
+                        </ref>
+                    </p>
+                </content>
+            </article>
+        </body>
+    </act>
+</akomaNtoso>

@@ -106,64 +106,8 @@ app.get('/pull-parse', function (req, res) {
     }
 });
 
-app.post('/query', function (req, res) {
-    console.log(`Making n queries on all the documents...`);
-
-    try {
-        const queriesRes = [];
-        const json = JSON.parse(fs.readFileSync(global.jsonDir + 'data-one-collection.json'));
-        const fileCollection = new FileCollection('data-one');
-
-        fileCollection.constructFromJson(json);
-
-        fileCollection.collFiles.forEach(function (dataFile) {
-            var results = [];
-
-            req.body.queries.forEach((query) => {
-                dataFile.queryFile(query, req.body.queryLang);
-                const resQuery = dataFile.fileQueries.at(-1);
-
-                if (resQuery == null) {
-                    res.send({
-                        status: false,
-                        error: "Invalid query or an error occurred during execution of it."
-                    })
-                }
-
-                results.push(resQuery);
-            });
-
-            results.forEach(function (res) {
-                queriesRes.push(res);
-            });
-
-        })
-
-        // updating the json
-        const jsonString = JSON.stringify(fileCollection);
-        fs.writeFile(global.jsonDir + 'data-test-collection.json', jsonString, (err) => {
-            if (err) {
-                console.error('Error writing file:', err);
-            } else {
-                console.log('Objects saved to file.');
-            }
-        });
-
-        res.send({
-            status: true,
-            queriesResult: queriesRes
-        })
-    }
-    catch (e) {
-        res.send({
-            status: false,
-            error: e.message
-        });
-    }
-});
-
 app.post('/queries', function (req, res) {
-    console.log(`Making n queries on all the documents...`);
+    console.log(`Executing ${req.body.queries.length} queries on collection ${req.body.queriesDs}...`);
 
     try {
         var queriesResColl = []; // matrix of all the queries results for each file
@@ -213,6 +157,68 @@ app.post('/queries', function (req, res) {
         })
     }
     catch (e) {
+        res.send({
+            status: false,
+            error: e.message
+        });
+    }
+});
+
+app.post('/queries-colls', function (req, res) {
+    console.log(`Executing queries on some of the collections of files...`);
+
+    try {
+        const queries_by_ds = req.body.queriesByDs;
+        var results_colls = [];
+
+        queries_by_ds.forEach((queries_ds) => {
+            var results_ds = {
+                ds : queries_ds.ds,
+                queries : []
+            }
+
+            let ds_dir = fs.readdirSync(global.jsonDir)[queries_ds.ds];
+            let ds_json = JSON.parse(fs.readFileSync(global.jsonDir + ds_dir));
+            let ds_filecoll = new FileCollection(queries_ds.ds);
+
+            ds_filecoll.constructFromJson(ds_json);
+
+            ds_filecoll.collFiles.forEach((file) => {
+                var results_file = [];
+
+                file.queriesFile(queries_ds.queries, queries_ds.queryLanguage);
+                results_file = file.fileQueries.at(-1);
+
+                results_file.forEach(result => {
+                    if (result == null) {
+                        res.send({
+                            status: false,
+                            error: "Invalid query or an error occurred during execution of it."
+                        })
+                    }
+                });
+    
+                results_ds.queries.push(results_file);
+            })
+
+            const jsonString = JSON.stringify(ds_filecoll);
+            fs.writeFile(global.jsonDir + ds_dir, jsonString, (err) => {
+                if (err) {
+                    console.error('Error writing ' + ds_dir + ' file:', err);
+                } else {
+                    console.log('File ' + ds_dir + ' of objects updated.');
+                }
+            });
+
+            results_colls.push(results_ds);
+        })
+        
+        res.send({
+            status: true,
+            resultsQueries: results_colls
+        })
+    }
+     catch (e) {
         res.send({
             status: false,
             error: e.message

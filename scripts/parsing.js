@@ -198,32 +198,6 @@ class DataFile {
 
   }
 
-  /*
-  * Querying of the file based on the format and the query language.
-  */
-  async queryFile(query, queryLang) {
-    let queryRes, queryOb;
-    switch (this.fileFormat) {
-      case '.xml':
-        switch (queryLang) {
-          case 'xpath':
-            queryRes = queryXMLXPath(query, this.fileContent);
-            queryOb = [new Query(this.fileName, query, queryLang, queryRes)];
-
-            this.fileQueries.push(queryOb);
-            break;
-          case 'xquery':
-            queryRes = queryXMLXQuery(query, this.fileContent);
-            queryOb = [new Query(this.fileName, query, queryLang, queryRes)];
-            this.fileQueries.push(queryOb);
-            break;
-          default:
-            console.error(`Can't perform a ${queryLang} query on XML file.`);
-            break;
-        }
-    }
-  }
-
   async queriesFile(queries, queryLang) {
     switch (this.fileFormat) {
       case '.xml':
