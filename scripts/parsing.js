@@ -180,6 +180,7 @@ class DataFile {
     this.fileFormat = fileFormat;
     this.fileParsed = {};
     this.fileQueries = [];
+    //this.fileQueryResults = [];
   }
 
   /**
@@ -203,14 +204,17 @@ class DataFile {
       case '.xml':
         switch (queryLang) {
           case 'xpath':
-            var queriesRes = [];
+            var queriesObjRes = [];
+            //var queriesRes = [];
 
             queries.forEach((query) => {
               let queryRes = queryXMLXPath(query, this.fileContent);
-              queriesRes.push(new Query(this.fileName, query, queryLang, queryRes));
+              queriesObjRes.push(new Query(this.fileName, query, queryLang, queryRes));
+              //queriesRes.push(queryRes);
             })
 
-            this.fileQueries.push(queriesRes);
+            this.fileQueries.push(queriesObjRes);
+            //this.fileQueryResults.push(queriesRes)
             break;
           case 'xquery':
             /*var xqueriesRes = [];

@@ -7,52 +7,35 @@ global = {
 $(document).ready(function () {
 
     loadData();
-
-    global.vizByTag.push({
-        tag: 0,
-        title: 'Number of articles per year, one ds version.',
-        queriesByDs: [{
-            ds: 0,
-            queries: []
-        }]
-    }, {
-        tag: 1,
-        title: 'Number of articles per year, two ds version',
-        queriesByDs: [{
-            ds: 0,
-            queries: []
-        },
-        {
-            ds: 1,
-            queries: []
-        }]
-    });
-    
+    loadVizData();
+    loadVizGrid();
 
     $('#showViz0').click(function(event){
         document.getElementById("showViz0").style.display = "none";
-		var dsQueries0 = [{
+        document.getElementById("showMore0").style.display = "block";
+		var vizQueries0 = [{
             ds: 0,
             queryLanguage: 'xpath',
-            queries: ['count(//*[local-name()="article"])', 'string(//*[local-name()="publication"]/@date)']
+            queriesText: ['count(//*[local-name()="article"])', 'string(//*[local-name()="publication"]/@date)']
         }]
-        loadVisualization(0, dsQueries0);
+        loadVizQueriesResults(0, vizQueries0);
 	})
 
     $('#showViz1').click(function(event){
         document.getElementById("showViz1").style.display = "none";
-        var dsQueries1 = [{
+        document.getElementById("showMore1").style.display = "block";
+        var vizQueries1 = [{
             ds: 0,
             queryLanguage: 'xpath',
-            queries: ['count(//*[local-name()="article"])']
+            queriesText: ['count(//*[local-name()="article"])']
         },
         {
             ds: 1,
             queryLanguage: 'xpath',
-            queries: ['string(//*[local-name()="publication"]/@date)']
+            queriesText: ['string(//*[local-name()="publication"]/@date)']
         }]
         
-        loadVisualization(1, dsQueries1);
+        loadVizQueriesResults(1, vizQueries1);
 	})
 
 })
@@ -72,14 +55,52 @@ function loadData() {
     });
 }
 
-function loadVisualization(tag, dsQueries) {
+function loadVizData() {
+    vizData.forEach(viz => {
+        global.vizByTag.push(viz);
+    })
+
+}
+
+function loadVizGrid() {
+    var vizGrid = $('#chartsGrid');
+    vizGrid.html("");
+
+    global.vizByTag.forEach((viz) => {
+        vizGrid.append(
+            `<div class="column">
+                <div class="ui link card">
+                    <button class="ui button" id="showViz${viz.tag}">Make Chart</button>
+                    <div class="content">
+                        <div class="header">${viz.title}</div>
+                    </div>
+                    <div class="chart-container" >
+                        <canvas id="canvas${viz.tag}"></canvas>
+                    </div>
+                    <div class="extra content">
+                        <span>${viz.description}</span>
+                    </div>
+                    <div class="extra content">
+                        <button class="ui button" id="showMore${viz.tag}" onclick="viz()" style="display: none;">Show more</button>
+                    </div>
+                </div>
+            </div>`
+        );
+    })
+}
+
+function viz() {
+    window.location.href = "viz.html";
+}
+
+function loadVizQueriesResults(tag, dsQueries) {
 
     switch (tag) {
         case 0: /* NUMBER OF ARTICLES BY YEAR, ONE DATASET, TWO XPATH QUERIES */
             var yearCount = {};
             loadQueriesByDs(dsQueries, tag).then(function () {
         
-                global.vizByTag[tag].queriesByDs[dsQueries[0].ds].queries.forEach(queryFile => {
+                global.vizByTag[tag].queriesByDs[0].queries.forEach(queryFile => {
                     const queryArt = queryFile[0].queryRes;
                     const queryDate = queryFile[1].queryRes;
                     const queryYear = new Date(queryDate).getFullYear();
@@ -97,9 +118,10 @@ function loadVisualization(tag, dsQueries) {
         break;
         case 1: /* NUMBER OF ARTICLES BY YEAR, TWO DATASETS, ONE XPATH QUERY FOR DS */
             var yearCount = {};
-            loadQueriesByDs(dsQueries, tag).then(function () {
-                const tagResultQueriesDs0 = global.vizByTag[tag].queriesByDs[dsQueries[0].ds];
-                const tagResultQueriesDs1 = global.vizByTag[tag].queriesByDs[dsQueries[1].ds];
+
+             loadQueriesByDs(dsQueries, tag).then(function () {
+                const tagResultQueriesDs0 = global.vizByTag[tag].queriesByDs[0];
+                const tagResultQueriesDs1 = global.vizByTag[tag].queriesByDs[1];
 
                 tagResultQueriesDs0.queries.forEach((queryFile, index) => {
                     const queryArt = queryFile[0].queryRes;
@@ -115,113 +137,21 @@ function loadVisualization(tag, dsQueries) {
                 })
                 createChart(yearCount, "Number of articles per year", tag);
         
-            });
+            }); 
+
         break;
     }
 
 
-
-}
-
-function loadViz() {
-    var vizGrid = $('#chartsGrid');
-    vizGrid.html("");
-
-    if (global.vizByTag.length == 0) {
-        //document.getElementById("loadingItems").style.display = "none";
-        //document.getElementById("noItems").style.display = "block";
-    }
-    else {
-
-        global.vizByTag.forEach((viz) => {
-            vizGrid.append(`<div class="column">
-                            <div class="ui link card">
-                            <button class="ui button" id="showViz${viz.tag}">Make Chart</button>
-                            
-                            <div class="content">
-                                <div class="header"${viz.title}</div>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="canvas${viz.tag}"></canvas>
-                            </div>
-                            <div class="extra content">
-                                            <span>Queries from collection`);
-            viz.queriesByDs.forEach((ds) => {
-                vizGrid.append(`
-                <i><b>${ds.ds}</b></i> `);
-            })
-            vizGrid.append(`</span></div></div></div>`);
-        })
-
-        //document.getElementById("noItems").style.display = "none";
-        //document.getElementById("loadingItems").style.display = "none";
-        //document.getElementById("fileList").style.display = "block";
-    }
-}
-
-/* function loadFileList() {
-    var fileList = $('#fileList');
-    fileList.html("");
-
-    if (global.fileNames.length == 0) {
-        document.getElementById("loadingItems").style.display = "none";
-        document.getElementById("noItems").style.display = "block";
-    }
-    else {
-        count = 0;
-        global.fileNames.forEach((dir) => {
-            fileList.append(`
-            <h4>Directory ${count}</h4>`);
-            dir.forEach((file) => {
-                fileList.append(`
-                <div class="item" tag="${file}">
-                    <div class="content">
-                        <div class="description">${file}</div>
-                    </div>
-                </div>`);
-            })
-            count++;
-        })
-
-        document.getElementById("noItems").style.display = "none";
-        document.getElementById("loadingItems").style.display = "none";
-        document.getElementById("fileList").style.display = "block";
-    }
-}
- */
-
-function loadQueries(queries, tag, dsNum) {
-    return queriesFiles(queries, 'xpath', tag, dsNum);
 }
 
 function loadQueriesByDs(queriesByDs, tag) {
     return queriesFilesDs(queriesByDs, tag);
 }
 
-function queriesFiles(queries, queryLang, tag, dsNum) {
-    return $.ajax({
-        url: 'queries',
-        type: 'POST',
-        data: {
-            queries: queries,
-            queryLang: queryLang,
-            queriesDs: dsNum
-        },
-
-        success: function (data) {
-
-            global.queriesByTag[tag].queriesByDs[dsNum].queries = data.queriesResColl;
-
-        },
-        error: function (error) {
-            alert(error);
-        }
-    });
-}
-
 function queriesFilesDs(queriesByDs, tag) {
     return $.ajax({
-        url: 'queries-colls',
+        url: 'queries',
         type: 'POST',
         data: {
             queriesByDs: queriesByDs
@@ -267,5 +197,7 @@ function createChart(data, label, chartNum) {
         },
         options: options
     });
+
+    global.vizByTag.chart = chart;
 
 }

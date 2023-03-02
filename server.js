@@ -32,13 +32,14 @@ app.use('/', express.static(global.rootDir + '/client'));
 /* // ENABLE FILE UPLOAD
 app.use(fileUpload({
     createParentPath: true
-})); */
+})); 
+//app.use(morgan('dev'));
+*/
 
 // OTHER MIDDLEWARE
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(morgan('dev'));
 app.enable('trust proxy');
 
 app.get('/pull-parse', function (req, res) {
@@ -98,7 +99,6 @@ app.get('/pull-parse', function (req, res) {
         res.send({
             status: true,
             fileNames: collectionsFilesNames
-            //parsedData: collectionsFiles
         })
     }
     catch (e) {
@@ -106,7 +106,7 @@ app.get('/pull-parse', function (req, res) {
     }
 });
 
-app.post('/queries', function (req, res) {
+app.post('/queries-single', function (req, res) {
     console.log(`Executing ${req.body.queries.length} queries on collection ${req.body.queriesDs}...`);
 
     try {
@@ -164,7 +164,7 @@ app.post('/queries', function (req, res) {
     }
 });
 
-app.post('/queries-colls', function (req, res) {
+app.post('/queries', function (req, res) {
     console.log(`Executing queries on some of the collections of files...`);
 
     try {
@@ -186,7 +186,7 @@ app.post('/queries-colls', function (req, res) {
             ds_filecoll.collFiles.forEach((file) => {
                 var results_file = [];
 
-                file.queriesFile(queries_ds.queries, queries_ds.queryLanguage);
+                file.queriesFile(queries_ds.queriesText, queries_ds.queryLanguage);
                 results_file = file.fileQueries.at(-1);
 
                 results_file.forEach(result => {
