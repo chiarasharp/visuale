@@ -2,7 +2,7 @@
 var path = require('path');
 const fs = require('fs');
 const express = require('express');
-const fileUpload = require('express-fileupload');
+
 const cors = require('cors');
 const bodyParser = require('body-parser');
 //const morgan = require('morgan');
@@ -12,14 +12,13 @@ const _ = require('lodash');
 /* GLOBAL VARS */
 /* =========== */
 global.rootDir = __dirname;
-global.collectionsDir = global.rootDir + '/data';
-global.testCollDir = global.collectionsDir + '/data-test/';
+global.collectionsDir = global.rootDir + '/data/collections-data/';
+global.vizualizationsDir = global.rootDir + '/data/viz-data';
 global.jsonDir = global.rootDir + '/json/';
 
 global.supExt = ['.rdf', '.xml'];
 global.startDate = null;
 global.port = 8000;
-
 
 const { DataFile, FileCollection } = require(global.rootDir + '/scripts/parsing.js');
 
@@ -30,6 +29,7 @@ var app = express();
 app.use('/', express.static(global.rootDir + '/client'));
 
 /* // ENABLE FILE UPLOAD
+const fileUpload = require('express-fileupload');
 app.use(fileUpload({
     createParentPath: true
 })); 
@@ -42,7 +42,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.enable('trust proxy');
 
-app.get('/pull-parse', function (req, res) {
+app.get('/pull-parse-data', function (req, res) {
     console.log(`Pulling files from all the collections and parsing them...`);
 
     try {
@@ -80,7 +80,7 @@ app.get('/pull-parse', function (req, res) {
                 });
 
                 // saving all the data about the collection in a json file
-                const jsonString = JSON.stringify(fileCollection);
+                const jsonString = JSON.stringify(fileCollection, null, "\t");
                 fs.writeFile(global.jsonDir + pathDir + ".json", jsonString, (err) => {
                     if (err) {
                         console.error('Error writing ' + pathDir + ".json" + ' file:', err);
@@ -106,7 +106,45 @@ app.get('/pull-parse', function (req, res) {
     }
 });
 
-app.post('/queries-single', function (req, res) {
+app.get('/pull-viz', function (req, res) {
+    console.log(`Pulling visualization data...`);
+
+    try {
+        
+        let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
+
+        res.send({
+            status: true,
+            vizualizations: vizualizations
+        })
+    }
+    catch (e) {
+        res.send({
+            status: false,
+            error: e.message
+        });
+    }
+});
+
+app.post('/save-chart-data', function (req, res) {
+    console.log('Saving chart data to viz.json...');
+
+    const chartData = req.body.chartData;
+    let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
+    vizualizations[req.body.tag].chart = chartData;
+  
+    fs.writeFile(global.vizualizationsDir + "/viz.json", JSON.stringify(vizualizations, null, "\t"), err => {
+      if (err) {
+        console.error(err);
+        console.log('Error saving chart data.');
+      } else {
+        console.log('Chart data saved to viz.json.');
+      }
+    });
+});
+
+
+/* app.post('/queries-single', function (req, res) {
     console.log(`Executing ${req.body.queries.length} queries on collection ${req.body.queriesDs}...`);
 
     try {
@@ -162,16 +200,17 @@ app.post('/queries-single', function (req, res) {
             error: e.message
         });
     }
-});
+}); */
 
 app.post('/queries', function (req, res) {
     console.log(`Executing queries on some of the collections of files...`);
 
     try {
+        let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
         const queries_by_ds = req.body.queriesByDs;
         var results_colls = [];
-
-        queries_by_ds.forEach((queries_ds) => {
+        
+        queries_by_ds.forEach((queries_ds, index) => {
             var results_ds = {
                 ds : queries_ds.ds,
                 queries : []
@@ -199,14 +238,25 @@ app.post('/queries', function (req, res) {
                 });
     
                 results_ds.queries.push(results_file);
+                
+                vizualizations[req.body.tag].queriesByDs[queries_ds.ds].queries = results_ds.queries; 
             })
-
-            const jsonString = JSON.stringify(ds_filecoll);
+            
+            const jsonString = JSON.stringify(ds_filecoll, null, "\t");
             fs.writeFile(global.jsonDir + ds_dir, jsonString, (err) => {
                 if (err) {
                     console.error('Error writing ' + ds_dir + ' file:', err);
                 } else {
                     console.log('File ' + ds_dir + ' of objects updated.');
+                }
+            });
+
+            const jsonViz = JSON.stringify(vizualizations, null, "\t");
+            fs.writeFile(global.vizualizationsDir + "/viz.json", jsonViz, (err) => {
+                if (err) {
+                    console.error('Error writing viz.json file:', err);
+                } else {
+                    console.log('File viz.json updated.');
                 }
             });
 
