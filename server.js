@@ -2,10 +2,8 @@
 var path = require('path');
 const fs = require('fs');
 const express = require('express');
-
 const cors = require('cors');
 const bodyParser = require('body-parser');
-//const morgan = require('morgan');
 const _ = require('lodash');
 
 /* =========== */
@@ -14,7 +12,7 @@ const _ = require('lodash');
 global.rootDir = __dirname;
 global.collectionsDir = global.rootDir + '/data/collections-data/';
 global.vizualizationsDir = global.rootDir + '/data/viz-data';
-global.jsonDir = global.rootDir + '/json/';
+global.jsonDir = global.rootDir + '/data/collections-json/';
 
 global.supExt = ['.rdf', '.xml'];
 global.startDate = null;
@@ -26,21 +24,19 @@ const { DataFile, FileCollection } = require(global.rootDir + '/scripts/parsing.
 /* EXPRESS CONFIG */
 /* ============== */
 var app = express();
-app.use('/', express.static(global.rootDir + '/client'));
-
-/* // ENABLE FILE UPLOAD
-const fileUpload = require('express-fileupload');
-app.use(fileUpload({
-    createParentPath: true
-})); 
-//app.use(morgan('dev'));
-*/
-
+app.use('/', express.static(global.rootDir + '/public'));
 // OTHER MIDDLEWARE
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.enable('trust proxy');
+
+app.set('view engine', 'ejs');
+
+app.get('/', function(req, res) {
+    res.render('pages/index');
+});
+
 
 app.get('/pull-parse-data', function (req, res) {
     console.log(`Pulling files from all the collections and parsing them...`);
@@ -131,7 +127,7 @@ app.post('/save-chart-data', function (req, res) {
 
     const chartData = req.body.chartData;
     let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
-    vizualizations[req.body.tag].chart = chartData;
+    vizualizations[req.body.tag].chartData = chartData;
   
     fs.writeFile(global.vizualizationsDir + "/viz.json", JSON.stringify(vizualizations, null, "\t"), err => {
       if (err) {
@@ -141,6 +137,17 @@ app.post('/save-chart-data', function (req, res) {
         console.log('Chart data saved to viz.json.');
       }
     });
+});
+
+app.get('/viz/:id', (req, res) => {
+    const vizId = req.params.id;
+    //console.log(vizId);
+    let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
+    var vizData = vizualizations[vizId];
+    //console.log(vizData);
+
+    res.render('pages/viz', { viz: vizData });
+    //res.render('pages/viz')
 });
 
 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+  <script src="/semantic/dist/semantic.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+  <script src="/viz.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="/semantic/dist/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="/main.css">
+</head>
+<body>
+
+  <%- include('../partials/header'); %>
+
+  <!-- MAIN CONTENT -->
+  <div class="ui container">
+    <div class="ui centered grid">
+      <div class="two column row">
+
+        <div class="fourteen wide column">
+
+          <h3 id="viz-title" class="header item">
+            Chart
+          </h3>
+          <div class="ui container"><canvas id="chart-container"></canvas></div>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // pass data from server-side to viz.js script
+    var vizData = <%- JSON.stringify(viz) %>;
+  
+    // call the buildChart function to create the chart
+    buildChart(vizData);
+  </script>  
+</body>
+</html>

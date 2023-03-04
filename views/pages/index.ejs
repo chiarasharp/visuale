@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dashboard Project</title>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+  <script src="/semantic/dist/semantic.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<!--   <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.poly.js"></script> -->
+  <script src="/client.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="/semantic/dist/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="/main.css">
+
+</head>
+
+<body>
+
+
+  <%- include('../partials/header'); %>
+
+
+  <!-- MAIN CONTENT -->
+  <div class="ui container">
+    <div class="ui centered grid">
+      <div class="two column row">
+
+        <!-- LIST OF FILES -->
+        <!-- <div class="three wide column">
+
+          <h3 class="header item">
+            <i class="folder icon"></i>
+            Files
+          </h3>
+
+          <div id="loadingItems">
+            <p>Loading...</p>
+          </div>
+          <div id="noItems" style="display: none;">
+            <p>No files to show.</p>
+          </div>
+
+          <div id="fileList" class="ui large celled list overflow" style="overflow: auto; display: none;"></div>
+
+        </div> -->
+
+        <!-- PERSONALIZED DASHBOARD -->
+        <div class="fourteen wide column">
+
+          <h3 class="header item">
+            Charts
+          </h3>
+
+          <div id="chartsGrid" class="ui three column doubling stackable grid">
+            
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
