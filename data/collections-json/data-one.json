@@ -330,6 +330,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1990-03-27"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-0-2.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 0
+					}
 				]
 			]
 		},
@@ -991,6 +999,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1990-03-29"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-0-3.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 3
+					}
 				]
 			]
 		},
@@ -1608,6 +1624,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1990-04-24"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-0-4.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 5
+					}
 				]
 			]
 		},
@@ -2166,6 +2190,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1990-04-30"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-0-5.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 9
+					}
 				]
 			]
 		},
@@ -2711,6 +2743,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1990-05-19"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-0-6.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 7
+					}
 				]
 			]
 		},
@@ -3131,6 +3171,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1993-06-19"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-0-7.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 0
+					}
 				]
 			]
 		},
@@ -3478,6 +3526,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1992-06-20"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-0.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 2
 					}
 				]
 			]
@@ -3856,6 +3912,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1992-06-27"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-01-2.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 3
 					}
 				]
 			]
@@ -5135,6 +5199,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1992-07-21"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-01-3.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 33
+					}
 				]
 			]
 		},
@@ -5573,6 +5645,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1992-10-20"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-01-4.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 5
+					}
 				]
 			]
 		},
@@ -5980,6 +6060,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1993-02-27"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-01-5.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 4
 					}
 				]
 			]
@@ -6389,6 +6477,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1993-03-02"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-01-6.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 4
+					}
 				]
 			]
 		},
@@ -6750,6 +6846,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1994-07-01"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-1-2.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 1
 					}
 				]
 			]
@@ -7236,6 +7340,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1994-07-01"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-1.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 0
 					}
 				]
 			]
@@ -7735,6 +7847,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1996-03-19"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-2-2.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 7
+					}
 				]
 			]
 		},
@@ -8082,6 +8202,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1996-03-19"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-2-3.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 2
 					}
 				]
 			]
@@ -8878,6 +9006,14 @@
 						"queryLang": "xpath",
 						"queryRes": "1996-03-19"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-2-4.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 15
+					}
 				]
 			]
 		},
@@ -9225,6 +9361,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1996-03-20"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-2-5.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 2
 					}
 				]
 			]
@@ -9587,6 +9731,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "1994-07-01"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-2.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 1
 					}
 				]
 			]
@@ -10426,6 +10578,14 @@
 						"queryLang": "xpath",
 						"queryRes": "2006-09-27"
 					}
+				],
+				[
+					{
+						"queryFile": "akn-download-3-2.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 10
+					}
 				]
 			]
 		},
@@ -10955,6 +11115,14 @@
 						"queryText": "string(//*[local-name()=\"publication\"]/@date)",
 						"queryLang": "xpath",
 						"queryRes": "2006-08-18"
+					}
+				],
+				[
+					{
+						"queryFile": "akn-download-3.xml",
+						"queryText": "count(//*[local-name()=\"ref\"])",
+						"queryLang": "xpath",
+						"queryRes": 0
 					}
 				]
 			]

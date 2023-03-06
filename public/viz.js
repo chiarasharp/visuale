@@ -2,7 +2,7 @@
 function buildChart(viz) {
     var chartData = viz.chartData;
     var chartLabel = viz.title;
-    var ctx = document.getElementById('chart-container').getContext('2d');
+    var ctx = document.getElementById('canvas-viz').getContext('2d');
     const keys = Object.keys(chartData);
     const values = Object.values(chartData);
     
@@ -36,5 +36,20 @@ function buildChart(viz) {
     var myChart = new Chart(ctx, chartObj);
   
     $('#viz-title').text(chartLabel);
+    $("#viz-description").html(viz.description);
+    var queriesList = $('#queries-list');
+    queriesList.html("");
+    viz.queriesByDs.forEach((queriesDs) => {
+        queriesList.append(`
+        <h5>Dataset ${queriesDs.ds}</h5>`);
+        queriesDs.queriesText.forEach((query)=> {
+            queriesList.append(`
+            <div class="item">
+                <div class="content">
+                    <div class="description">${query}</div>
+                </div>
+            </div>`);
+        })  
+    });
 }
   

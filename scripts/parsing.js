@@ -71,7 +71,6 @@ const queryXMLXQuery = (query, fileContent) => {
 }*/
 
 
-
 /* 
 * Parses an XML file.
 */
@@ -180,7 +179,6 @@ class DataFile {
     this.fileFormat = fileFormat;
     this.fileParsed = {};
     this.fileQueries = [];
-    //this.fileQueryResults = [];
   }
 
   /**
@@ -234,6 +232,9 @@ class DataFile {
   }
 }
 
+/* 
+* ODM class to represent a collection of files. 
+*/
 class FileCollection {
   constructor(collId) {
     this.collId = collId;

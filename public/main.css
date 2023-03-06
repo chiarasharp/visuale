@@ -2,6 +2,10 @@
   background-color: #EBEBD3;
 }
 
+.dashboard-link {
+  color: black;
+}
+
 #container {
   width: 100%;
   height: 100%;
@@ -10,4 +14,9 @@
 .chart-container {
   padding: 20px;
   min-height: 300px;
+}
+
+.chart-container-viz {
+  width: 500px;
+  height: 400px;
 }

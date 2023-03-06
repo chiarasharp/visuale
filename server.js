@@ -37,7 +37,6 @@ app.get('/', function(req, res) {
     res.render('pages/index');
 });
 
-
 app.get('/pull-parse-data', function (req, res) {
     console.log(`Pulling files from all the collections and parsing them...`);
 
@@ -141,73 +140,11 @@ app.post('/save-chart-data', function (req, res) {
 
 app.get('/viz/:id', (req, res) => {
     const vizId = req.params.id;
-    //console.log(vizId);
     let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
     var vizData = vizualizations[vizId];
-    //console.log(vizData);
 
     res.render('pages/viz', { viz: vizData });
-    //res.render('pages/viz')
 });
-
-
-/* app.post('/queries-single', function (req, res) {
-    console.log(`Executing ${req.body.queries.length} queries on collection ${req.body.queriesDs}...`);
-
-    try {
-        var queriesResColl = []; // matrix of all the queries results for each file
-
-        // getting the json of the directory to query and parsing it
-        let dir = fs.readdirSync(global.jsonDir)[req.body.queriesDs];
-        let json = JSON.parse(fs.readFileSync(global.jsonDir + dir));
-
-        let fileCollection = new FileCollection(req.body.queriesDs);
-        fileCollection.constructFromJson(json);
-
-        // querying all the files of the collection
-        fileCollection.collFiles.forEach(function (dataFile) {
-            var queriesResFile = []; // array of all the queries results for the current dataFile
-
-            // making the queries on the file
-            dataFile.queriesFile(req.body.queries, req.body.queryLang);
-            queriesResFile = dataFile.fileQueries.at(-1); // array of queries
-
-            // checking that the queries went well
-            queriesResFile.forEach(resQuery => {
-                if (resQuery == null) {
-                    res.send({
-                        status: false,
-                        error: "Invalid query or an error occurred during execution of it."
-                    })
-                }
-            });
-
-            // pushing the array of query res in the queries result matrix
-            queriesResColl.push(queriesResFile);
-        })
-
-        // updating the json
-        const jsonString = JSON.stringify(fileCollection);
-        fs.writeFile(global.jsonDir + dir, jsonString, (err) => {
-            if (err) {
-                console.error('Error writing ' + dir + ' file:', err);
-            } else {
-                console.log('File ' + dir + ' of objects updated.');
-            }
-        });
-
-        res.send({
-            status: true,
-            queriesResColl: queriesResColl
-        })
-    }
-    catch (e) {
-        res.send({
-            status: false,
-            error: e.message
-        });
-    }
-}); */
 
 app.post('/queries', function (req, res) {
     console.log(`Executing queries on some of the collections of files...`);

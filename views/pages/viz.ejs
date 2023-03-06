@@ -17,17 +17,34 @@
 
   <!-- MAIN CONTENT -->
   <div class="ui container">
+    <h2 id="viz-title" class="header item">
+    </h2>
     <div class="ui centered grid">
       <div class="two column row">
 
-        <div class="fourteen wide column">
-
-          <h3 id="viz-title" class="header item">
+        <div class="eight wide column">
+          <h3 class="header item">
             Chart
           </h3>
-          <div class="ui container"><canvas id="chart-container"></canvas></div>
-          
+          <div class="ui container chart-container-viz">
+            <canvas id="canvas-viz"></canvas>
+          </div>
+        </div>
+        <div class="five wide column">
+          <h3 class="header item">
+            Metadata
+          </h3>
+          <h4 class="header item">
+            Description
+          </h4>
+          <span id="viz-description"> 
+          </span>
+          <h4 class="header item">
+            Queries
+          </h4>
+          <div id="queries-list" class="ui large celled list overflow">
 
+          </div>
         </div>
 
       </div>
