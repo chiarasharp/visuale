@@ -1,5 +1,5 @@
 
-function buildChart(viz) {
+function buildChartPage(viz) {
     var chartData = viz.chartData;
     var chartLabel = viz.title;
     var ctx = document.getElementById('canvas-viz').getContext('2d');
@@ -35,21 +35,37 @@ function buildChart(viz) {
     
     var myChart = new Chart(ctx, chartObj);
   
-    $('#viz-title').text(chartLabel);
+    $('.viz-title').text(chartLabel);
     $("#viz-description").html(viz.description);
+
     var queriesList = $('#queries-list');
+    var queryItems = "";
+
     queriesList.html("");
+    
     viz.queriesByDs.forEach((queriesDs) => {
-        queriesList.append(`
-        <h5>Dataset ${queriesDs.ds}</h5>`);
+        queryItems += `<div class="ui list">`;
         queriesDs.queriesText.forEach((query)=> {
-            queriesList.append(`
+            var queryItem = `
             <div class="item">
                 <div class="content">
-                    <div class="description">${query}</div>
+                    <div class="ui raised segment">
+                        <div class="ui top left attached label">${queriesDs.queryLanguage}</div>
+                        <p>${query}</p>
+                    </div>
                 </div>
-            </div>`);
-        })  
+            </div>`;
+            queryItems += queryItem;
+        });
+        queryItems += `</div>`;
+        queriesList.append(`<div class="item">
+                                <div class="content">
+                                    <div class="ui segment">
+                                        <p class="ui sub header"><i>Dataset ${queriesDs.ds}</i></p>`+
+                                        queryItems +
+                                `   </div>
+                                </div>
+                            </div>`);
     });
 }
   
