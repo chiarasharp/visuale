@@ -7,35 +7,36 @@ global = {
 $(document).ready(function () {
 
     loadData();
-    loadVizData().then(function() {
-            loadVizGrid();
+    loadVizData().then(function () {
+        loadVizGrid();
 
-            const buttonsMakeChart = document.querySelectorAll('.make-chart');
-            const buttonsShowMore = document.querySelectorAll('button.show-more');
+        const buttonsMakeChart = document.querySelectorAll('.make-chart');
+        const buttonsShowMore = document.querySelectorAll('button.show-more');
 
-            buttonsMakeChart.forEach(button => {
-                
-                button.addEventListener('click', () => {
-                    const id = button.dataset.id;
-                    button.style.display = "none";
+        buttonsMakeChart.forEach(button => {
 
-        
-                    var showMore = document.querySelectorAll('.show-more[data-id="'+id+'"]');
-                    for (var i = 0; i < showMore.length; i++ ) {
-                        showMore[i].style.display = "block";
-                    }
-                
-                    loadVizQueriesResults(parseInt(id), global.vizualizations[id].queriesByDs);
-                });
-                
+            button.addEventListener('click', () => {
+                const id = button.dataset.id;
+                button.style.display = "none";
+
+
+                var showMore = document.querySelectorAll('.show-more[data-id="' + id + '"]');
+                for (var i = 0; i < showMore.length; i++) {
+                    showMore[i].style.display = "block";
+                }
+
+                loadVizQueriesResults(parseInt(id), global.vizualizations[id].queriesByDs);
             });
 
-            buttonsShowMore.forEach(button => {
-                button.addEventListener('click', () => {
-                    const id = button.dataset.id;
-                    loadVizPage(id);
-                });
-            })
+        });
+
+        buttonsShowMore.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.dataset.id;
+                saveChartData(id, global.vizualizations[id].chartData);
+                loadVizPage(id);
+            });
+        })
 
 
     });
@@ -104,13 +105,13 @@ function loadVizPage(id) {
     return $.ajax({
         url: '/viz/' + id,
         type: 'GET',
-        success: function(data) {
-          // handle successful response
-          window.location.href = '/viz/' + id;
+        success: function (data) {
+            // handle successful response
+            window.location.href = '/viz/' + id;
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-          // handle error
-          console.log("Error:", textStatus, errorThrown);
+        error: function (jqXHR, textStatus, errorThrown) {
+            // handle error
+            console.log("Error:", textStatus, errorThrown);
         }
     });
 }
@@ -121,12 +122,12 @@ function loadVizQueriesResults(tag, dsQueries) {
         case 0: /* NUMBER OF ARTICLES BY YEAR, ONE DATASET, TWO XPATH QUERIES */
             var yearCount = {};
             loadQueriesByDs(dsQueries, tag).then(function () {
-        
+
                 global.vizualizations[tag].queriesByDs[0].queries.forEach(queryFile => {
                     const queryArt = queryFile[0].queryRes;
                     const queryDate = queryFile[1].queryRes;
                     const queryYear = new Date(queryDate).getFullYear();
-        
+
                     if (yearCount.hasOwnProperty(queryYear)) {
                         yearCount[queryYear] = yearCount[queryYear] + queryArt;
                     }
@@ -135,13 +136,13 @@ function loadVizQueriesResults(tag, dsQueries) {
                     }
                 })
                 createBarChart(yearCount, global.vizualizations[tag].title, tag);
-        
+
             });
-        break;
+            break;
         case 1: /* NUMBER OF ARTICLES BY YEAR, TWO DATASETS, ONE XPATH QUERY FOR DS */
             var yearCount = {};
 
-             loadQueriesByDs(dsQueries, tag).then(function () {
+            loadQueriesByDs(dsQueries, tag).then(function () {
                 const tagResultQueriesDs0 = global.vizualizations[tag].queriesByDs[0];
                 const tagResultQueriesDs1 = global.vizualizations[tag].queriesByDs[1];
 
@@ -149,7 +150,7 @@ function loadVizQueriesResults(tag, dsQueries) {
                     const queryArt = queryFile[0].queryRes;
                     const queryDate = tagResultQueriesDs1.queries[index][0].queryRes;
                     const queryYear = new Date(queryDate).getFullYear();
-        
+
                     if (yearCount.hasOwnProperty(queryYear)) {
                         yearCount[queryYear] = yearCount[queryYear] + queryArt;
                     }
@@ -158,10 +159,29 @@ function loadVizQueriesResults(tag, dsQueries) {
                     }
                 })
                 createBarChart(yearCount, global.vizualizations[tag].title, tag);
-        
-            }); 
 
-        break;
+            });
+            break;
+        case 2:
+            var yearCount = {};
+            loadQueriesByDs(dsQueries, tag).then(function () {
+
+                global.vizualizations[tag].queriesByDs[0].queries.forEach(queryFile => {
+                    const queryArt = queryFile[0].queryRes;
+                    const queryDate = queryFile[1].queryRes;
+                    const queryYear = new Date(queryDate).getFullYear();
+
+                    if (yearCount.hasOwnProperty(queryYear)) {
+                        yearCount[queryYear] = yearCount[queryYear] + queryArt;
+                    }
+                    else {
+                        yearCount[queryYear] = queryArt;
+                    }
+                })
+                createBarChart(yearCount, global.vizualizations[tag].title, tag);
+
+            });
+            break;
     }
 
 
@@ -222,26 +242,28 @@ function createBarChart(dataChart, label, tag) {
         },
         options: options
     };
-    
+
 
     var chart = new Chart(context, chartObj);
 
-    global.vizualizations.chartData = dataChart;
-    
-    $.ajax({
+    global.vizualizations[tag].chartData = dataChart;
+
+}
+
+function saveChartData(tag, chartData) {
+    return $.ajax({
         url: '/save-chart-data',
         type: 'POST',
         data: {
             tag: tag,
-            chartData: dataChart
+            chartData: chartData
         },
 
         success: function (data) {
-           
+            console.log("Chart data saved.");
         },
         error: function (error) {
-
+            console.log("Error saving chart data.");
         }
     });
-
 }

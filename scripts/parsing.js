@@ -60,15 +60,11 @@ const queryXMLXPath = (query, fileContent) => {
 
 /*
 * Querys an XML file with an XQuery query.
-  // TODO: try saxon 
-
+*/
 const queryXMLXQuery = (query, fileContent) => {
-  const xmlDoc = SaxonJS.getResource({ type: 'xml', text: fileContent });
-  //const xmlDoc = SaxonJS.XPath.createDocument(fileContent);
-  const result = SaxonJS.XPath.evaluate(query, xmlDoc);
-  console.log(result);
-  return result;
-}*/
+  const res = SaxonJS.XPath.evaluate(query, fileContent);
+  return res;
+}
 
 
 /* 
@@ -120,6 +116,16 @@ const parseXML = fileContent => {
 
   return data;
 };
+
+function parseXMLSaxon(fileContent) {
+  const d = SaxonJS.getResource({
+    type: 'xml',
+    text: fileContent
+  }).then(function (doc) {
+    return doc;
+  });
+  return d;
+}
 
 /* 
 * Parses an RDF/XML file.
@@ -197,32 +203,34 @@ class DataFile {
 
   }
 
+  async parseFileSaxon() {
+    this.fileParsedSaxon = await parseXMLSaxon(this.fileContent);
+    return this;
+  }
+
   async queriesFile(queries, queryLang) {
     switch (this.fileFormat) {
       case '.xml':
         switch (queryLang) {
           case 'xpath':
             var queriesObjRes = [];
-            //var queriesRes = [];
 
             queries.forEach((query) => {
               let queryRes = queryXMLXPath(query, this.fileContent);
               queriesObjRes.push(new Query(this.fileName, query, queryLang, queryRes));
-              //queriesRes.push(queryRes);
             })
 
             this.fileQueries.push(queriesObjRes);
-            //this.fileQueryResults.push(queriesRes)
             break;
           case 'xquery':
-            /*var xqueriesRes = [];
+            var xqueriesRes = [];
 
             queries.forEach((query) => {
-              var queryRes = queryXMLXQuery(query, this.fileContent);
+              var queryRes = queryXMLXQuery(query, this.fileParsedSaxon);
               xqueriesRes.push(new Query(this.fileName, query, queryLang, queryRes))
             })
 
-            this.fileQueries.push(xqueriesRes);*/
+            this.fileQueries.push(xqueriesRes);
             break;
           default:
             console.error(`Can't perform a ${queryLang} query on XML file.`);

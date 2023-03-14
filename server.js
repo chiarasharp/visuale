@@ -33,7 +33,7 @@ app.enable('trust proxy');
 
 app.set('view engine', 'ejs');
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.render('pages/index');
 });
 
@@ -48,13 +48,13 @@ app.get('/pull-parse-data', function (req, res) {
         let collectionsFilesNames = [];
 
         var countDir = 0;
-        
+
         // cycle ds directory
         datasetDir.forEach(pathDir => {
-            
+
             // get current sub directory
             const fullPath = path.join(global.collectionsDir, pathDir);
-            
+
             // check if it's a directory
             if (!(fs.statSync(fullPath).isFile())) {
 
@@ -62,7 +62,7 @@ app.get('/pull-parse-data', function (req, res) {
                 const coll = fs.readdirSync(fullPath);
                 // creating file collection object
                 const fileCollection = new FileCollection(countDir);
-                
+
                 // parsing the collection of files
                 coll.forEach(function (file) {
                     filePath = path.join(fullPath, file);
@@ -105,7 +105,7 @@ app.get('/pull-viz', function (req, res) {
     console.log(`Pulling visualization data...`);
 
     try {
-        
+
         let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
 
         res.send({
@@ -124,18 +124,27 @@ app.get('/pull-viz', function (req, res) {
 app.post('/save-chart-data', function (req, res) {
     console.log('Saving chart data to viz.json...');
 
-    const chartData = req.body.chartData;
-    let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
-    vizualizations[req.body.tag].chartData = chartData;
-  
-    fs.writeFile(global.vizualizationsDir + "/viz.json", JSON.stringify(vizualizations, null, "\t"), err => {
-      if (err) {
-        console.error(err);
+    const chart_data = req.body.chartData;
+
+    try {
+        let json_viz = fs.readFileSync(global.vizualizationsDir + "/viz.json");
+        let vizualizations = JSON.parse(json_viz);
+        vizualizations[req.body.tag].chartData = chart_data;
+
+        fs.writeFile(global.vizualizationsDir + "/viz.json", JSON.stringify(vizualizations, null, "\t"), err => {
+            if (err) {
+                console.error(err);
+                console.log('Error saving chart data.');
+            } else {
+                console.log('Chart data saved to viz.json.');
+            }
+        });
+    }
+    catch (e) {
+        console.error(e);
         console.log('Error saving chart data.');
-      } else {
-        console.log('Chart data saved to viz.json.');
-      }
-    });
+    }
+
 });
 
 app.get('/viz/:id', (req, res) => {
@@ -153,18 +162,32 @@ app.post('/queries', function (req, res) {
         let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
         const queries_by_ds = req.body.queriesByDs;
         var results_colls = [];
-        
-        queries_by_ds.forEach((queries_ds, index) => {
+
+        queries_by_ds.forEach(async (queries_ds, index) => {
             var results_ds = {
-                ds : queries_ds.ds,
-                queries : []
+                ds: queries_ds.ds,
+                queries: []
             }
 
             let ds_dir = fs.readdirSync(global.jsonDir)[queries_ds.ds];
             let ds_json = JSON.parse(fs.readFileSync(global.jsonDir + ds_dir));
             let ds_filecoll = new FileCollection(queries_ds.ds);
+            //var file_coll_saxon = new FileCollection(queries_ds.ds);
 
             ds_filecoll.constructFromJson(ds_json);
+            //ds_filecoll_saxon.constructFromJson(ds_json);
+
+            await new Promise(function (resolve) {
+                // parsing the collection of files
+                ds_filecoll.collFiles.forEach(async function (file) {
+                    parsedFile = await file.parseFileSaxon();
+
+                    // Resolve the Promise once the loop is done
+                    if (ds_filecoll.collFiles.indexOf(file) === ds_filecoll.collFiles.length - 1) {
+                        resolve();
+                    }
+                });
+            });
 
             ds_filecoll.collFiles.forEach((file) => {
                 var results_file = [];
@@ -180,12 +203,16 @@ app.post('/queries', function (req, res) {
                         })
                     }
                 });
-    
+
                 results_ds.queries.push(results_file);
-                
-                vizualizations[req.body.tag].queriesByDs[queries_ds.ds].queries = results_ds.queries; 
+
+                vizualizations[req.body.tag].queriesByDs[queries_ds.ds].queries = results_ds.queries;
             })
-            
+
+            ds_filecoll.collFiles.forEach((file) => {
+                file.fileParsedSaxon = {};
+            })
+
             const jsonString = JSON.stringify(ds_filecoll, null, "\t");
             fs.writeFile(global.jsonDir + ds_dir, jsonString, (err) => {
                 if (err) {
@@ -206,13 +233,13 @@ app.post('/queries', function (req, res) {
 
             results_colls.push(results_ds);
         })
-        
+
         res.send({
             status: true,
             resultsQueries: results_colls
         })
     }
-     catch (e) {
+    catch (e) {
         res.send({
             status: false,
             error: e.message

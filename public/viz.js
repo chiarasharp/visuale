@@ -51,7 +51,7 @@ function buildChartPage(viz) {
                 <div class="content">
                     <div class="ui raised segment">
                         <div class="ui top left attached label">${queriesDs.queryLanguage}</div>
-                        <p>${query}</p>
+                        <p><i>${query}</i></p>
                     </div>
                 </div>
             </div>`;
@@ -66,6 +66,7 @@ function buildChartPage(viz) {
                                 `   </div>
                                 </div>
                             </div>`);
+        queryItems = "";
     });
 }
   

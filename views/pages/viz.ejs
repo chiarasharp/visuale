@@ -15,48 +15,64 @@
 
   <%- include('../partials/header'); %>
 
-  <!-- MAIN CONTENT -->
   <div class="ui container">
+    
     <h2 class="header item viz-title">
     </h2>
+
     <div class="ui centered grid">
       <div class="two column row">
+
         <div class="seven wide column">
+
           <h3 class="header item">
             Chart
           </h3>
+
           <div class="ui container segment chart-container-viz">
             <canvas id="canvas-viz"></canvas>
           </div>
+
         </div>
+
         <div class="six wide column">
+
           <h3 class="header">Metadata</h3>
+
           <div class="ui segments">
+
             <div class="ui segment">
+
               <h4 class="ui sub header">
                 Description
               </h4>
+
               <p></p>
               <span id="viz-description"></span>
+
             </div>
+
             <div class="ui segment">
+
               <h4 class="ui sub header">
                 Queries
               </h4>
+
               <div id="queries-list" class="ui list">
               </div>
-            </div>      
+
+            </div>
+
           </div>
         </div>
+
       </div>
     </div>
   </div>
   
   <script>
-    // pass data from server-side to viz.js script
     var vizData = <%- JSON.stringify(viz) %>;
   
-    // call the buildChart function to create the chart
     buildChartPage(vizData);
   </script>  
 </body>
