@@ -173,12 +173,12 @@ app.post('/queries', function (req, res) {
             let ds_json = JSON.parse(fs.readFileSync(global.json_dir + ds_dir));
             let ds_filecoll = new FileCollection(queries_ds.ds);
 
-            ds_filecoll.constructFromJson(ds_json);
+            ds_filecoll.construct_from_json(ds_json);
 
             await new Promise(function (resolve) {
                 // parsing the collection of files
                 ds_filecoll.coll_files.forEach(async function (file) {
-                    parsedFile = await file.parse_file_Saxon();
+                    parsed_file = await file.parse_file_Saxon();
 
                     // Resolve the Promise once the loop is done
                     if (ds_filecoll.coll_files.indexOf(file) === ds_filecoll.coll_files.length - 1) {
@@ -207,8 +207,8 @@ app.post('/queries', function (req, res) {
                 vizualizations[req.body.viz_tag].queries_by_ds[queries_ds.ds].queries = results_ds.queries;
             })
 
-            ds_filecoll.collFiles.forEach((file) => {
-                file.fileParsedSaxon = {};
+            ds_filecoll.coll_files.forEach((file) => {
+                file.file_parsed_Saxon = {};
             })
 
             /* const jsonString = JSON.stringify(ds_filecoll, null, "\t");
@@ -220,8 +220,8 @@ app.post('/queries', function (req, res) {
                 }
             }); */
 
-            const jsonViz = JSON.stringify(vizualizations, null, "\t");
-            fs.writeFile(global.vizualizations_dir + "/viz.json", jsonViz, (err) => {
+            const json_viz = JSON.stringify(vizualizations, null, "\t");
+            fs.writeFile(global.vizualizations_dir + "/viz.json", json_viz, (err) => {
                 if (err) {
                     console.error('Error writing viz.json file:', err);
                 } else {

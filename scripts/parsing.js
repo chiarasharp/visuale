@@ -177,8 +177,7 @@ class Query {
 class DataFile {
 
   /**
-   * @property {string} fileName - the file's name.
-   //{Query[][]} fileQueries - a matrix of Querys because for a single file we often do multiple queries at the time and it is useful to index them together.
+   * @property {string} file_name - the file's name.
    * */
   constructor(file_name, file_content, file_format) {
     this.file_name = file_name;
@@ -258,7 +257,7 @@ class FileCollection {
   }
 
   async construct_from_json(json) {
-    json.collFiles.forEach(file => {
+    json.coll_files.forEach(file => {
       var data_file = new DataFile(file.file_name, file.file_content, file.file_format);
 
       data_file.file_parsed = file.file_parsed;
@@ -271,7 +270,7 @@ class FileCollection {
         data_file.file_queries.push(queriesI);
       })
 
-      this.collFiles.push(data_file);
+      this.coll_files.push(data_file);
     });
   }
 }
