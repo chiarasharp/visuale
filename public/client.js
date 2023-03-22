@@ -1,18 +1,23 @@
 global = {
     vizualizations: [],
-    fileNames: []
+    file_names: []
 }
+
+const is_object_empty = (object_name) => {
+    return Object.keys(object_name).length === 0
+  }
 
 
 $(document).ready(function () {
 
-    loadData();
-    loadVizData().then(function () {
-        loadVizGrid();
-
+    load_data();
+    load_viz_data().then(function () {
+        
+        /*
+        load_viz_grid();
+        
+        
         const buttonsMakeChart = document.querySelectorAll('.make-chart');
-        const buttonsShowMore = document.querySelectorAll('button.show-more');
-
         buttonsMakeChart.forEach(button => {
 
             button.addEventListener('click', () => {
@@ -24,33 +29,38 @@ $(document).ready(function () {
                 for (var i = 0; i < showMore.length; i++) {
                     showMore[i].style.display = "block";
                 }
-
-                loadVizQueriesResults(parseInt(id), global.vizualizations[id].queriesByDs);
+                
+                create_viz_chart_from_queries(parseInt(id), global.vizualizations[id].queries_by_ds);
+                //loadVizQueriesResults(parseInt(id), global.vizualizations[id].queries_by_ds);
             });
 
         });
+        */
 
-        buttonsShowMore.forEach(button => {
+        // loading chart data with viz.json
+        load_viz_grid_chart_data();
+
+        const buttons_showmore = document.querySelectorAll('button.show-more');
+        buttons_showmore.forEach(button => {
             button.addEventListener('click', () => {
-                const id = button.dataset.id;
-                saveChartData(id, global.vizualizations[id].chartData);
-                loadVizPage(id);
+                const viz_tag = button.dataset.id;
+                //save_chart_data(viz_tag, global.vizualizations[viz_tag].chart_data);
+                load_viz_page(viz_tag);
             });
         })
-
 
     });
 
 })
 
-function loadData() {
+function load_data() {
     return $.ajax({
         url: 'pull-parse-data',
         type: 'GET',
         contentType: "application/json",
 
         success: function (data) {
-            global.fileNames = data.fileNames;
+            global.file_names = data.file_names;
         },
         error: function (error) {
             alert(error);
@@ -58,7 +68,7 @@ function loadData() {
     });
 }
 
-function loadVizData() {
+function load_viz_data() {
     return $.ajax({
         url: 'pull-viz',
         type: 'GET',
@@ -73,12 +83,13 @@ function loadVizData() {
     });
 }
 
-function loadVizGrid() {
-    var vizGrid = $('#chartsGrid');
-    vizGrid.html("");
+function load_viz_grid() {
+    var viz_grid = $('#chartsGrid');
+    viz_grid.html("");
 
     global.vizualizations.forEach((viz) => {
-        vizGrid.append(
+
+        viz_grid.append(
             `
             <div class="column">
                 <div class="ui link card">
@@ -98,16 +109,46 @@ function loadVizGrid() {
                 </div>
             </div>`
         );
-    })
+
+    });
 }
 
-function loadVizPage(id) {
+function load_viz_grid_chart_data() {
+    var viz_grid = $('#chartsGrid');
+    viz_grid.html("");
+
+    global.vizualizations.forEach((viz) => {
+        viz_grid.append(
+            `
+            <div class="column">
+                <div class="ui link card">
+                    <div class="content">
+                        <div class="header show-more" data-id="${viz.tag}">${viz.title}</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="canvas${viz.tag}"></canvas>
+                    </div>
+                    <div class="extra content">
+                        <span class="show-more" data-id="${viz.tag}">${viz.description}</span>
+                    </div>
+                    <div class="extra content">
+                        <button class="ui button show-more" data-id="${viz.tag}">Show more</button>
+                    </div>
+                </div>
+            </div>`
+        );
+        create_bar_chart(viz.tag, viz.title, viz.chart_data);
+    });
+   
+}
+
+function load_viz_page(viz_tag) {
     return $.ajax({
-        url: '/viz/' + id,
+        url: '/viz/' + viz_tag,
         type: 'GET',
         success: function (data) {
             // handle successful response
-            window.location.href = '/viz/' + id;
+            window.location.href = '/viz/' + viz_tag;
         },
         error: function (jqXHR, textStatus, errorThrown) {
             // handle error
@@ -116,93 +157,101 @@ function loadVizPage(id) {
     });
 }
 
-function loadVizQueriesResults(tag, dsQueries) {
+function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
 
-    switch (tag) {
-        case 0: /* NUMBER OF ARTICLES BY YEAR, ONE DATASET, TWO XPATH QUERIES */
-            var yearCount = {};
-            loadQueriesByDs(dsQueries, tag).then(function () {
+    if(!is_object_empty(global.vizualizations[viz_tag].chart_data)) {
+        create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, global.vizualizations[viz_tag].chart_data);
+    }
+    else {
+        switch (viz_tag) {
+            case 0: /* NUMBER OF ARTICLES BY YEAR, ONE DATASET, TWO XPATH QUERIES */
+                var count_art_by_year = {};
 
-                global.vizualizations[tag].queriesByDs[0].queries.forEach(queryFile => {
-                    const queryArt = queryFile[0].queryRes;
-                    const queryDate = queryFile[1].queryRes;
-                    const queryYear = new Date(queryDate).getFullYear();
+                load_queries_by_ds(viz_tag, viz_queries_by_ds).then(function () {
+    
+                    global.vizualizations[viz_tag].queries_by_ds[0].queries.forEach(query_file => {
+                        const query_art = query_file[0].query_res;
+                        const query_date = query_file[1].query_res;
+                        const query_year = new Date(query_date).getFullYear();
+    
+                        if (count_art_by_year.hasOwnProperty(query_year)) {
+                            count_art_by_year[query_year] = count_art_by_year[query_year] + query_art;
+                        }
+                        else {
+                            count_art_by_year[query_year] = query_art;
+                        }
+                    })
 
-                    if (yearCount.hasOwnProperty(queryYear)) {
-                        yearCount[queryYear] = yearCount[queryYear] + queryArt;
-                    }
-                    else {
-                        yearCount[queryYear] = queryArt;
-                    }
-                })
-                createBarChart(yearCount, global.vizualizations[tag].title, tag);
+                    global.vizualizations[tag].chart_data = count_art_by_year;
+                    create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, count_art_by_year);
+                });
+                break;
+            case 1: /* NUMBER OF REFERENCES BY YEAR, TWO DATASETS, ONE XPATH QUERY FOR DS */
+                var count_ref_by_year = {};
+    
+                load_queries_by_ds(viz_tag, viz_queries_by_ds).then(function () {
+                    const tagResultQueriesDs0 = global.vizualizations[viz_tag].queries_by_ds[0];
+                    const tagResultQueriesDs1 = global.vizualizations[viz_tag].queries_by_ds[1];
+    
+                    tagResultQueriesDs0.queries.forEach((query_file, index) => {
+                        const query_ref = query_file[0].query_res;
+                        const query_date = tagResultQueriesDs1.queries[index][0].query_res;
+                        const query_year = new Date(query_date).getFullYear();
+    
+                        if (count_ref_by_year.hasOwnProperty(query_year)) {
+                            count_ref_by_year[query_year] = count_ref_by_year[query_year] + query_ref;
+                        }
+                        else {
+                            count_ref_by_year[query_year] = query_ref;
+                        }
+                    })
+                    global.vizualizations[tag].chart_data = count_ref_by_year;
+                    create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, count_ref_by_year);
+                });
+                break;
+            case 2: /* NUMBER OF REFERENCES BY YEAR, ONE DATASET, TWO XQUERY QUERIES */
+                var count_ref_by_year = {};
 
-            });
-            break;
-        case 1: /* NUMBER OF ARTICLES BY YEAR, TWO DATASETS, ONE XPATH QUERY FOR DS */
-            var yearCount = {};
-
-            loadQueriesByDs(dsQueries, tag).then(function () {
-                const tagResultQueriesDs0 = global.vizualizations[tag].queriesByDs[0];
-                const tagResultQueriesDs1 = global.vizualizations[tag].queriesByDs[1];
-
-                tagResultQueriesDs0.queries.forEach((queryFile, index) => {
-                    const queryArt = queryFile[0].queryRes;
-                    const queryDate = tagResultQueriesDs1.queries[index][0].queryRes;
-                    const queryYear = new Date(queryDate).getFullYear();
-
-                    if (yearCount.hasOwnProperty(queryYear)) {
-                        yearCount[queryYear] = yearCount[queryYear] + queryArt;
-                    }
-                    else {
-                        yearCount[queryYear] = queryArt;
-                    }
-                })
-                createBarChart(yearCount, global.vizualizations[tag].title, tag);
-
-            });
-            break;
-        case 2:
-            var yearCount = {};
-            loadQueriesByDs(dsQueries, tag).then(function () {
-
-                global.vizualizations[tag].queriesByDs[0].queries.forEach(queryFile => {
-                    const queryArt = queryFile[0].queryRes;
-                    const queryDate = queryFile[1].queryRes;
-                    const queryYear = new Date(queryDate).getFullYear();
-
-                    if (yearCount.hasOwnProperty(queryYear)) {
-                        yearCount[queryYear] = yearCount[queryYear] + queryArt;
-                    }
-                    else {
-                        yearCount[queryYear] = queryArt;
-                    }
-                })
-                createBarChart(yearCount, global.vizualizations[tag].title, tag);
-
-            });
-            break;
+                load_queries_by_ds(viz_tag, viz_queries_by_ds).then(function () {
+    
+                    global.vizualizations[viz_tag].queries_by_ds[0].queries.forEach(query_file => {
+                        const query_ref = query_file[0].query_res;
+                        const query_date = query_file[1].query_res;
+                        const query_year = new Date(query_date).getFullYear();
+    
+                        if (count_ref_by_year.hasOwnProperty(query_year)) {
+                            count_ref_by_year[query_year] = count_ref_by_year[query_year] + query_ref;
+                        }
+                        else {
+                            count_ref_by_year[query_year] = query_ref;
+                        }
+                    })
+                    global.vizualizations[tag].chart_data = count_ref_by_year;
+                    create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, count_ref_by_year);
+                });
+                break;
+        }
+        
     }
 
-
 }
 
-function loadQueriesByDs(queriesByDs, tag) {
-    return queriesFilesDs(queriesByDs, tag);
+function load_queries_by_ds(viz_tag, queries_by_datasets) {
+    return query_by_ds(viz_tag, queries_by_datasets);
 }
 
-function queriesFilesDs(queriesByDs, tag) {
+function query_by_ds(viz_tag, queries_by_datasets) {
     return $.ajax({
         url: 'queries',
         type: 'POST',
         data: {
-            queriesByDs: queriesByDs,
-            tag: tag
+            queries_by_datasets: queries_by_datasets,
+            viz_tag: viz_tag
         },
 
         success: function (data) {
-            data.resultsQueries.forEach(dsQueries => {
-                global.vizualizations[tag].queriesByDs[dsQueries.ds].queries = dsQueries.queries;
+            data.results_queries.forEach(ds_queries => {
+                global.vizualizations[viz_tag].queries_by_ds[ds_queries.ds].queries = ds_queries.queries;
             })
         },
         error: function (error) {
@@ -211,11 +260,11 @@ function queriesFilesDs(queriesByDs, tag) {
     });
 }
 
-function createBarChart(dataChart, label, tag) {
-    var chartName = 'canvas' + tag;
-    var context = document.getElementById(chartName).getContext('2d');
-    const keys = Object.keys(dataChart);
-    const values = Object.values(dataChart);
+function create_bar_chart(viz_tag, viz_label, viz_chart_data) {
+    var chart_name = 'canvas' + viz_tag;
+    var context = document.getElementById(chart_name).getContext('2d');
+    const keys = Object.keys(viz_chart_data);
+    const values = Object.values(viz_chart_data);
 
     const options = {
         maintainAspectRatio: false,
@@ -229,12 +278,12 @@ function createBarChart(dataChart, label, tag) {
         }
     }
 
-    const chartObj = {
+    const chart_obj = {
         type: 'bar',
         data: {
             labels: keys,
             datasets: [{
-                label: label,
+                label: viz_label,
                 data: values,
                 backgroundColor: 'rgba( 8, 61, 119, 1)',
                 fill: false,
@@ -244,19 +293,16 @@ function createBarChart(dataChart, label, tag) {
     };
 
 
-    var chart = new Chart(context, chartObj);
-
-    global.vizualizations[tag].chartData = dataChart;
-
+    var chart = new Chart(context, chart_obj);
 }
 
-function saveChartData(tag, chartData) {
+function save_chart_data(viz_tag, chart_data) {
     return $.ajax({
         url: '/save-chart-data',
         type: 'POST',
         data: {
-            tag: tag,
-            chartData: chartData
+            viz_tag: viz_tag,
+            chart_data: chart_data
         },
 
         success: function (data) {

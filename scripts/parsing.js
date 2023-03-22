@@ -7,8 +7,8 @@ const fs = require('fs');
 /*
 * Auxiliar function that finds the URI inside an RDF/XML file.
 */
-function findUriRDFXML(rdfText) {
-  const match = rdfText.match(/xmlns:(\w+)="(.*?)"/);
+function find_uri_RDFXML(rdf_text) {
+  const match = rdf_text.match(/xmlns:(\w+)="(.*?)"/);
   if (match) {
     return match[2];
   }
@@ -18,13 +18,13 @@ function findUriRDFXML(rdfText) {
 /*
 * Querys an XML file with an XPath query.
 */
-const queryXMLXPath = (query, fileContent) => {
+const query_XML_XPath = (query, file_content) => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(fileContent, 'application/xml');
+  const doc = parser.parseFromString(file_content, 'application/xml');
   const root = doc.documentElement; // avoiding xmldom security problem
   var res = "";
 
-  var resultEvaluate = xpath.evaluate(
+  var result_evaluate = xpath.evaluate(
     query,                      // xpathExpression
     root,                       // contextNode
     null,                       // namespaceResolver
@@ -32,22 +32,22 @@ const queryXMLXPath = (query, fileContent) => {
     null                        // result
   )
 
-  switch (resultEvaluate.resultType) {
+  switch (result_evaluate.resultType) {
     case 1:                              // NUMBER_TYPE
-      res = resultEvaluate.numberValue;
+      res = result_evaluate.numberValue;
       break;
     case 2:                              // STRING_TYPE
-      res = resultEvaluate.stringValue;
+      res = result_evaluate.stringValue;
       break;
     case 3:                              // BOOLEAN_TYPE
-      res = resultEvaluate.booleanValue;
+      res = result_evaluate.booleanValue;
       break;
     case 4:                              // UNORDERED_NODE_ITERATOR_TYPE
     case 5:                              // ORDERED_NODE_ITERATOR_TYPE
-      node = resultEvaluate.iterateNext();
+      node = result_evaluate.iterateNext();
       while (node) {
         res = res + "\n" + node.toString();
-        node = resultEvaluate.iterateNext();
+        node = result_evaluate.iterateNext();
       }
       break;
     default:
@@ -61,8 +61,8 @@ const queryXMLXPath = (query, fileContent) => {
 /*
 * Querys an XML file with an XQuery query.
 */
-const queryXMLXQuery = (query, fileContent) => {
-  const res = SaxonJS.XPath.evaluate(query, fileContent);
+const query_XML_XQuery = (query, file_content) => {
+  const res = SaxonJS.XPath.evaluate(query, file_content);
   return res;
 }
 
@@ -70,67 +70,68 @@ const queryXMLXQuery = (query, fileContent) => {
 /* 
 * Parses an XML file.
 */
-const parseXML = fileContent => {
+const parse_XML = file_content => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(fileContent, 'application/xml');
+  const doc = parser.parseFromString(file_content, 'application/xml');
   //const root = doc.documentElement;
 
   const data = {
     namespaces: "",
-    namespacePrefixes: "",
+    namespace_prefixes: "",
     elements: []
   };
 
   const elements = doc.getElementsByTagName('*');
-  const elementsArray = Array.from(elements);
+  const elements_array = Array.from(elements);
 
-  if (elementsArray[0].namespaceURI) {
-    data.namespaces = elementsArray[0].namespaceURI;
+  if (elements_array[0].namespaceURI) {
+    data.namespaces = elements_array[0].namespaceURI;
   }
 
-  if (elementsArray[0].prefix) {
-    data.namespacePrefixes = elementsArray[0].prefix;
+  if (elements_array[0].prefix) {
+    data.namespace_prefixes = elements_array[0].prefix;
   }
 
-  for (const element of elementsArray) {
+  for (const element of elements_array) {
 
-    const elementData = {
-      tagName: element.tagName,
+    const element_data = {
+      tag_name: element.tagName,
       attributes: {},
-      textContent: ""
+      text_content: ""
     };
 
     const attributes = element.attributes;
-    const attributesArray = Array.from(attributes);
+    const attributes_array = Array.from(attributes);
 
-    for (const attribute of attributesArray) {
-      elementData.attributes[attribute.name] = attribute.value;
+    for (const attribute of attributes_array) {
+      element_data.attributes[attribute.name] = attribute.value;
     }
 
-    if (element.textContent) {
-      elementData.textContent = element.textContent.trim();
+    if (element.text_content) {
+      element_data.text_content = element.text_content.trim();
     }
 
-    data.elements.push(elementData);
+    data.elements.push(element_data);
   }
 
   return data;
 };
 
-function parseXMLSaxon(fileContent) {
-  const d = SaxonJS.getResource({
+function parse_XML_Saxon(file_content) {
+  const doc = SaxonJS.getResource({
     type: 'xml',
-    text: fileContent
+    text: file_content
   }).then(function (doc) {
     return doc;
   });
-  return d;
+
+  return doc;
 }
 
 /* 
 * Parses an RDF/XML file.
 */
-const parseRDFXML = fileContent => {
+const parse_RDFXML = file_content => {
   const store = rdflib.graph();
   const data = {
     namespaces: {},
@@ -139,9 +140,9 @@ const parseRDFXML = fileContent => {
 
   try {
     // Attempt to find the original namespace URI in the file
-    const uri = findUriRDFXML(fileContent);
+    const uri = find_uri_RDFXML(file_content);
 
-    rdflib.parse(fileContent, store, uri, 'application/rdf+xml', (err, stat) => {
+    rdflib.parse(file_content, store, uri, 'application/rdf+xml', (err, stat) => {
       data.statements = stat.statements;
       data.namespaces = stat.namespaces;
     });
@@ -161,11 +162,11 @@ class Query {
   /* 
   * Constructor for a query.
   */
-  constructor(queryFile, queryText, queryLang, queryRes) {
-    this.queryFile = queryFile;
-    this.queryText = queryText;
-    this.queryLang = queryLang;
-    this.queryRes = queryRes;
+  constructor(query_file, query_text, query_lang, query_res) {
+    this.query_file = query_file
+    this.query_text = query_text;
+    this.query_lang = query_lang;
+    this.query_res = query_res;
   }
 
 }
@@ -179,61 +180,64 @@ class DataFile {
    * @property {string} fileName - the file's name.
    //{Query[][]} fileQueries - a matrix of Querys because for a single file we often do multiple queries at the time and it is useful to index them together.
    * */
-  constructor(fileName, fileContent, fileFormat) {
-    this.fileName = fileName;
-    this.fileContent = fileContent;
-    this.fileFormat = fileFormat;
-    this.fileParsed = {};
-    this.fileQueries = [];
+  constructor(file_name, file_content, file_format) {
+    this.file_name = file_name;
+    this.file_content = file_content;
+    this.file_format = file_format;
+    this.file_parsed = {};
+    this.file_queries = [];
   }
 
   /**
   * Parsing of the file based on the format.
   */
-  async parseFile() {
+  async parse_file() {
 
-    switch (this.fileFormat) {
+    switch (this.file_format) {
       case '.xml':
-        this.fileParsed = parseXML(this.fileContent);
+        this.file_parsed = parse_XML(this.file_content);
         break;
       case '.rdf':
-        this.fileParsed = parseRDFXML(this.fileContent);
+        this.file_parsed = parse_RDFXML(this.file_content);
         break;
     }
 
   }
 
-  async parseFileSaxon() {
-    this.fileParsedSaxon = await parseXMLSaxon(this.fileContent);
+  async parse_file_Saxon() {
+    this.file_parsed_Saxon = await parse_XML_Saxon(this.file_content);
     return this;
   }
 
-  async queriesFile(queries, queryLang) {
-    switch (this.fileFormat) {
+  async queries_file(queries, query_lang) {
+    switch (this.file_format) {
       case '.xml':
-        switch (queryLang) {
+        switch (query_lang) {
+
           case 'xpath':
-            var queriesObjRes = [];
+            var queries_obj_res = [];
 
             queries.forEach((query) => {
-              let queryRes = queryXMLXPath(query, this.fileContent);
-              queriesObjRes.push(new Query(this.fileName, query, queryLang, queryRes));
+              let query_res = query_XML_XPath(query, this.file_content);
+              queries_obj_res.push(new Query(this.file_name, query, query_lang, query_res));
             })
 
-            this.fileQueries.push(queriesObjRes);
+            this.file_queries.push(queries_obj_res);
             break;
+          
           case 'xquery':
-            var xqueriesRes = [];
+            var xqueries_res = [];
 
             queries.forEach((query) => {
-              var queryRes = queryXMLXQuery(query, this.fileParsedSaxon);
-              xqueriesRes.push(new Query(this.fileName, query, queryLang, queryRes))
+              var query_res = query_XML_XQuery(query, this.file_parsed_Saxon);
+              xqueries_res.push(new Query(this.file_name, query, query_lang, query_res))
             })
 
-            this.fileQueries.push(xqueriesRes);
+            this.file_queries.push(xqueries_res);
             break;
+
           default:
-            console.error(`Can't perform a ${queryLang} query on XML file.`);
+            console.error(`Can't perform a ${query_lang} query on XML file.`);
             break;
         }
     }
@@ -244,30 +248,30 @@ class DataFile {
 * ODM class to represent a collection of files. 
 */
 class FileCollection {
-  constructor(collId) {
-    this.collId = collId;
-    this.collFiles = [];
+  constructor(coll_id) {
+    this.coll_id = coll_id;
+    this.coll_files = [];
   }
 
-  async pushDataFile(dataFile) {
-    this.collFiles.push(dataFile);
+  async push_DataFile(data_file) {
+    this.coll_files.push(data_file);
   }
 
-  async constructFromJson(json) {
+  async construct_from_json(json) {
     json.collFiles.forEach(file => {
-      var dataFile = new DataFile(file.fileName, file.fileContent, file.fileFormat);
+      var data_file = new DataFile(file.file_name, file.file_content, file.file_format);
 
-      dataFile.fileParsed = file.fileParsed;
+      data_file.file_parsed = file.file_parsed;
 
-      file.fileQueries.forEach(queries => {
+      file.file_queries.forEach(queries => {
         var queriesI = []
         queries.forEach(query => {
           queriesI.push(query);
         })
-        dataFile.fileQueries.push(queriesI);
+        data_file.file_queries.push(queriesI);
       })
 
-      this.collFiles.push(dataFile);
+      this.collFiles.push(data_file);
     });
   }
 }

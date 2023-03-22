@@ -9,22 +9,22 @@ const _ = require('lodash');
 /* =========== */
 /* GLOBAL VARS */
 /* =========== */
-global.rootDir = __dirname;
-global.collectionsDir = global.rootDir + '/data/collections-data/';
-global.vizualizationsDir = global.rootDir + '/data/viz-data';
-global.jsonDir = global.rootDir + '/data/collections-json/';
+global.root_dir = __dirname;
+global.collections_dir = global.root_dir + '/data/collections-data/';
+global.vizualizations_dir = global.root_dir + '/data/viz-data';
+global.json_dir = global.root_dir + '/data/collections-json/';
 
-global.supExt = ['.rdf', '.xml'];
-global.startDate = null;
+global.supported_ext = ['.rdf', '.xml'];
+global.start_date = null;
 global.port = 8000;
 
-const { DataFile, FileCollection } = require(global.rootDir + '/scripts/parsing.js');
+const { DataFile, FileCollection } = require(global.root_dir + '/scripts/parsing.js');
 
 /* ============== */
 /* EXPRESS CONFIG */
 /* ============== */
 var app = express();
-app.use('/', express.static(global.rootDir + '/public'));
+app.use('/', express.static(global.root_dir + '/public'));
 // OTHER MIDDLEWARE
 app.use(cors());
 app.use(bodyParser.json());
@@ -42,58 +42,58 @@ app.get('/pull-parse-data', function (req, res) {
 
     try {
         // parse the directory of collections of files
-        let datasetDir = fs.readdirSync(global.collectionsDir);
+        let collections_dir = fs.readdirSync(global.collections_dir);
 
         //let collectionsFiles = [];
-        let collectionsFilesNames = [];
+        let collections_filesnames = [];
 
-        var countDir = 0;
+        var count_dir = 0;
 
         // cycle ds directory
-        datasetDir.forEach(pathDir => {
+        collections_dir.forEach(path_dir => {
 
             // get current sub directory
-            const fullPath = path.join(global.collectionsDir, pathDir);
+            const full_path = path.join(global.collections_dir, path_dir);
 
             // check if it's a directory
-            if (!(fs.statSync(fullPath).isFile())) {
+            if (!(fs.statSync(full_path).isFile())) {
 
                 // parse the directory to get files
-                const coll = fs.readdirSync(fullPath);
+                const collection = fs.readdirSync(full_path);
                 // creating file collection object
-                const fileCollection = new FileCollection(countDir);
+                const file_collection = new FileCollection(count_dir);
 
                 // parsing the collection of files
-                coll.forEach(function (file) {
-                    filePath = path.join(fullPath, file);
-                    fileContent = fs.readFileSync(filePath, 'utf-8');
-                    fileFormat = path.extname(filePath);
+                collection.forEach(function (file) {
+                    file_path = path.join(full_path, file);
+                    file_content = fs.readFileSync(file_path, 'utf-8');
+                    file_format = path.extname(file_path);
 
-                    const dataFile = new DataFile(file, fileContent, fileFormat);
-                    dataFile.parseFile();
-                    fileCollection.pushDataFile(dataFile);
+                    const data_file = new DataFile(file, file_content, file_format);
+                    data_file.parse_file();
+                    file_collection.push_DataFile(data_file);
                 });
 
                 // saving all the data about the collection in a json file
-                const jsonString = JSON.stringify(fileCollection, null, "\t");
-                fs.writeFile(global.jsonDir + pathDir + ".json", jsonString, (err) => {
+                const json_string = JSON.stringify(file_collection, null, "\t");
+                fs.writeFile(global.json_dir + path_dir + ".json", json_string, (err) => {
                     if (err) {
-                        console.error('Error writing ' + pathDir + ".json" + ' file:', err);
+                        console.error('Error writing ' + path_dir + ".json" + ' file:', err);
                     } else {
-                        console.log('File ' + pathDir + ".json" + ' of objects created.');
+                        console.log('File ' + path_dir + ".json" + ' of objects created.');
                     }
                 });
 
                 //collectionsFiles.push(fileCollection.collFiles); //TODO: rivedere meglio cosa ha senso avere nel client
-                collectionsFilesNames.push(coll);
+                collections_filesnames.push(collection);
 
-                countDir++;
+                count_dir++;
             }
         });
 
         res.send({
             status: true,
-            fileNames: collectionsFilesNames
+            file_names: collections_filesnames
         })
     }
     catch (e) {
@@ -106,7 +106,7 @@ app.get('/pull-viz', function (req, res) {
 
     try {
 
-        let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
+        let vizualizations = JSON.parse(fs.readFileSync(global.vizualizations_dir + "/viz.json"));
 
         res.send({
             status: true,
@@ -124,14 +124,14 @@ app.get('/pull-viz', function (req, res) {
 app.post('/save-chart-data', function (req, res) {
     console.log('Saving chart data to viz.json...');
 
-    const chart_data = req.body.chartData;
+    const chart_data = req.body.chart_data;
 
     try {
-        let json_viz = fs.readFileSync(global.vizualizationsDir + "/viz.json");
+        let json_viz = fs.readFileSync(global.vizualizations_dir + "/viz.json");
         let vizualizations = JSON.parse(json_viz);
-        vizualizations[req.body.tag].chartData = chart_data;
+        vizualizations[req.body.viz_tag].chart_data = chart_data;
 
-        fs.writeFile(global.vizualizationsDir + "/viz.json", JSON.stringify(vizualizations, null, "\t"), err => {
+        fs.writeFile(global.vizualizations_dir + "/viz.json", JSON.stringify(vizualizations, null, "\t"), err => {
             if (err) {
                 console.error(err);
                 console.log('Error saving chart data.');
@@ -148,52 +148,50 @@ app.post('/save-chart-data', function (req, res) {
 });
 
 app.get('/viz/:id', (req, res) => {
-    const vizId = req.params.id;
-    let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
-    var vizData = vizualizations[vizId];
+    const viz_tag = req.params.id;
+    let vizualizations = JSON.parse(fs.readFileSync(global.vizualizations_dir + "/viz.json"));
+    var viz_data = vizualizations[viz_tag];
 
-    res.render('pages/viz', { viz: vizData });
+    res.render('pages/viz', { viz: viz_data });
 });
 
 app.post('/queries', function (req, res) {
     console.log(`Executing queries on some of the collections of files...`);
 
     try {
-        let vizualizations = JSON.parse(fs.readFileSync(global.vizualizationsDir + "/viz.json"));
-        const queries_by_ds = req.body.queriesByDs;
+        let vizualizations = JSON.parse(fs.readFileSync(global.vizualizations_dir + "/viz.json"));
+        const queries_by_ds = req.body.queries_by_datasets;
         var results_colls = [];
 
-        queries_by_ds.forEach(async (queries_ds, index) => {
+        queries_by_ds.forEach(async (queries_ds) => {
             var results_ds = {
                 ds: queries_ds.ds,
                 queries: []
             }
 
-            let ds_dir = fs.readdirSync(global.jsonDir)[queries_ds.ds];
-            let ds_json = JSON.parse(fs.readFileSync(global.jsonDir + ds_dir));
+            let ds_dir = fs.readdirSync(global.json_dir)[queries_ds.ds];
+            let ds_json = JSON.parse(fs.readFileSync(global.json_dir + ds_dir));
             let ds_filecoll = new FileCollection(queries_ds.ds);
-            //var file_coll_saxon = new FileCollection(queries_ds.ds);
 
             ds_filecoll.constructFromJson(ds_json);
-            //ds_filecoll_saxon.constructFromJson(ds_json);
 
             await new Promise(function (resolve) {
                 // parsing the collection of files
-                ds_filecoll.collFiles.forEach(async function (file) {
-                    parsedFile = await file.parseFileSaxon();
+                ds_filecoll.coll_files.forEach(async function (file) {
+                    parsedFile = await file.parse_file_Saxon();
 
                     // Resolve the Promise once the loop is done
-                    if (ds_filecoll.collFiles.indexOf(file) === ds_filecoll.collFiles.length - 1) {
+                    if (ds_filecoll.coll_files.indexOf(file) === ds_filecoll.coll_files.length - 1) {
                         resolve();
                     }
                 });
             });
 
-            ds_filecoll.collFiles.forEach((file) => {
+            ds_filecoll.coll_files.forEach((file) => {
                 var results_file = [];
 
-                file.queriesFile(queries_ds.queriesText, queries_ds.queryLanguage);
-                results_file = file.fileQueries.at(-1);
+                file.queries_file(queries_ds.queries_text, queries_ds.query_language);
+                results_file = file.file_queries.at(-1);
 
                 results_file.forEach(result => {
                     if (result == null) {
@@ -206,24 +204,24 @@ app.post('/queries', function (req, res) {
 
                 results_ds.queries.push(results_file);
 
-                vizualizations[req.body.tag].queriesByDs[queries_ds.ds].queries = results_ds.queries;
+                vizualizations[req.body.viz_tag].queries_by_ds[queries_ds.ds].queries = results_ds.queries;
             })
 
             ds_filecoll.collFiles.forEach((file) => {
                 file.fileParsedSaxon = {};
             })
 
-            const jsonString = JSON.stringify(ds_filecoll, null, "\t");
+            /* const jsonString = JSON.stringify(ds_filecoll, null, "\t");
             fs.writeFile(global.jsonDir + ds_dir, jsonString, (err) => {
                 if (err) {
                     console.error('Error writing ' + ds_dir + ' file:', err);
                 } else {
                     console.log('File ' + ds_dir + ' of objects updated.');
                 }
-            });
+            }); */
 
             const jsonViz = JSON.stringify(vizualizations, null, "\t");
-            fs.writeFile(global.vizualizationsDir + "/viz.json", jsonViz, (err) => {
+            fs.writeFile(global.vizualizations_dir + "/viz.json", jsonViz, (err) => {
                 if (err) {
                     console.error('Error writing viz.json file:', err);
                 } else {
@@ -236,7 +234,7 @@ app.post('/queries', function (req, res) {
 
         res.send({
             status: true,
-            resultsQueries: results_colls
+            results_queries: results_colls
         })
     }
     catch (e) {
@@ -251,6 +249,6 @@ app.post('/queries', function (req, res) {
 /* ACTIVATE NODE SERVER */
 /* ==================== */
 app.listen(global.port, function () {
-    global.startDate = new Date();
-    console.log(`App is listening on port ${global.port} started ${global.startDate.toLocaleString()}.`);
+    global.start_date = new Date();
+    console.log(`App is listening on port ${global.port} started ${global.start_date.toLocaleString()}.`);
 });
