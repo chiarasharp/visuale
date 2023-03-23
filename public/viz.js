@@ -1,6 +1,7 @@
 function build_chart_page(viz) {
     var chart_data = viz.chart_data;
     var chart_label = viz.title;
+    var chart_type = viz.chart_type;
     var ctx = document.getElementById('canvas-viz').getContext('2d');
     const keys = Object.keys(chart_data);
     const values = Object.values(chart_data);
@@ -17,8 +18,8 @@ function build_chart_page(viz) {
         }
     }
 
-    const chartObj = {
-        type: 'bar',
+    const chart_obj = {
+        type: chart_type,
         data: {
             labels: keys,
             datasets: [{
@@ -32,7 +33,7 @@ function build_chart_page(viz) {
     };
   
     
-    var myChart = new Chart(ctx, chartObj);
+    var my_chart = new Chart(ctx, chart_obj);
   
     $('.viz-title').text(chart_label);
     $("#viz-description").html(viz.description);

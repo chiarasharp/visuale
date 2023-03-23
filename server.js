@@ -4,7 +4,7 @@ const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const _ = require('lodash');
+//const _ = require('lodash');
 
 /* =========== */
 /* GLOBAL VARS */
@@ -25,12 +25,14 @@ const { DataFile, FileCollection } = require(global.root_dir + '/scripts/parsing
 /* ============== */
 var app = express();
 app.use('/', express.static(global.root_dir + '/public'));
+
 // OTHER MIDDLEWARE
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.enable('trust proxy');
 
+// ejs 
 app.set('view engine', 'ejs');
 
 app.get('/', function (req, res) {
@@ -125,11 +127,13 @@ app.post('/save-chart-data', function (req, res) {
     console.log('Saving chart data to viz.json...');
 
     const chart_data = req.body.chart_data;
+    const chart_type = req.body.chart_type;
 
     try {
         let json_viz = fs.readFileSync(global.vizualizations_dir + "/viz.json");
         let vizualizations = JSON.parse(json_viz);
         vizualizations[req.body.viz_tag].chart_data = chart_data;
+        vizualizations[req.body.viz_tag].chart_type = chart_type;
 
         fs.writeFile(global.vizualizations_dir + "/viz.json", JSON.stringify(vizualizations, null, "\t"), err => {
             if (err) {

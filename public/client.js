@@ -44,7 +44,7 @@ $(document).ready(function () {
         buttons_showmore.forEach(button => {
             button.addEventListener('click', () => {
                 const viz_tag = button.dataset.id;
-                //save_chart_data(viz_tag, global.vizualizations[viz_tag].chart_data);
+                //save_chart_data(viz_tag, global.vizualizations[viz_tag].chart_data, global.vizualizations[viz_tag].chart_type);
                 load_viz_page(viz_tag);
             });
         })
@@ -137,7 +137,7 @@ function load_viz_grid_chart_data() {
                 </div>
             </div>`
         );
-        create_bar_chart(viz.tag, viz.title, viz.chart_data);
+        create_chart(viz.tag, viz.title, viz.chart_data, viz.chart_type);
     });
    
 }
@@ -160,7 +160,7 @@ function load_viz_page(viz_tag) {
 function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
 
     if(!is_object_empty(global.vizualizations[viz_tag].chart_data)) {
-        create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, global.vizualizations[viz_tag].chart_data);
+        create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, global.vizualizations[viz_tag].chart_data, global.vizualizations[viz_tag].chart_type);
     }
     else {
         switch (viz_tag) {
@@ -183,7 +183,8 @@ function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
                     })
 
                     global.vizualizations[tag].chart_data = count_art_by_year;
-                    create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, count_art_by_year);
+                    global.vizualizations[tag].chart_type = "bar";
+                    create_chart(viz_tag, global.vizualizations[viz_tag].title, count_art_by_year, "bar");
                 });
                 break;
             case 1: /* NUMBER OF REFERENCES BY YEAR, TWO DATASETS, ONE XPATH QUERY FOR DS */
@@ -206,7 +207,8 @@ function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
                         }
                     })
                     global.vizualizations[tag].chart_data = count_ref_by_year;
-                    create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, count_ref_by_year);
+                    global.vizualizations[tag].chart_type = "bar";
+                    create_chart(viz_tag, global.vizualizations[viz_tag].title, count_ref_by_year, "bar");
                 });
                 break;
             case 2: /* NUMBER OF REFERENCES BY YEAR, ONE DATASET, TWO XQUERY QUERIES */
@@ -227,7 +229,8 @@ function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
                         }
                     })
                     global.vizualizations[tag].chart_data = count_ref_by_year;
-                    create_bar_chart(viz_tag, global.vizualizations[viz_tag].title, count_ref_by_year);
+                    global.vizualizations[tag].chart_type = "bar";
+                    create_chart(viz_tag, global.vizualizations[viz_tag].title, count_ref_by_year, "bar");
                 });
                 break;
         }
@@ -260,7 +263,7 @@ function query_by_ds(viz_tag, queries_by_datasets) {
     });
 }
 
-function create_bar_chart(viz_tag, viz_label, viz_chart_data) {
+function create_chart(viz_tag, viz_label, viz_chart_data, viz_type) {
     var chart_name = 'canvas' + viz_tag;
     var context = document.getElementById(chart_name).getContext('2d');
     const keys = Object.keys(viz_chart_data);
@@ -279,7 +282,7 @@ function create_bar_chart(viz_tag, viz_label, viz_chart_data) {
     }
 
     const chart_obj = {
-        type: 'bar',
+        type: viz_type,
         data: {
             labels: keys,
             datasets: [{
@@ -296,12 +299,13 @@ function create_bar_chart(viz_tag, viz_label, viz_chart_data) {
     var chart = new Chart(context, chart_obj);
 }
 
-function save_chart_data(viz_tag, chart_data) {
+function save_chart_data(viz_tag, chart_type, chart_data) {
     return $.ajax({
         url: '/save-chart-data',
         type: 'POST',
         data: {
             viz_tag: viz_tag,
+            chart_type: chart_type,
             chart_data: chart_data
         },
 

@@ -3,6 +3,7 @@
 		"tag": 0,
 		"title": "Number of articles per year",
 		"description": "Queries from collection <i><b>data-one</b></i> made with XPath language.",
+		"chart_type": "bar",
 		"chart_data": {
 			"1990": "19",
 			"1992": "43",
@@ -322,6 +323,7 @@
 		"tag": 1,
 		"title": "Number of references per year",
 		"description": "Queries from collection <i><b>data-one</b></i> and <i><b>data-two</b></i> made with XPath language.",
+		"chart_type": "bar",
 		"chart_data": {
 			"1990": "24",
 			"1992": "43",
@@ -691,6 +693,7 @@
 		"tag": 2,
 		"title": "Number of references per year",
 		"description": "Queries from collection <i><b>data-one</b></i> made with XQuery language.",
+		"chart_type": "bar",
 		"chart_data": {
 			"1990": "24",
 			"1992": "43",

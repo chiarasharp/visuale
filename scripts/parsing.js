@@ -2,7 +2,7 @@ const rdflib = require('rdflib');
 const DOMParser = require('xmldom').DOMParser;
 const xpath = require('xpath');
 const SaxonJS = require('saxon-js');
-const fs = require('fs');
+//const fs = require('fs');
 
 /*
 * Auxiliar function that finds the URI inside an RDF/XML file.
@@ -184,7 +184,6 @@ class DataFile {
     this.file_content = file_content;
     this.file_format = file_format;
     this.file_parsed = {};
-    this.file_queries = [];
   }
 
   /**
