@@ -186,6 +186,7 @@ function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
                     global.vizualizations[tag].chart_type = "bar";
                     create_chart(viz_tag, global.vizualizations[viz_tag].title, count_art_by_year, "bar");
                 });
+
                 break;
             case 1: /* NUMBER OF REFERENCES BY YEAR, TWO DATASETS, ONE XPATH QUERY FOR DS */
                 var count_ref_by_year = {};
@@ -206,6 +207,7 @@ function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
                             count_ref_by_year[query_year] = query_ref;
                         }
                     })
+
                     global.vizualizations[tag].chart_data = count_ref_by_year;
                     global.vizualizations[tag].chart_type = "bar";
                     create_chart(viz_tag, global.vizualizations[viz_tag].title, count_ref_by_year, "bar");
@@ -215,7 +217,8 @@ function create_viz_chart_from_queries(viz_tag, viz_queries_by_ds) {
                 var count_ref_by_year = {};
 
                 load_queries_by_ds(viz_tag, viz_queries_by_ds).then(function () {
-    
+                    
+                    // GROUPING THE RESULTS OF THE REFERENCES BY THE RESULTS OF THE YEARS
                     global.vizualizations[viz_tag].queries_by_ds[0].queries.forEach(query_file => {
                         const query_ref = query_file[0].query_res;
                         const query_date = query_file[1].query_res;
